@@ -3,10 +3,6 @@
 #include <stdint.h>
 #include <stddef.h>
 
-#ifdef ATOMIC_STRUCTURE_BUILD_ENVIRONMENT_LINUX
-#include <pthread.h>
-#endif
-
 typedef struct
     __atomic_circular_queue_node
 {

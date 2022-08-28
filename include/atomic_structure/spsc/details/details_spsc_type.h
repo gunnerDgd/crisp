@@ -8,7 +8,3 @@ typedef
 typedef
     __atomic_circular_queue_node
         __atomic_spsc_node;
-
-typedef
-    __atomic_circular_queue_pointer
-        __atomic_spsc_pointer;

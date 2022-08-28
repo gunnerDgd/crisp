@@ -11,10 +11,8 @@ void
     fprintf
         (stderr,
             "[ATOMIC_STRUCTURE][TESTCASE] Circular Queue Size : %d\r\n\
-             [ATOMIC_STRUCTURE][TESTCASE] Circular Queue Pointer Size : %d\r\n\
              [ATOMIC_STRUCTURE][TESTCASE] Circular Queue Node Size : %d\r\n",
                 sizeof(__atomic_circular_queue),
-                sizeof(__atomic_circular_queue_pointer),
                 sizeof(__atomic_circular_queue_node));
 }
 
@@ -61,16 +59,10 @@ void
                it_push <= pCqueueIterationCount;
                it_push++)
     {
-        fprintf
-            (stderr,
-                "[ATOMIC_STRUCTURE][TESTCASE] Circular Test Push : %08x\r\n\
-                 [ATOMIC_STRUCTURE][TESTCASE] Circular Test Push Next :%08x\r\n",
-                    pCqueue->ptr_cqueue_wrptr.ptr_cqueue_node,
-                        pCqueue->ptr_cqueue_wrptr.ptr_cqueue_node->ptr_cqueue_next);
-        pCqueue->ptr_cqueue_wrptr.ptr_cqueue_node->ptr_cqueue_data
+        pCqueue->ptr_cqueue_wrptr->ptr_cqueue_data
             = it_push;
-        pCqueue->ptr_cqueue_wrptr.ptr_cqueue_node
-            = pCqueue->ptr_cqueue_wrptr.ptr_cqueue_node->ptr_cqueue_next;
+        pCqueue->ptr_cqueue_wrptr
+            = pCqueue->ptr_cqueue_wrptr->ptr_cqueue_next;
     }
 }
 
@@ -85,16 +77,10 @@ uint64_t
                it_pop < pCqueueIterationCount;
                it_pop++)
     {
-        fprintf
-            (stderr,
-                "[ATOMIC_STRUCTURE][TESTCASE] Circular Test Pop : %08x\r\n\
-                 [ATOMIC_STRUCTURE][TESTCASE] Circular Test Pop Next :%08x\r\n",
-                    pCqueue->ptr_cqueue_rdptr.ptr_cqueue_node,
-                        pCqueue->ptr_cqueue_rdptr.ptr_cqueue_node->ptr_cqueue_next);
         CqueueTestcaseResult
-            += (uint64_t)pCqueue->ptr_cqueue_rdptr.ptr_cqueue_node->ptr_cqueue_data;
-        pCqueue->ptr_cqueue_rdptr.ptr_cqueue_node
-            = pCqueue->ptr_cqueue_rdptr.ptr_cqueue_node->ptr_cqueue_next;
+            += (uint64_t)pCqueue->ptr_cqueue_rdptr->ptr_cqueue_data;
+        pCqueue->ptr_cqueue_rdptr
+            = pCqueue->ptr_cqueue_rdptr->ptr_cqueue_next;
     }
 
     return

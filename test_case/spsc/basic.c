@@ -18,17 +18,7 @@ int main(int argc, char** argv)
         SpscIterationCount = atoi(argv[1]),
         SpscTestResult     = 0;
     atomic_spsc
-        SpscQueue          = atomic_spsc_initialize(SpscIterationCount +  1);
-
-    atomic_spsc_read_pointer
-        SpscReader = atomic_spsc_retrieve_read_pointer(SpscQueue);
-    atomic_spsc_write_pointer
-        SpscWriter = atomic_spsc_retrieve_write_pointer(SpscQueue);
-    
-    if(SpscReader.handle == SpscWriter.handle){
-        fprintf(stdout, "[ATOMIC_STRUCTURE][SPSC][FATAL-ERROR] Pointer Error !!\r\n");
-        return 0;
-    }
+        SpscQueue          = atomic_spsc_initialize(SpscIterationCount +  2);
     
     if(!SpscQueue.handle) {
         fprintf(stdout, "[ATOMIC_STRUCTURE][SPSC][FATAL-ERROR] MMAP Failed !!\r\n");
@@ -50,22 +40,21 @@ void
     atomic_structure_testcase_spsc_push
         (atomic_spsc pSpscQueue, size_t pSpscIteration)
 {
-    atomic_spsc_write_pointer
-        SpscWritePointer = atomic_spsc_retrieve_write_pointer(pSpscQueue);
 
     for(size_t it_push  = 1;
-               it_push <= (pSpscIteration); 
+               it_push <= pSpscIteration;
                it_push++)
     {
         size_t*
             SpscPushValue = malloc(8);
         *SpscPushValue
             = it_push;
-        fprintf(stdout, "[ATOMIC_STRUCTURE][SPSC] Push Operation\r\n");
+        fprintf
+            (stdout, "[ATOMIC_STRUCTURE][SPSC] Push Operation\r\n");
 
         
         atomic_spsc_write_to_until_success
-            (pSpscQueue, SpscWritePointer, SpscPushValue);
+            (pSpscQueue, SpscPushValue);
     }
 }
 
@@ -73,18 +62,16 @@ size_t
     atomic_structure_testcase_spsc_pop
         (atomic_spsc pSpscQueue, size_t pSpscIteration)
 {
-    atomic_spsc_read_pointer
-        SpscReadPointer  = atomic_spsc_retrieve_read_pointer(pSpscQueue);
     size_t
         SpscReadValueSum = 0;
     
     for(size_t it_pop = 0;
-               it_pop < pSpscIteration - 1;
+               it_pop < pSpscIteration;
                it_pop++)
     {
         size_t*
             SpscReadValue 
-                = atomic_spsc_read_from_until_success(pSpscQueue, SpscReadPointer);
+                = atomic_spsc_read_from_until_success(pSpscQueue);
         SpscReadValueSum
             += *SpscReadValue;
         fprintf(stdout, "[ATOMIC_STRUCTURE][SPSC] Pop Operation : %d\r\n", *SpscReadValue);

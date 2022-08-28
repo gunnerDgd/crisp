@@ -34,8 +34,6 @@ void
     __atomic_stack_push
         (__atomic_stack* pStack, __atomic_stack_node* pStackNode)
 {
-    __atomic_stack_node*
-        ptr_stack_node;
 #ifdef ATOMIC_STRUCTURE_BUILD_ENVIRONMENT_GNU
     do
     {
@@ -44,8 +42,17 @@ void
     } while
         (!atomic_compare_exchange_weak
             (&pStack->ptr_stack_node,
-                &pStackNode->ptr_node_next, pStackNode));
+                &pStackNode, pStackNode->ptr_node_next));
 #elif ATOMIC_STRUCTURE_BUILD_ENVIRONMENT_MSVC
+    do
+    {
+        pStackNode->ptr_node_next
+            = pStack->ptr_stack_node;
+    } while
+        (InterlockedCompareExchange64
+            (&pStack->ptr_stack_node,
+                pStackNode, pStackNode->ptr_node_next)
+                    != pStackNode->ptr_node_next);
 #else
     static_assert("[FATAL] This Build Environment Does Not Support Atomic Operation.");
 #endif
@@ -70,6 +77,18 @@ __atomic_stack_node*
             (&pStack->ptr_stack_node,
                 &ptr_stack_node, ptr_stack_node->ptr_node_next));
 #elif ATOMIC_STRUCTURE_BUILD_ENVIRONMENT_MSVC
+    do
+    {
+        ptr_stack_node
+            = pStack->ptr_stack_node;
+        
+        if(!ptr_stack_node)
+            return 0;
+    } while
+        (InterlockedCompareExchange64
+            (&pStack->ptr_stack_node,
+                ptr_stack_node->ptr_node_next, ptr_stack_node)
+                    != ptr_stack_node);
 #else
     static_assert("[FATAL] This Build Environment Does Not Support Atomic Operation.");
 #endif

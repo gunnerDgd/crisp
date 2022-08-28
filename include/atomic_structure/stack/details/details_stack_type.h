@@ -13,7 +13,7 @@ typedef struct
 typedef struct
     __atomic_stack
 {
-    volatile 
+    volatile
         __atomic_stack_node*
             ptr_stack_node;
 }   __atomic_stack;

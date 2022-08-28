@@ -41,7 +41,11 @@ void
     for(int i = 1 ; i <= pIteration ; i++)
     {
         atomic_stack_node*
-            AtomicStackNode     = aligned_alloc(16, sizeof(atomic_stack_node));
+#ifdef ATOMIC_STRUCTURE_BUILD_ENVIRONMENT_GNU
+            AtomicStackNode = aligned_alloc(16, sizeof(atomic_stack_node));
+#elif  ATOMIC_STRUCTURE_BUILD_ENVIRONMENT_MSVC
+            AtomicStackNode = _aligned_malloc(16, sizeof(atomic_stack_node));
+#endif
         size_t*
             AtomicStackNodeData = malloc(8);
         
@@ -65,6 +69,9 @@ uint64_t
         AtomicStackSum
             += *(uint64_t*)atomic_stack_node_data 
                             (atomic_stack_pop_until_success(pStack));
+        fprintf
+            (stdout, "[ATOMIC_STRUCTURE][STACK] Pop Sum : %d\r\n",
+                AtomicStackSum);
     }
 
     return

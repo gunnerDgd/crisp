@@ -1,4 +1,4 @@
-#include <atomic_structure/stack/statk_type.h>
+#include <atomic_structure/stack/stack_type.h>
 
 void
     atomic_stack_initialize
