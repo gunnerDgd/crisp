@@ -3,11 +3,11 @@
 
 __atomic_spsc*
     __atomic_spsc_initialize
-        (size_t pSpscNodeCount)
+        (size_t pSpscNodeCount, atomic_allocator* pSpscAllocator)
 {
     return
         __atomic_circular_queue_initialize
-            (pSpscNodeCount);
+            (pSpscNodeCount, pSpscAllocator);
 }
 
 void

@@ -26,7 +26,7 @@ if("${CMAKE_C_COMPILER_ID}" STREQUAL "GNU")
         add_compile_options(-ggdb)
     endif()
 elseif("${CMAKE_C_COMPILER_ID}" STREQUAL "MSVC")
-    message(STATUS "[PRE-BUILD][ENVIRONMENT] GNU Build System Detected.")
+    message(STATUS "[PRE-BUILD][ENVIRONMENT] MSVC Build System Detected.")
     add_compile_definitions(ATOMIC_STRUCTURE_BUILD_ENVIRONMENT_MSVC)
 endif()
 
@@ -35,6 +35,8 @@ if(BUILD_DEBUG_MESSAGE)
 endif()
 
 add_subdirectory(source/details)
+add_subdirectory(source/allocator)
+
 if(FEATURES_ATOMIC_STACK)
     message(STATUS "[PRE-BUILD][FEATURES] atomic_stack")
     add_subdirectory(source/stack)

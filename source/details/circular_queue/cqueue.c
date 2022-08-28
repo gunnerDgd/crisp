@@ -12,20 +12,18 @@
 
 __atomic_circular_queue*
     __atomic_circular_queue_initialize
-        (size_t pCqueueNodeCount)
+        (size_t pCqueueNodeCount, atomic_allocator* pCqueueAllocator)
 {
     __atomic_circular_queue*
         ptr_cqueue
-#ifdef ATOMIC_STRUCTURE_BUILD_ENVIRONMENT_LINUX
-            = mmap
-                (0, __atomic_circular_queue_size(pCqueueNodeCount),
-                    PROT_READ | PROT_WRITE, 
-                        MAP_ANONYMOUS | MAP_PRIVATE, -1, 0);
-#elif  ATOMIC_STRUCTURE_BUILD_ENVIRONMENT_WINDOWS
-            = VirtualAlloc
-                    (0, __atomic_circular_queue_size(pCqueueNodeCount),
-                        MEM_COMMIT, PAGE_READWRITE);
-#endif
+            = pCqueueAllocator->allocate
+                (pCqueueAllocator,
+                    __atomic_circular_queue_size(pCqueueNodeCount), 0);
+    
+    ptr_cqueue->cqueue_node_count
+        = pCqueueNodeCount;
+    ptr_cqueue->cqueue_allocator_ptr
+        = pCqueueAllocator;
     ptr_cqueue->cqueue_node_ptr
         = (uint8_t*)ptr_cqueue + sizeof(__atomic_circular_queue);
 
@@ -61,13 +59,8 @@ void
     __atomic_circular_queue_cleanup
         (__atomic_circular_queue* pCqueue)
 {
-#ifdef ATOMIC_STRUCTURE_BUILD_ENVIRONMENT_LINUX
-    munmap
-        (pCqueue, 
-            __atomic_circular_queue_size(pCqueue->cqueue_node_count));
-        
-#elif  ATOMIC_STRUCTURE_BUILD_ENVIRONMENT_WINDOWS
-    VirtualFree
-        (pCqueue, 0, MEM_FREE);
-#endif
+    pCqueue->cqueue_allocator_ptr->deallocate
+        (pCqueue->cqueue_allocator_ptr, 
+            __atomic_circular_queue_size
+                (pCqueue->cqueue_node_count), pCqueue);
 }

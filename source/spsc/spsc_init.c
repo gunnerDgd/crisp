@@ -3,7 +3,7 @@
 
 atomic_spsc
     atomic_spsc_initialize
-        (size_t pSpscCount)
+        (size_t pSpscCount, atomic_allocator* pSpscAllocator)
 {
     atomic_spsc
         hnd_atomic_spsc = { .handle = 0 };
@@ -12,7 +12,8 @@ atomic_spsc
         return hnd_atomic_spsc;
     else {
         hnd_atomic_spsc.handle
-            = __atomic_spsc_initialize(pSpscCount);
+            = __atomic_spsc_initialize
+                    (pSpscCount, pSpscAllocator);
         return
             hnd_atomic_spsc;
     }

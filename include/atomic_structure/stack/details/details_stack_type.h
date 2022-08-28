@@ -1,4 +1,5 @@
 #pragma once
+#include <atomic_structure/allocator/allocator.h>
 
 typedef struct
     __atomic_stack_node
@@ -13,6 +14,8 @@ typedef struct
 typedef struct
     __atomic_stack
 {
+    atomic_allocator*
+        ptr_stack_allocator;
     volatile
         __atomic_stack_node*
             ptr_stack_node;

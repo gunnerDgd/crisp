@@ -1,57 +1,51 @@
 #include <atomic_structure/stack/stack.h>
 #include <atomic_structure/stack/details/details_stack.h>
 
-void
+atomic_stack
     atomic_stack_initialize
-        (atomic_stack* pStack)
+        (atomic_allocator* pStackAllocator)
 {
-    if(pStack)
-        __atomic_stack_initialize
-            (pStack);
+    atomic_stack
+        ptr_atomic_stack
+            = { .handle = __atomic_stack_initialize(pStackAllocator) };
+    
+    return
+        ptr_atomic_stack;
 }
 
 void
-    atomic_stack_node_initialize
-        (atomic_stack_node* pStackNode, void* pStackNodeData)
+    atomic_stack_cleanup
+        (atomic_stack pStack)
 {
-    if(pStackNode)
-        __atomic_stack_node_initialize
-            (pStackNode, pStackNodeData);
-}
-
-void*
-    atomic_stack_node_data
-        (atomic_stack_node* pStackNode)
-{
-    return
-        __atomic_stack_node_data(pStackNode);
+    __atomic_stack_cleanup
+        (pStack.handle);
 }
 
 void
     atomic_stack_push
-        (atomic_stack* pStack, atomic_stack_node* pStackNode)
+        (atomic_stack pStack, void* pStackNodeData)
 {
-    if(pStack)
+    if(pStack.handle)
         __atomic_stack_push
-            (pStack, pStackNode);
+            (pStack.handle, pStackNodeData);
 }
 
-atomic_stack_node*
+void*
     atomic_stack_pop
-        (atomic_stack* pStack)
+        (atomic_stack pStack)
 {
     return
-        (pStack) 
-            ? __atomic_stack_pop(pStack)
+        (pStack.handle) 
+            ? __atomic_stack_pop(pStack.handle)
                 : 0;
 }
 
-atomic_stack_node*
+void*
     atomic_stack_pop_until_success
-        (atomic_stack* pStack)
+        (atomic_stack pStack)
 {
     return
-        (pStack)
-            ?__atomic_stack_pop_until_success(pStack)
+        (pStack.handle)
+            ?__atomic_stack_pop_until_success(pStack.handle)
                 : 0;
 }

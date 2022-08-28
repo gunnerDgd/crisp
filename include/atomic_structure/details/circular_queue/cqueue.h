@@ -2,7 +2,7 @@
 
 __atomic_circular_queue*
     __atomic_circular_queue_initialize
-        (size_t);
+        (size_t, atomic_allocator*);
 
 void
     __atomic_circular_queue_cleanup

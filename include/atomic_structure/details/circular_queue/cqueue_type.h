@@ -1,7 +1,5 @@
 #pragma once
-
-#include <stdint.h>
-#include <stddef.h>
+#include <atomic_structure/allocator/allocator.h>
 
 typedef struct
     __atomic_circular_queue_node
@@ -19,10 +17,13 @@ typedef struct
 {
     __atomic_circular_queue_node*
         cqueue_node_ptr;
+    size_t
+        cqueue_node_count;
+    atomic_allocator*
+        cqueue_allocator_ptr;
+    
     volatile
         __atomic_circular_queue_node
             *ptr_cqueue_rdptr,
             *ptr_cqueue_wrptr;
-    size_t
-        cqueue_node_count;
 }   __atomic_circular_queue;

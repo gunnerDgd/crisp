@@ -1,4 +1,5 @@
 #include <atomic_structure/spsc/spsc.h>
+#include <atomic_structure/allocator/system_paging.h>
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -17,14 +18,20 @@ int main(int argc, char** argv)
     size_t
         SpscIterationCount = atoi(argv[1]),
         SpscTestResult     = 0;
+    atomic_allocator*
+        SpscQueueAllocator 
+            = atomic_allocator_syspaging_initialize();
     atomic_spsc
-        SpscQueue          = atomic_spsc_initialize(SpscIterationCount +  2);
+        SpscQueue
+            = atomic_spsc_initialize
+                (SpscIterationCount +  2, SpscQueueAllocator);
     
     if(!SpscQueue.handle) {
-        fprintf(stdout, "[ATOMIC_STRUCTURE][SPSC][FATAL-ERROR] MMAP Failed !!\r\n");
+        fprintf
+            (stdout, 
+                "[ATOMIC_STRUCTURE][SPSC][FATAL-ERROR] MMAP Failed !!\r\n");
         return 0;
     }
-
     
     atomic_structure_testcase_spsc_push
         (SpscQueue, SpscIterationCount);
@@ -32,8 +39,15 @@ int main(int argc, char** argv)
         = atomic_structure_testcase_spsc_pop
             (SpscQueue, SpscIterationCount);
 
-    fprintf(stdout, "[ATOMIC_STRUCTURE][SPSC] Test Result : %d\r\n", SpscTestResult);
-    atomic_spsc_cleanup(SpscQueue);
+    fprintf
+        (stdout, 
+            "[ATOMIC_STRUCTURE][SPSC] Test Result : %d\r\n", 
+                SpscTestResult);
+    
+    atomic_spsc_cleanup
+        (SpscQueue);
+    atomic_allocator_syspaging_cleanup
+        (SpscQueueAllocator);
 }
 
 void
@@ -51,7 +65,6 @@ void
             = it_push;
         fprintf
             (stdout, "[ATOMIC_STRUCTURE][SPSC] Push Operation\r\n");
-
         
         atomic_spsc_write_to_until_success
             (pSpscQueue, SpscPushValue);
@@ -74,7 +87,10 @@ size_t
                 = atomic_spsc_read_from_until_success(pSpscQueue);
         SpscReadValueSum
             += *SpscReadValue;
-        fprintf(stdout, "[ATOMIC_STRUCTURE][SPSC] Pop Operation : %d\r\n", *SpscReadValue);
+        fprintf
+            (stdout, 
+                  "[ATOMIC_STRUCTURE][SPSC] Pop Operation : %d\r\n", 
+                    *SpscReadValue);
     }
 
     return
