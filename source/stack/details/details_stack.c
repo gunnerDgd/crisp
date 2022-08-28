@@ -42,7 +42,7 @@ void
     } while
         (!atomic_compare_exchange_weak
             (&pStack->ptr_stack_node,
-                &pStackNode, pStackNode->ptr_node_next));
+                &pStackNode->ptr_node_next, pStackNode));
 #elif ATOMIC_STRUCTURE_BUILD_ENVIRONMENT_MSVC
     do
     {
