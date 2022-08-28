@@ -4,6 +4,7 @@ project (atomic-structure VERSION 0.1.0 LANGUAGES C)
 
 option(FEATURES_ATOMIC_STACK OFF)
 option(FEATURES_ATOMIC_SPSC  OFF)
+option(FEATURES_ATOMIC_MPMC  OFF)
 
 option(BUILD_STATIC_LIBRARY OFF)
 option(BUILD_SHARED_LIBRARY ON)
@@ -45,6 +46,11 @@ endif()
 if(FEATURES_ATOMIC_SPSC)
     message(STATUS "[PRE-BUILD][FEATURES] atomic_spsc")
     add_subdirectory(source/spsc)
+endif()
+
+if(FEATURES_ATOMIC_MPMC)
+    message(STATUS "[PRE-BUILD][FEATURES] atomic_mpmc")
+    add_subdirectory(source/mpmc)
 endif()
 
 if(BUILD_TESTCASE)
