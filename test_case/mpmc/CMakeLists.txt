@@ -9,3 +9,7 @@ target_link_libraries     (testcase_mpmc_basic PRIVATE
 
 target_include_directories(testcase_mpmc_basic PRIVATE ${CMAKE_SOURCE_DIR}/include)
 set_target_properties     (testcase_mpmc_basic PROPERTIES LINKER_LANGUAGE CXX)
+
+if(UNIX AND NOT APPLE)
+    target_link_libraries(testcase_mpmc_basic PRIVATE pthread)
+endif()

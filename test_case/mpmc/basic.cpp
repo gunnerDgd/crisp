@@ -50,6 +50,8 @@ int main(int argc, char** argv)
     atomic_allocator*
         MpmcQueueAllocator
             = atomic_allocator_syspaging_initialize();
+    std::cout
+        << "[ATOMIC_STRUCTURE][MPMC] Allocator Initialized\n";
     size_t
         MpmcQueueNodeCount
             = std::atoi(argv[1]);
@@ -57,8 +59,13 @@ int main(int argc, char** argv)
         MpmcQueue
             = atomic_mpmc_initialize
                     (MpmcQueueNodeCount, MpmcQueueAllocator);
+    std::cout
+        << "[ATOMIC_STRUCTURE][MPMC] MPMC Initialized\n";
     std::atomic<std::size_t>
-        MpmcValidationSum;
+        MpmcValidationSum(0);
+    
+    std::cout
+        << "[ATOMIC_STRUCTURE][MPMC] Test Started\n";
 
 
     for(auto& it_push_thread : MpmcPushThread)
