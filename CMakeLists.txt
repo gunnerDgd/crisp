@@ -1,5 +1,6 @@
 cmake_minimum_required(VERSION 3.0.0)
-set     (CMAKE_C_STANDARD 11)
+set     (CMAKE_C_STANDARD   11)
+set     (CMAKE_CXX_STANDARD 17)
 project (atomic-structure VERSION 0.1.0 LANGUAGES C)
 
 option(FEATURES_ATOMIC_STACK OFF)
