@@ -1,6 +1,6 @@
 #include <atomic_structure/allocator/details/aligned_heap/aheap_manip.h>
 
-#ifdef ATOMIC_STRUCTURE_BUILD_ENVIRONMENT_GCC
+#ifdef ATOMIC_STRUCTURE_BUILD_ENVIRONMENT_GNU
 #include <stdlib.h>
 #include <stdalign.h>
 #elif  ATOMIC_STRUCTURE_BUILD_ENVIRONMENT_MSVC
@@ -13,12 +13,11 @@ void*
          size_t                           pAllocatorSize, 
          void*                            pAllocatorHint)
 {
-#ifdef ATOMIC_STRUCTURE_BUILD_ENVIRONMENT_GCC
+#ifdef ATOMIC_STRUCTURE_BUILD_ENVIRONMENT_GNU
     return
-        aligned_malloc
-            (__atomic_allocator_aligned_heap_allocate_size
-                (pAllocator, pAllocatorSize),
-                    pAllocator->aheap_allocate_alignment);
+        aligned_alloc
+            (pAllocator->aheap_allocate_alignment,
+                pAllocatorSize);
 #elif  ATOMIC_STRUCTURE_BUILD_ENVIRONMENT_MSVC
     return
         _aligned_malloc
@@ -41,8 +40,8 @@ void
          size_t                           pDeallocSize,
          void*                            pDeallocPtr)
 {
-#ifdef ATOMIC_STRUCTURE_BUILD_ENVIRONMENT_GCC
-    aligned_free
+#ifdef ATOMIC_STRUCTURE_BUILD_ENVIRONMENT_GNU
+    free
         (pDeallocPtr);
 #elif  ATOMIC_STRUCTURE_BUILD_ENVIRONMENT_MSVC
     _aligned_free(pDeallocPtr);

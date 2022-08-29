@@ -23,11 +23,7 @@ void
     } while
         (!atomic_compare_exchange_weak
             (&pStack->ptr_stack_node,
-<<<<<<< HEAD:source/stack/details/details_stack_manip.c
-                &ptr_stack_node, ptr_stack_node->ptr_node_next));
-=======
-                &pStackNode->ptr_node_next, pStackNode));
->>>>>>> 5aec088d6d978582ec16fda8aa529c5823d65442:source/stack/details/details_stack.c
+                &ptr_stack_node->ptr_node_next, ptr_stack_node));
 #elif ATOMIC_STRUCTURE_BUILD_ENVIRONMENT_MSVC
     do
     {
