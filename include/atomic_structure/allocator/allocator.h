@@ -1,18 +1,12 @@
 #pragma once
+#include <atomic_structure/allocator/allocator_type.h>
 
-#include <stdint.h>
-#include <stddef.h>
+atomic_allocator
+    atomic_allocator_initialize
+        (atomic_allocator_allocate_t,
+            atomic_allocator_deallocate_t,
+                size_t, size_t, void*);
 
-typedef struct
-    atomic_allocator
-{
-    void*
-        (*allocate)     
-            (struct atomic_allocator*, size_t, void*);
-    size_t
-        (*allocate_alignment)
-            (struct atomic_allocator*);
-    void
-        (*deallocate)
-            (struct atomic_allocator*, size_t, void*);
-}   atomic_allocator;
+void
+    atomic_allocator_cleanup
+        (atomic_allocator);

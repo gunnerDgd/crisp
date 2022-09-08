@@ -18,6 +18,20 @@ atomic_fixed_stack
         ptr_fixed_stack;
 }
 
+atomic_fixed_stack
+    atomic_fixed_stack_initialize_from_existing
+        (void* pFixedStackMemory);
+
+/*
+    Initialize Fixed Stack at Existing Memory. 
+*/
+atomic_fixed_stack
+    atomic_fixed_stack_initialize_from_existing_memory
+        (void* pFixedStackMemory)
+{
+
+}
+
 void
     atomic_fixed_stack_cleanup
         (atomic_fixed_stack pFixedStack)

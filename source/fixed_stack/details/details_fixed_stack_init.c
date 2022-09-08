@@ -7,13 +7,29 @@ __atomic_fixed_stack*
          size_t            pFixedStackNodeSize)
 {
     __atomic_fixed_stack*
-        ptr_fixed_stack
-            = __atomic_fixed_stack_size
-                    (pFixedStackNodeSize, pFixedStackNodeCount);
+        ptr_fixed_stack;
     __atomic_fixed_stack_node*
-        ptr_fixed_stack_node
-            = (uint8_t*)ptr_fixed_stack
-                    + sizeof(__atomic_fixed_stack);
+        ptr_fixed_stack_node;
+    
+    if(pFixedStackAllocator->allocate_max_size
+            (pFixedStackAllocator) < 
+                __atomic_fixed_stack_size
+                    (pFixedStackNodeSize, pFixedStackNodeCount))
+                        return 0;
+
+    if(pFixedStackAllocator->allocate_alignment
+            (pFixedStackAllocator) % 16 != 0)
+                return 0;
+
+    ptr_fixed_stack
+        = pFixedStackAllocator->allocate
+            (pFixedStackAllocator,
+                __atomic_fixed_stack_size
+                    (pFixedStackNodeSize, pFixedStackNodeCount), 0);
+                    
+    ptr_fixed_stack_node
+        = (uint8_t*)ptr_fixed_stack
+                + sizeof(__atomic_fixed_stack);
     
     ptr_fixed_stack->ptr_fixed_stack_allocator
         = pFixedStackAllocator;
