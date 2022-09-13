@@ -10,6 +10,18 @@ atomic_mpmc
             (pMpmcNodeCount, pMpmcAllocator.handle).hnd_mpmc;
 }
 
+atomic_mpmc
+    atomic_mpmc_initialize_from_memory
+        (void*   pMpmcMemory    ,
+         size_t* pMpmcMemorySize, 
+         size_t  pMpmcNodeCount)
+{
+    return
+        __atomic_mpmc_intialize_from_memory
+            (pMpmcMemory, pMpmcMemorySize, pMpmcNodeCount)
+                .hnd_mpmc;
+}
+
 void
     atomic_mpmc_cleanup
         (atomic_mpmc pMpmc)

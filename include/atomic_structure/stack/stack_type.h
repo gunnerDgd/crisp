@@ -5,5 +5,5 @@
 
 typedef struct
     atomic_stack 
-        { void* handle; } 
+        { uint64_t handle[2]; }
             atomic_stack;

@@ -1,5 +1,5 @@
-#include <atomic_structure/stack/details/details_stack.h>
-#include <assert.h>
+#include <atomic_structure/stack/details/details_stack_init.h>
+#include <atomic_structure/stack/details/details_stack_manip.h>
 
 #ifdef ATOMIC_STRUCTURE_BUILD_ENVIRONMENT_GNU
 #include <stdatomic.h>
@@ -34,8 +34,6 @@ void
             (&pStack->ptr_stack_node,
                 ptr_stack_node, ptr_stack_node->ptr_node_next)
                     != ptr_stack_node->ptr_node_next);
-#else
-    static_assert("[FATAL] This Build Environment Does Not Support Atomic Operation.");
 #endif
 }
 
@@ -72,8 +70,6 @@ void*
             (&pStack->ptr_stack_node,
                 ptr_stack_node->ptr_node_next, ptr_stack_node)
                     != ptr_stack_node);
-#else
-    static_assert("[FATAL] This Build Environment Does Not Support Atomic Operation.");
 #endif
     ptr_stack_node_data
         = ptr_stack_node->ptr_node_data;

@@ -7,11 +7,7 @@ __atomic_spsc
 
 __atomic_spsc
     __atomic_spsc_initialize_from_memory
-        (void*, size_t, size_t);
-
-__atomic_spsc
-    __atomic_spsc_initialize_from_circular
-        (__atomic_circular_queue*);
+        (void*, size_t*, size_t);
 
 void
     __atomic_spsc_cleanup

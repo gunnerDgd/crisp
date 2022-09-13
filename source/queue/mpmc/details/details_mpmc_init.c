@@ -25,9 +25,9 @@ __atomic_mpmc
 
 __atomic_mpmc
     __atomic_mpmc_intialize_from_memory
-        (void*  pMpmcMemory, 
-         size_t pMpmcMemorySize, 
-         size_t pMpmcNodeCount)
+        (void*   pMpmcMemory, 
+         size_t* pMpmcMemorySize, 
+         size_t  pMpmcNodeCount)
 {
     __atomic_mpmc
         ptr_mpmc
@@ -38,28 +38,14 @@ __atomic_mpmc
                             (pMpmcMemory, pMpmcMemorySize, pMpmcNodeCount)
               };
     
+    if(!ptr_mpmc.ptr_mpmc_circular)
+        return ptr_mpmc;
+    
     ptr_mpmc.ptr_mpmc_circular->ptr_cqueue_rdptr
         = ptr_mpmc.ptr_mpmc_circular->cqueue_node_ptr;
     ptr_mpmc.ptr_mpmc_circular->ptr_cqueue_wrptr
         = ptr_mpmc.ptr_mpmc_circular->cqueue_node_ptr;
 
-    return
-        ptr_mpmc;
-}
-
-__atomic_mpmc
-    __atomic_mpmc_initialize_from_circular
-        (__atomic_circular_queue* pMpmcExisting)
-{
-    __atomic_mpmc
-        ptr_mpmc
-            = {
-                .ptr_mpmc_allocator = 0,
-                .ptr_mpmc_circular
-                    = __atomic_circular_queue_initialize_from_existing
-                            (pMpmcExisting)
-              };
-    
     return
         ptr_mpmc;
 }

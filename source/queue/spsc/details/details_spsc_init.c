@@ -21,32 +21,15 @@ __atomic_spsc
 
 __atomic_spsc
     __atomic_spsc_initialize_from_memory
-        (void*  pSpscMemory    ,
-         size_t pSpscMemorySize,
-         size_t pSpscNodeCount)
+        (void*   pSpscMemory    ,
+         size_t* pSpscMemorySize,
+         size_t  pSpscNodeCount)
 {
     __atomic_spsc
         ptr_spsc = 
             { .ptr_spsc_circular
                     = __atomic_circular_queue_initialize_from_memory
                             (pSpscNodeCount, pSpscMemorySize, pSpscNodeCount),
-              .ptr_spsc_allocator
-                    = 0
-            };
-
-    return
-        ptr_spsc;
-}
-
-__atomic_spsc
-    __atomic_spsc_initialize_from_circular
-        (__atomic_circular_queue* pSpscExistingCqueue)
-{
-    __atomic_spsc
-        ptr_spsc = 
-            { .ptr_spsc_circular
-                    =__atomic_circular_queue_initialize_from_existing
-                            (pSpscExistingCqueue),
               .ptr_spsc_allocator
                     = 0
             };

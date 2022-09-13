@@ -8,7 +8,7 @@ atomic_spsc
 
 atomic_spsc
     atomic_spsc_initialize_from_memory
-        (void*, size_t, size_t);
+        (void*, size_t*, size_t);
 
 void
     atomic_spsc_cleanup

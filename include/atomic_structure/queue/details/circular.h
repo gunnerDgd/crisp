@@ -7,11 +7,7 @@ __atomic_circular_queue*
 
 __atomic_circular_queue*
     __atomic_circular_queue_initialize_from_memory
-        (void*, size_t, size_t);
-
-__atomic_circular_queue*
-    __atomic_circular_queue_initialize_from_existing
-        (__atomic_circular_queue*);
+        (void*, size_t*, size_t);
 
 #define __atomic_circular_queue_size(pCqueueNodeCount)\
     ((pCqueueNodeCount * sizeof(__atomic_circular_queue_node))\

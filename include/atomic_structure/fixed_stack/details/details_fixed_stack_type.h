@@ -1,5 +1,5 @@
 #pragma once
-#include <atomic_structure/allocator/allocator.h>
+#include <atomic_structure/allocator/details/details_allocator_type.h>
 
 typedef struct
     __atomic_fixed_stack_node
@@ -14,7 +14,7 @@ typedef struct
 typedef struct
     __atomic_fixed_stack
 {
-    atomic_allocator*
+    __atomic_allocator*
         ptr_fixed_stack_allocator;
     size_t
         fixed_stack_node_count,

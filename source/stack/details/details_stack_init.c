@@ -1,5 +1,4 @@
-#include <atomic_structure/stack/details/details_stack.h>
-#include <assert.h>
+#include <atomic_structure/stack/details/details_stack_init.h>
 
 #ifdef ATOMIC_STRUCTURE_BUILD_ENVIRONMENT_GNU
 #include <stdatomic.h>
@@ -7,24 +6,15 @@
 #include <Windows.h>
 #endif
 
-__atomic_stack*
+void
     __atomic_stack_initialize
-        (atomic_allocator* pStackAllocator)
+        (__atomic_stack*     pStackHandle,
+         __atomic_allocator* pStackAllocator)
 {
-    __atomic_stack*
-        ptr_stack
-            = pStackAllocator->allocate
-                (pStackAllocator, sizeof(__atomic_stack), 0);
-    
-    if(!ptr_stack || ptr_stack == -1)
-        return 0;
-
-    ptr_stack->ptr_stack_allocator
+    pStackHandle->ptr_stack_allocator
         = pStackAllocator;
-    ptr_stack->ptr_stack_node
+    pStackHandle->ptr_stack_node
         = 0;
-    
-    return ptr_stack;
 }
 
 __atomic_stack_node*
@@ -50,9 +40,17 @@ void
     __atomic_stack_cleanup
         (__atomic_stack* pStack)
 {
-    pStack->ptr_stack_allocator->deallocate
-        (pStack->ptr_stack_allocator,
-            sizeof(__atomic_stack), pStack);
+    __atomic_stack_node*
+        ptr_node = pStack->ptr_stack_node;
+    
+    while(ptr_node) {
+        __atomic_stack_node*
+            ptr_erase_next
+                = ptr_node->ptr_node_next;
+        
+        __atomic_stack_node_cleanup
+            (pStack, ptr_node);
+    }
 }
 
 void

@@ -32,16 +32,20 @@ __atomic_circular_queue*
 
 __atomic_circular_queue*
     __atomic_circular_queue_initialize_from_memory
-        (void*  pCqueueMemory    ,
-         size_t pCqueueMemorySize,
-         size_t pCqueueNodeCount)
+        (void*   pCqueueMemory    ,
+         size_t* pCqueueMemorySize,
+         size_t  pCqueueNodeCount)
 {
     __atomic_circular_queue*
         ptr_cqueue = pCqueueMemory;
     
     if(pCqueueMemorySize
-            < __atomic_circular_queue_size(pCqueueNodeCount))
-                return 0;
+            < __atomic_circular_queue_size(pCqueueNodeCount)) {
+        *pCqueueMemorySize
+            = __atomic_circular_queue_size(pCqueueNodeCount)
+                    - *pCqueueMemorySize;
+        return 0;
+    }
     
     ptr_cqueue->cqueue_node_count
         = pCqueueNodeCount;
@@ -75,10 +79,3 @@ __atomic_circular_queue*
     return
         ptr_cqueue;
 } 
-
-__atomic_circular_queue*
-    __atomic_circular_queue_initialize_from_existing
-        (__atomic_circular_queue* pCqueueExisting)
-{
-
-}

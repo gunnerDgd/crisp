@@ -1,10 +1,11 @@
+#include <atomic_structure/allocator/details/details_allocator.h>
 #include <atomic_structure/fixed_stack/details/details_fixed_stack_init.h>
 
 __atomic_fixed_stack*
     __atomic_fixed_stack_initialize
-        (atomic_allocator* pFixedStackAllocator, 
-         size_t            pFixedStackNodeCount, 
-         size_t            pFixedStackNodeSize)
+        (__atomic_allocator* pFixedStackAllocator, 
+         size_t              pFixedStackNodeCount, 
+         size_t              pFixedStackNodeSize)
 {
     __atomic_fixed_stack*
         ptr_fixed_stack;
@@ -12,14 +13,12 @@ __atomic_fixed_stack*
         ptr_fixed_stack_node;
     
     if(pFixedStackAllocator->allocate_max_size
-            (pFixedStackAllocator) < 
-                __atomic_fixed_stack_size
+            < __atomic_fixed_stack_size
                     (pFixedStackNodeSize, pFixedStackNodeCount))
                         return 0;
 
-    if(pFixedStackAllocator->allocate_alignment
-            (pFixedStackAllocator) % 16 != 0)
-                return 0;
+    if(pFixedStackAllocator->allocate_alignment % 16 != 0)
+            return 0;
 
     ptr_fixed_stack
         = pFixedStackAllocator->allocate
@@ -73,6 +72,5 @@ void
         (pFixedStack->ptr_fixed_stack_allocator,
             __atomic_fixed_stack_size
                 (pFixedStack->fixed_stack_node_size,
-                    pFixedStack->fixed_stack_node_count),
-                        pFixedStack);
+                    pFixedStack->fixed_stack_node_count), pFixedStack);
 }

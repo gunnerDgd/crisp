@@ -10,7 +10,7 @@ typedef void
     (*atomic_allocator_deallocate_t)
         (void*, size_t, void*);
 
-typedef struct 
+typedef struct
     atomic_allocator
-        { void* handle; }
+        { uint64_t handle[5]; }
             atomic_allocator;

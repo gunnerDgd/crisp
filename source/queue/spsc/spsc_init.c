@@ -11,6 +11,18 @@ atomic_spsc
             (pSpscCount, pSpscAllocator.handle).hnd_spsc;
 }
 
+atomic_spsc
+    atomic_spsc_initialize_from_memory
+        (void*   pSpscMemory, 
+         size_t* pSpscMemorySize, 
+         size_t  pSpscNodeCount)
+{
+    return
+        __atomic_spsc_initialize_from_memory
+            (pSpscMemory, pSpscMemorySize, pSpscNodeCount)
+                .hnd_spsc;
+}
+
 void
     atomic_spsc_cleanup
         (atomic_spsc pSpsc)
