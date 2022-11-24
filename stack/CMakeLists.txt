@@ -15,4 +15,4 @@ add_library(stack.dynamic_stack STATIC
             dynamic_stack.h
             dynamic_stack_controller.h
             dynamic_stack.c
-            dynamic_stack_controller.h)
+            dynamic_stack_controller.c)

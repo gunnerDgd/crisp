@@ -1,5 +1,9 @@
 #pragma once
 
+#define crisp_bool       char
+#define crisp_bool_true  1
+#define crisp_bool_false 0
+
 #define crisp_i8  char
 #define crisp_i16 short
 #define crisp_i32 int

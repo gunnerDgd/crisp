@@ -1,10 +1,10 @@
 #pragma once
 #include "type_spsc.h"
 
-void
+__spsc_head*
 	__spsc_head_initialize
-		(__spsc_head*);
+		(__allocator_entity*, crisp_u64);
 
 void
-	__spsc_node_initialize
-		(__spsc_head*, __spsc_node*, void*);
+	__spsc_head_cleanup
+		(__spsc_head*);

@@ -23,7 +23,7 @@ __dynamic_stack_node*
 		(__dynamic_stack_head* pHead, void* pEntity, crisp_u64 pEntitySize) {
 	__dynamic_stack_node* node_new
 		= pHead->alloc.controller->allocate
-				(&pHead->alloc.base, pEntitySize + sizeof(__dynamic_stack_node));
+				(&pHead->alloc.base, sizeof(__dynamic_stack_node) + pEntitySize);
 
 	if (!node_new) return 0;
 
@@ -31,7 +31,7 @@ __dynamic_stack_node*
 	node_new->head   = pHead;
 	node_new->next   = 0;
 
-	pHead->alloc.controller->copy(node_new->entity, pEntity);
+	pHead->alloc.controller->copy(node_new->entity, pEntity, pEntitySize);
 	return node_new;
 }
 

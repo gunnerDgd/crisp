@@ -12,15 +12,17 @@ typedef struct
 
 typedef struct
 	__dynamic_stack_controller {
-	void  (*push)		 (__dynamic_stack_head*, void* , crisp_u64) ;
+	void  (*push)		 (__dynamic_stack_head*, void* , crisp_u64);
 	void  (*push_bounded)(__dynamic_stack_head*, void**, crisp_u64*, crisp_u64);
 	
-	void* (*pop)		 (__dynamic_stack_head*);
-	void  (*pop_bounded) (__dynamic_stack_head*, void**, crisp_u64);
+	void  (*pop)		 (__dynamic_stack_head*);
+	void  (*pop_bounded) (__dynamic_stack_head*, crisp_u64);
+
+	void* (*peek)		 (__dynamic_stack_head*);
 }	__dynamic_stack_controller;
 
 typedef struct
 	__dynamic_stack_entity {
-	__dynamic_stack_head	   head;
+	__dynamic_stack_head	   head		 ;
 	__dynamic_stack_controller controller;
 }	__dynamic_stack_entity;
