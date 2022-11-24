@@ -8,4 +8,8 @@ add_library(endpoint.list.list STATIC
             list_iterate.c
             list.h
             list_iterate.h
+            dynamic_list.h
+            dynamic_list_iterate.h
+            dynamic_list.c
+            dynamic_list_iterate.c
             type.h)

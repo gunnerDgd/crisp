@@ -6,9 +6,8 @@ typedef __list_node __dynamic_list_node;
 
 typedef struct
 	__dynamic_list_head {
-	__list_head				head	  ;
-	__allocator_base*		alloc_base;
-	__allocator_controller* alloc	  ;
+	__list_head		   head	;
+	__allocator_entity alloc;
 }	__dynamic_list_head;
 
 typedef struct

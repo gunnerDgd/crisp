@@ -25,7 +25,7 @@ void
 		(__dynamic_list_head* pHead, void* pEntity, crisp_u64 pEntitySize) {
 	__dynamic_list_node* node_new
 		= __dynamic_list_node_initialize(pHead, pEntitySize);
-	pHead->alloc->copy
+	pHead->alloc.controller->copy
 		(node_new->entity, pEntity, pEntitySize);
 
 	__list_push_front
@@ -37,7 +37,7 @@ void
 		(__dynamic_list_head* pHead, void* pEntity, crisp_u64 pEntitySize) {
 	__dynamic_list_node* node_new
 		= __dynamic_list_node_initialize(pHead, pEntitySize);
-	pHead->alloc->copy
+	pHead->alloc.controller->copy
 		(node_new->entity, pEntity, pEntitySize);
 
 	__list_push_back
@@ -52,7 +52,7 @@ void
 		 crisp_u64			  pEntitySize) {
 	__dynamic_list_node* node_new
 		= __dynamic_list_node_initialize(pHead, pEntitySize);
-	pHead->alloc->copy
+	pHead->alloc.controller->copy
 		(node_new->entity, pEntity, pEntitySize);
 
 	__list_push_at

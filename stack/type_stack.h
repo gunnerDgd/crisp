@@ -24,6 +24,6 @@ typedef struct
 
 typedef struct
 	__stack_entity {
-	__stack_head	   head;
-	__stack_controller controller;
+	__stack_head	    head;
+	__stack_controller* controller;
 }	__stack_entity;

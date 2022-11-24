@@ -8,6 +8,8 @@ include_directories(${CMAKE_SOURCE_DIR})
 add_subdirectory(base)
 add_subdirectory(list)
 add_subdirectory(stack)
+add_subdirectory(queue)
 add_subdirectory(atomic)
 
 add_subdirectory(crisp/list)
+add_subdirectory(crisp/allocator)

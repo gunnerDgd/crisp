@@ -3,7 +3,7 @@
 
 void
 	__dynamic_list_head_initialize
-		(__dynamic_list_head*, __allocator_base*, __allocator_controller*);
+		(__dynamic_list_head*, __allocator_entity*);
 
 void
 	__dynamic_list_head_cleanup
