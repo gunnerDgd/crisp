@@ -20,10 +20,11 @@ __list_controller*
 void
 	__list_push_front
 		(__list_head* pHead, __list_node* pNode) {
-	pNode->prev		 = 0;
-	pNode->next		 = pHead->frontmost;
-	pHead->frontmost = pNode;
+	pNode->prev	  = 0;
+	pNode->next	  = pHead->frontmost;
+	pNode->entity = (crisp_u8*)pNode + sizeof(__list_node);
 
+	pHead->frontmost = pNode;
 	if (!pHead->backmost)
 		 pHead->backmost  = pNode;
 	else
@@ -33,10 +34,11 @@ void
 void
 	__list_push_back
 		(__list_head* pHead, __list_node* pNode) {
-	pNode->next		= 0;
-	pNode->prev		= pHead->backmost;
-	pHead->backmost = pNode;
+	pNode->next	  = 0;
+	pNode->prev	  = pHead->backmost;
+	pNode->entity = (crisp_u8*)pNode + sizeof(__list_node);
 
+	pHead->backmost = pNode;
 	if (!pHead->frontmost)
 	 	 pHead->frontmost = pNode;
 	else
@@ -49,8 +51,9 @@ void
 	if (!pNode || !pNodeAt)
 		return; // Invalid Parameter.
 		
-	pNode->prev = pNodeAt;
-	pNode->next = pNodeAt->next;
+	pNode->prev   = pNodeAt;
+	pNode->next   = pNodeAt->next;
+	pNode->entity = (crisp_u8*)pNode + sizeof(__list_node);
 
 	if(pNodeAt->next)
 		pNodeAt->next->prev = pNode;
@@ -63,10 +66,12 @@ __list_node*
 
 	if (!pHead->frontmost) // Empty List
 		return node_popped;
-	pHead->frontmost
-		= pHead->frontmost->next;
+	pHead->frontmost = pHead->frontmost->next;
+
 	if (!pHead->frontmost)
-		 pHead->backmost = 0; // If the Popped Node was Last Node;
+		pHead->backmost = 0; // If the Popped Node was Last Node;
+	else
+		pHead->frontmost->prev = 0;
 
 	return node_popped;
 }
@@ -89,10 +94,14 @@ __list_node*
 void
 	__list_pop_at
 		(__list_head* pHead, __list_node* pNode) {
-	if (!pNode->prev)
+	if (!pNode->prev) {
 		__list_pop_front(pHead);
-	if (!pNode->next)
+		return;
+	}
+	if (!pNode->next) {
 		__list_pop_back (pHead);
+		return;
+	}
 
 	pNode->prev->next = pNode->next;
 	pNode->next->prev = pNode->prev;

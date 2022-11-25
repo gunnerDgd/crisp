@@ -18,3 +18,5 @@ add_subdirectory(crisp/atomic)
 add_subdirectory(crisp/allocator)
 
 add_subdirectory(examples/list)
+add_subdirectory(examples.performance/list)
+add_subdirectory(examples/queue)

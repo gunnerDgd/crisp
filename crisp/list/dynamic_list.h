@@ -6,6 +6,10 @@ void
 		(crisp_dynamic_list*, crisp_allocator*);
 
 void
+	crisp_dynamic_list_cleanup
+		(crisp_dynamic_list*);
+
+void
 	crisp_dynamic_list_push_front
 		(crisp_dynamic_list*, void*, crisp_u64);
 

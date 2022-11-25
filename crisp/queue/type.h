@@ -3,4 +3,4 @@
 
 typedef struct
 	crisp_queue
-		{ crisp_u64 opaque[8]; } crisp_queue;
+		{ crisp_u64 opaque[2]; } crisp_queue;

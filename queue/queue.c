@@ -15,12 +15,14 @@ __queue_head*
 	for(crisp_u64 init_it = 0;
 				  init_it < pCount - 1;
 				  init_it++) {
-		head->node[init_it].next = &head->node[init_it + 1];
-		head->node[init_it].head = head;
+		head->node[init_it].next   = &head->node[init_it + 1];
+		head->node[init_it].head   = head;
+		head->node[init_it].entity = 0;
 	}
 
-	head->node[pCount - 1].next = &head->node[0];
-	head->node[pCount - 1].head =  head;
+	head->node[pCount - 1].next   = &head->node[0];
+	head->node[pCount - 1].head   =  head;
+	head->node[pCount - 1].entity =  0;
 
 	head->push_ptr = head->node->next;
 	head->pop_ptr  = head->node;

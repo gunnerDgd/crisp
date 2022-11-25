@@ -9,3 +9,10 @@ add_executable(examples.list.dynamic_list dynamic_list.c)
 target_link_libraries(examples.list.list PUBLIC
                       list.list
                       endpoint.list.list)
+
+target_link_libraries(examples.list.dynamic_list PUBLIC
+                      base.allocator.stdlib
+                      endpoint.allocator.standard_library
+                      list.list
+                      list.dynamic_list
+                      endpoint.list.list)

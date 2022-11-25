@@ -9,20 +9,20 @@ void
 	crisp_dynamic_list_begin
 		(crisp_dynamic_list*		  pList,
 		 crisp_dynamic_list_iterator* pIterator) {
-	__list_iterator*     iterator = pIterator;
-	__dynamic_list_head* head	  = pList;
+	__list_iterator*       iterator = pIterator;
+	__dynamic_list_entity* head	    = pList;
 
-	iterator->node = head->head.frontmost;
+	iterator->node = head->head.head.frontmost;
 }
 
 void
 	crisp_dynamic_list_end
 		(crisp_dynamic_list*		  pList,
 		 crisp_dynamic_list_iterator* pIterator) {
-	__list_iterator*     iterator = pIterator;
-	__dynamic_list_head* head	  = pList;
+	__list_iterator*       iterator = pIterator;
+	__dynamic_list_entity* head	    = pList;
 
-	iterator->node = head->head.backmost;
+	iterator->node = head->head.head.backmost;
 }
 
 void

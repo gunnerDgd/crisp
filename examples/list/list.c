@@ -9,16 +9,16 @@ typedef struct node_struct {
 	int				value;
 }	node_struct;
 
-void print_value(node_struct* node) {
-	printf("Node Value : %d\n", node->value);
+void print_value(int* node) {
+	printf("Node Value : %d\n", *node);
 }
 
 int main() {
 	crisp_list list;
 	crisp_list_initialize(&list);
 
-	for(crisp_u64 i = 0	 ;
-				  i < 100;
+	for(crisp_u64 i = 0;
+				  i < 5;
 				  i++) {
 		node_struct* node = malloc(sizeof(node_struct));
 					 node->value = i;

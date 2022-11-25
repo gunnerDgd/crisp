@@ -19,4 +19,4 @@ typedef struct
 
 typedef struct
 	crisp_dynamic_list
-		{ crisp_u8 opaque[32]; } crisp_dynamic_list;
+		{ crisp_u8 opaque[64]; } crisp_dynamic_list;

@@ -49,8 +49,8 @@ void*
 	if (pHead->pop_ptr->next == pHead->push_ptr)
 		return 0;
 
-	void* pop_ptr = pHead->pop_ptr->entity;
 					pHead->pop_ptr = pHead->pop_ptr->next;
+	void* pop_ptr = pHead->pop_ptr->entity;
 
 	return pop_ptr;
 }

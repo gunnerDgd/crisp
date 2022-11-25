@@ -3,7 +3,7 @@
 #include <crisp/allocator/type.h>
 
 void
-	crisp_queue_intitialize
+	crisp_queue_initialize
 		(crisp_queue*, crisp_allocator*, crisp_u64);
 
 void

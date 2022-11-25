@@ -4,7 +4,7 @@
 #include <queue/queue_controller.h>
 
 void
-	crisp_queue_intitialize
+	crisp_queue_initialize
 		(crisp_queue* pHead, crisp_allocator* pAlloc, crisp_u64 pSize) {
 	__queue_entity* queue			  = pHead;
 					queue->head		  = __queue_head_initialize(pAlloc, pSize);
@@ -22,8 +22,10 @@ crisp_bool
 	crisp_queue_push
 		(crisp_queue* pHead, void* pEntity) {
 	__queue_entity* queue = pHead;
+
 	return
-		__queue_push(&queue->head, pEntity);
+		queue->controller->push
+			(queue->head, pEntity);
 }
 
 void
@@ -31,7 +33,7 @@ void
 		(crisp_queue* pHead, void* pEntity) {
 	__queue_entity* queue = pHead;
 	queue->controller->push_until_success
-		(&queue->head, pEntity);
+		(queue->head, pEntity);
 }
 
 crisp_u64
@@ -40,7 +42,7 @@ crisp_u64
 	__queue_entity* queue = pHead;
 	return
 		queue->controller->push_bounded
-			(&queue->head, pEntityArray, pEntityCount);
+			(queue->head, pEntityArray, pEntityCount);
 }
 
 void*
@@ -48,7 +50,7 @@ void*
 		(crisp_queue* pHead) {
 	__queue_entity* queue = pHead;
 	return
-		queue->controller->pop(&queue->head);
+		queue->controller->pop(queue->head);
 }
 
 void*
@@ -57,7 +59,7 @@ void*
 	__queue_entity* queue = pHead;
 	return
 		queue->controller->pop_until_success
-			(&queue->head);
+			(queue->head);
 }
 
 crisp_u64
@@ -66,5 +68,5 @@ crisp_u64
 	__queue_entity* queue = pHead;
 	return
 		queue->controller->pop_bounded
-			(&queue->head, pEntityArray, pEntityCount);
+			(queue->head, pEntityArray, pEntityCount);
 }
