@@ -13,6 +13,7 @@ add_subdirectory(atomic)
 
 add_subdirectory(crisp/list)
 add_subdirectory(crisp/stack)
+add_subdirectory(crisp/queue)
 add_subdirectory(crisp/atomic)
 add_subdirectory(crisp/allocator)
 

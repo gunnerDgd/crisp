@@ -6,4 +6,6 @@ project(crisp.endpoint.atomic
 add_library(endpoint.atomic STATIC
             type.h
             stack.h
-            stack.c)
+            stack.c
+            spsc.h
+            spsc.c)

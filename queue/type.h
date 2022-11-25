@@ -20,11 +20,11 @@ typedef struct
 	__queue_controller {
 	crisp_bool (*push)			    (__queue_head*, void*);
 	void	   (*push_until_success)(__queue_head*, void*); // For SPSC / MPMC Support. Not for Generic Circular Queue.
-	crisp_bool (*push_bounded)	    (__queue_head*, void**, crisp_u64);
+	crisp_u64  (*push_bounded)	    (__queue_head*, void**, crisp_u64);
 
 	void*	   (*pop)			    (__queue_head*);
 	void*	   (*pop_until_success) (__queue_head*);		// For SPSC / MPMC Support. Not for Generic Circular Queue.
-	crisp_bool (*pop_bounded)	    (__queue_head*, void**, crisp_u64);
+	crisp_u64  (*pop_bounded)	    (__queue_head*, void**, crisp_u64);
 }	__queue_controller;
 
 typedef struct
