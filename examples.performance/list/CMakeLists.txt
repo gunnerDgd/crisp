@@ -14,4 +14,7 @@ target_link_libraries(examples.pf.list PUBLIC
                       endpoint.allocator.standard_library
                       list.list
                       list.dynamic_list
-                      endpoint.list.list)
+                      list.turbo_list
+                      endpoint.list.list
+                      turbo_list_x86_64_msvc
+                      )

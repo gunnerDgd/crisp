@@ -12,4 +12,6 @@ add_library(endpoint.list.list STATIC
             dynamic_list_iterate.h
             dynamic_list.c
             dynamic_list_iterate.c
+            turbo_list.h
+            turbo_list.c
             type.h)

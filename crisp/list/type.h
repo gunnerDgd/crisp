@@ -17,6 +17,9 @@ typedef struct
 	crisp_list
 		{ crisp_u8 opaque[32]; } crisp_list;
 
+typedef crisp_list	    crisp_turbo_list;
+typedef crisp_list_node crisp_turbo_list_node;
+
 typedef struct
 	crisp_dynamic_list
 		{ crisp_u8 opaque[64]; } crisp_dynamic_list;
