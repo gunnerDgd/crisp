@@ -17,15 +17,19 @@ section .text
 
 __turbo_list_push_front:
     mov rbx, qword[rcx]              ; pHead->frontmost
+    mov rax, qword[rcx + 0x08]       ; pHead->backmost
     
+    mov      qword[rdx + 0x18], rdx  ; pNode->entity = (crisp_u8*)pNode + sizeof(__list_node*);
+    add      qword[rdx + 0x18], 0x20
+
     mov      qword[rdx + 0x08], rbx  ; pNode->next = pHead->frontmost
     mov      qword[rdx]       , 0x00 ; pNode->prev = 0
     mov      qword[rcx]       , rdx  ; pHead->frontmost = pNode;
 
-    test rbx, rbx
-    jne  __turbo_list_set_old_frontmost ; if(pHead->frontmost)
-    mov  qword[rcx + 0x08], rdx         ; if(pHead->frontmost)
-                                        ;   pHead->backmost = pNode;
+    cmp rax, 0x00
+    jne __turbo_list_set_old_frontmost ; if(!pHead->backmost)
+    mov qword[rcx + 0x08], rdx         ;     pHead->backmost = pNode;
+
     ret
 
 __turbo_list_set_old_frontmost:
@@ -41,15 +45,19 @@ __turbo_list_set_old_frontmost:
 
 __turbo_list_push_back:
     mov rbx, qword[rcx + 0x08]      ; pHead->backmost
+    mov rax, qword[rcx]             ; pHead->frontmost
+
+    mov      qword[rdx + 0x18], rdx  ; pNode->entity = (crisp_u8*)pNode + sizeof(__list_node*);
+    add      qword[rdx + 0x18], 0x20
     
     mov      qword[rdx]       , rbx  ; pNode->prev = pHead->backmost
     mov      qword[rdx + 0x08], 0x00 ; pNode->next = 0
     mov      qword[rcx + 0x08], rdx  ; pHead->backmost = pNode
 
-    test rbx, rbx
-    jne  __turbo_list_set_old_backmost ; if(pHead->backmost)
-    mov  qword[rcx], rdx               ; if(!pHead->backmost)
-                                       ;    pHead->frontmost = pNode;
+    cmp rax, 0x00
+    jne __turbo_list_set_old_backmost ; if(pHead->frontmost)
+    mov qword[rcx], rdx               ;     pHead->frontmost = pNode;
+
     ret
 
 __turbo_list_set_old_backmost:
@@ -65,13 +73,16 @@ __turbo_list_set_old_backmost:
 ; R8  : (__list_node*) pNodeAt
 
 __turbo_list_push_at:
-    mov  rbx, qword[rbx]
-    test rbx, rbx
-    je   __turbo_list_push_front
+    mov rbx, qword[rcx]
+    cmp rbx, 0x00
+    je  __turbo_list_push_front
 
-    mov  rbx, qword[rbx + 0x08]
-    test rbx, rbx
-    je   __turbo_list_push_back
+    mov rbx, qword[rcx + 0x08]
+    cmp rbx, 0x00
+    je  __turbo_list_push_back
+
+    mov      qword[rdx + 0x18], rdx  ; pNode->entity = (crisp_u8*)pNode + sizeof(__list_node*);
+    add      qword[rdx + 0x18], 0x20
 
     mov  r9, qword[r8  + 0x08]      ; pNodeAt->next
     mov      qword[r8  + 0x08], rdx ; pNodeAt->next       = pNode
@@ -88,15 +99,15 @@ __turbo_list_push_at:
 ; RCX : (__list_head*) pHead
 
 __turbo_list_pop_front:
-    mov  rax, qword[rcx] ; (Return) = pHead->frontmost
-    test rax, rax
+    mov rax, qword[rcx] ; (Return) = pHead->frontmost
+    cmp rax, 0x00
     
     je   __pop_front_empty
     mov  rbx, qword[rax + 0x08] ; pHead->frontmost->next
     mov       qword[rcx], rbx   ; pHead->frontmost = pHead->frontmost->next
     
-    test rbx, rbx
-    je   __pop_front_last
+    cmp rbx, 0x00
+    je  __pop_front_last
     ret
 __pop_front_empty:
     ret
@@ -111,15 +122,15 @@ __pop_front_last:
 ; RCX : (__list_head*) pHead
 
 __turbo_list_pop_back:
-    mov  rax, qword[rcx + 0x08] ; (Return) = pHead->backmost
-    test rax, rax               ; if(!pHead->backmost)
+    mov rax, qword[rcx + 0x08] ; (Return) = pHead->backmost
+    cmp rax, 0x00               ; if(!pHead->backmost)
     
     je   __pop_back_empty
     mov  rbx, qword[rax]             ; pHead->backmost->prev
     mov       qword[rcx + 0x08], rbx ; pHead->backmost = pHead->backmost->prev
     
-    test rbx, rbx
-    je   __pop_back_last
+    cmp rbx, 0x00
+    je  __pop_back_last
     ret
 __pop_back_empty:
     ret ; return;
@@ -135,12 +146,12 @@ __pop_back_last:
 ; RDX : (__list_node*) pNodeAt
 
 __turbo_list_pop_at:
-    mov  rax, qword[rdx]
-    test rax, rax
+    mov rax, qword[rdx]
+    cmp rax, 0x00
     je   __turbo_list_pop_front
     
-    mov  rax, qword[rdx + 0x08]
-    test rax, rax
+    mov rax, qword[rdx + 0x08]
+    cmp rax, 0x00
     je   __turbo_list_pop_back
 
     mov  r8, qword[rdx]        ; pNodeAt->prev

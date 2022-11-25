@@ -6,12 +6,12 @@ extern "C"
 #include <crisp/list/turbo_list.h>
 
 #include <crisp/allocator/standard_library.h>
-}
 
-struct node_struct {
+typedef struct node_struct {
 	crisp_turbo_list_node node ;
 	crisp_u64			  value;
-};
+}	node_struct;
+}
 
 void
 	pf_list_initialize

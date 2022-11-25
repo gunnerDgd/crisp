@@ -17,7 +17,7 @@ crisp_u64
 	for(crisp_u64 push_count = 0;
 				  push_count < pCount;
 				  push_count++) {
-		auto push_value = new node_struct;
+		auto push_value		   = new node_struct[2];
 			 push_value->value = push_count;
 		
 		crisp_list_push_back(pList, (crisp_list_node*)push_value);
@@ -35,7 +35,7 @@ crisp_u64
 	pf_begin = __rdtsc();
 	for(crisp_u64 pop_count = 0		;
 				  pop_count < pCount;
-				  pop_count++) {
+				  pop_count++)		{
 		auto pop_value = (node_struct*)crisp_list_pop_back(pList);
 		std::cout << pop_value->value << std::endl;
 	}

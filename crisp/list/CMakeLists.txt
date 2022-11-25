@@ -3,7 +3,7 @@ project(crisp.endpoint.list
         VERSION 0.1.0
         LANGUAGES C)
 
-add_library(endpoint.list.list STATIC
+add_library(endpoint.list.lib STATIC
             list.c
             list_iterate.c
             list.h
@@ -12,6 +12,4 @@ add_library(endpoint.list.list STATIC
             dynamic_list_iterate.h
             dynamic_list.c
             dynamic_list_iterate.c
-            turbo_list.h
-            turbo_list.c
             type.h)
