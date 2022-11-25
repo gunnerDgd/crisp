@@ -20,23 +20,27 @@ __list_controller*
 void
 	__list_push_front
 		(__list_head* pHead, __list_node* pNode) {
-	pNode->prev = 0;
-	pNode->next = pHead->frontmost;
+	pNode->prev		 = 0;
+	pNode->next		 = pHead->frontmost;
+	pHead->frontmost = pNode;
 
-	if (!pHead->frontmost)
+	if (!pHead->backmost)
 		 pHead->backmost  = pNode;
-	 	 pHead->frontmost = pNode;
+	else
+		 pNode->next->prev = pNode;
 }
 
 void
 	__list_push_back
 		(__list_head* pHead, __list_node* pNode) {
-	pNode->next = 0;
-	pNode->prev = pHead->backmost;
+	pNode->next		= 0;
+	pNode->prev		= pHead->backmost;
+	pHead->backmost = pNode;
 
-	if (!pHead->backmost)
-		 pHead->backmost  = pNode;
+	if (!pHead->frontmost)
 	 	 pHead->frontmost = pNode;
+	else
+		 pNode->prev->next = pNode;
 }
 
 void

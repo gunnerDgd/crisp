@@ -34,7 +34,7 @@ void
 	__list_iterator_for_each
 		(__list_iterator* pIterator, void(*pFunc)(void*)) {
 	while(pIterator->node) {
-		pFunc(pIterator->node->entity);
+		pFunc(pIterator->node);
 		pIterator->node
 			= pIterator->node->next;
 	}

@@ -4,44 +4,31 @@
 
 typedef struct
 	__queue_node {
-	struct __queue_node* next;
+	struct __queue_node* next  ;
 	void			   * head  ,
 					   * entity;
 }	__queue_node;
 
 typedef struct
 	__queue_head {
-	__queue_node* node,
-				* read, *write; // For Circular Queue Support. Most Of Linear Queue Does not use this member.
+	__queue_node	 * node,
+					 * push_ptr, *pop_ptr;
+	__allocator_entity alloc;
 }	__queue_head;
 
 typedef struct
-	__dynamic_queue_head {
-	__queue_head	   head ;
-	__allocator_entity alloc;
-}	__dynamic_queue_head;
-
-typedef struct
 	__queue_controller {
-	void		  (*push)			   (__queue_head*, __queue_node*);
-	void		  (*push_until_success)(__queue_head*, __queue_node*);
-	void		  (*push_bounded)	   (__queue_head*, __queue_node**, crisp_u64);
+	crisp_bool (*push)			    (__queue_head*, void*);
+	void	   (*push_until_success)(__queue_head*, void*); // For SPSC / MPMC Support. Not for Generic Circular Queue.
+	crisp_bool (*push_bounded)	    (__queue_head*, void**, crisp_u64);
 
-	__queue_node* (*pop)			   (__queue_head*);
-	__queue_node* (*pop_until_success) (__queue_head*);
-	void		  (*pop_bounded)	   (__queue_head*, __queue_node**, crisp_u64);
+	void*	   (*pop)			    (__queue_head*);
+	void*	   (*pop_until_success) (__queue_head*);		// For SPSC / MPMC Support. Not for Generic Circular Queue.
+	crisp_bool (*pop_bounded)	    (__queue_head*, void**, crisp_u64);
 }	__queue_controller;
 
 typedef struct
-	__dynamic_queue_controller {
-	void	   (*push)			    (__dynamic_queue_head*, void*, crisp_u64);
-	void	   (*push_until_success)(__dynamic_queue_head*, void*, crisp_u64);
-	void	   (*push_bounded)	    (__dynamic_queue_head*, void*, crisp_u64);
-
-	crisp_bool (*pop)			    (__dynamic_queue_head*);
-	void	   (*pop_until_success) (__dynamic_queue_head*);
-	void	   (*pop_bounded)	    (__dynamic_queue_head*, crisp_u64);
-
-	void*	   (*peek)				(__dynamic_queue_head*);
-}	__dynamic_queue_controller;
-
+	__queue_entity {
+	__queue_head*	    head;
+	__queue_controller* controller;
+}	__queue_entity;

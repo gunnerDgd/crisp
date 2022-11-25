@@ -26,9 +26,7 @@ set_target_properties(stack_controller_x86_64_msvc
 add_library(atomic.spsc STATIC
             type_spsc.h
             spsc.h
-            spsc_controller.h
-            spsc.c
-            spsc_controller.c)
+            spsc.c)
 
 add_library(atomic.stack STATIC
             type_stack.h

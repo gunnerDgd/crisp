@@ -1,38 +1,42 @@
 #include "spsc.h"
 
-__spsc_head*
-	__spsc_head_initialize
-		(__allocator_entity* pAlloc, crisp_u64 pNodeCount) {
-	__spsc_head* head
-		= pAlloc->controller->allocate
-			(&pAlloc->base, 
-			 sizeof(__spsc_head) +
-			 sizeof(__spsc_node) * pNodeCount);
-	__spsc_node* node
-		= (crisp_u8*)head + sizeof(__spsc_head);
+__queue_controller
+__queue_controller_spsc =
+	{
+		.push				= &__spsc_push				,
+		.push_bounded		= &__spsc_push_bounded		,
+		.push_until_success = &__spsc_push_until_success,
 
-	for(crisp_u64 it_init = 0;
-				  it_init < pNodeCount - 1 ;
-				  it_init++) {
-		node[it_init].next   = &node[it_init + 1];
-		node[it_init].head   = head;
-		node[it_init].entity = 0;
-	}
+		.pop			    = &__spsc_pop,
+		.pop_bounded	    = &__spsc_pop_bounded,
+		.pop_until_success  = &__spsc_pop_until_success,
+	};
 
-	node[pNodeCount - 1].next   = node;
-	node[pNodeCount - 1].head   = head;
-	node[pNodeCount - 1].entity = 0;
-
-	head->read  = node;
-	head->write = node->next;
-
-	return head;
+__queue_controller*
+	__spsc_default_controller() {
+		return
+			&__queue_controller_spsc;
 }
 
-void
-	__spsc_head_cleanup
-		(__spsc_head* pSpsc) {
-	__allocator_entity alloc = pSpsc->alloc;
-	alloc.controller->deallocate
-		(&alloc.base, pSpsc);
+crisp_u64
+	__spsc_push_bounded
+		(__spsc_head* pHead, void** pEntityArray, crisp_u64 pEntityCount) {
+	for(crisp_u64 push_count = 0			;
+				  push_count < pEntityCount ;
+				  push_count++)
+		__spsc_push_until_success(pHead, pEntityArray[pEntityCount]);
+
+	return pEntityCount;
+}
+
+crisp_u64
+	__spsc_pop_bounded
+		(__spsc_head* pHead, void** pEntityArray, crisp_u64 pEntityCount) {
+	for(crisp_u64 pop_count = 0;
+				  pop_count < pEntityCount ;
+				  pop_count++)
+		pEntityArray[pEntityCount]
+			= __spsc_pop_until_success(pHead);
+
+	return pEntityCount;
 }
