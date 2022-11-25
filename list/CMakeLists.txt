@@ -16,7 +16,3 @@ add_library(crisp.list.lib STATIC
             dynamic_list_controller.h
             dynamic_list.h
             type_dynamic_list.h)
-
-if(FEATURE_CRISP_TURBO)
-        add_subdirectory(turbo)
-endif()

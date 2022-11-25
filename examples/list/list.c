@@ -26,7 +26,8 @@ int main() {
 		crisp_list_push_front(&list, node);
 	}
 
-	crisp_list_iterator iterator;
-	crisp_list_begin   (&list, &iterator);
-	crisp_list_for_each(&iterator, &print_value);
+	crisp_list_iterator begin , end;
+	crisp_list_begin   (&list , &begin);
+	crisp_list_end     (&list , &end);
+	crisp_list_for_each(&begin, &end, &print_value);
 }

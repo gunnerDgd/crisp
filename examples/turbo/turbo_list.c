@@ -1,4 +1,4 @@
-#include <crisp/list/turbo_list.h>
+#include <crisp/turbo/turbo_list.h>
 #include <crisp/list/list.h>
 #include <crisp/list/list_iterate.h>
 
@@ -15,19 +15,19 @@ void print_value(int* pValue) {
 }
 
 int main() {
-	crisp_turbo_list			 list    ;
-	crisp_list_iterator			 iterator;
+	crisp_turbo_list			 list      ;
+	crisp_list_iterator			 begin, end;
 	crisp_turbo_list_initialize(&list);
 
-	for(crisp_u64 push_count = 0 ;
-				  push_count < 10;
-				  push_count++)	   {
+	for(crisp_u64 push_count = 0;
+						   push_count < 5;
+						   push_count++)	   {
 		node_type* push_value		 = malloc(sizeof(node_type));
 				   push_value->value = push_count;
-
 		crisp_list_push_front(&list, push_value);
 	}
 
-	crisp_list_begin   (&list, &iterator);
-	crisp_list_for_each(&list, &print_value);
+	crisp_list_begin   (&list, &begin);
+	crisp_list_end     (&list, &end);
+	crisp_list_for_each(&begin, &end, &print_value);
 }

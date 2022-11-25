@@ -6,14 +6,18 @@ project(crisp.examples.pf.list
 add_executable       (examples.pf.list 
                       pf_list.h
                       pf_stl_list.h
+                      pf_turbo.h
                       pf_list.cpp
                       pf_stl_list.cpp
+                      pf_turbo.cpp
                       main.cpp)
 
 target_link_libraries(examples.pf.list PUBLIC
-                      base.allocator.stdlib
-                      endpoint.allocator.standard_library
+                      crisp.base.lib
                       crisp.list.lib
-                      endpoint.list.list
-                      turbo_list_x86_64_msvc
+                      crisp.turbo.lib
+                      endpoint.list.lib
+                      endpoint.allocator.lib
+                      endpoint.turbo.lib
+                      crisp.arch.x86_64.msvc
                       )

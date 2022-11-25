@@ -1,5 +1,6 @@
 #include "dynamic_list_iterate.h"
 
+#include <list/list.h>
 #include <list/list_iterate.h>
 
 #include <list/dynamic_list.h>
@@ -9,20 +10,14 @@ void
 	crisp_dynamic_list_begin
 		(crisp_dynamic_list*		  pList,
 		 crisp_dynamic_list_iterator* pIterator) {
-	__list_iterator*       iterator = pIterator;
-	__dynamic_list_entity* head	    = pList;
-
-	iterator->node = head->head.head.frontmost;
+	__list_iterator_initialize_begin(pList, pIterator);
 }
 
 void
 	crisp_dynamic_list_end
 		(crisp_dynamic_list*		  pList,
 		 crisp_dynamic_list_iterator* pIterator) {
-	__list_iterator*       iterator = pIterator;
-	__dynamic_list_entity* head	    = pList;
-
-	iterator->node = head->head.head.backmost;
+	__list_iterator_initialize_end(pList, pIterator);
 }
 
 void
@@ -46,7 +41,8 @@ void*
 
 void
 	crisp_dynamic_list_for_each
-		(crisp_dynamic_list_iterator* pIterator, 
+		(crisp_dynamic_list_iterator* pBegin,
+		 crisp_dynamic_list_iterator* pEnd  ,
 		 void					   (* pFunc)(void*)) {
-	__list_iterator_for_each(pIterator, pFunc);
+	__list_iterator_for_each(pBegin, pEnd, pFunc);
 }

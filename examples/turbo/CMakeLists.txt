@@ -7,6 +7,6 @@ add_executable(examples.turbo.turbo_list   turbo_list.c)
 target_link_libraries(examples.turbo.turbo_list PUBLIC
                       crisp.list.lib
                       crisp.turbo.lib
+                      crisp.arch.x86_64.msvc
                       endpoint.list.lib
-                      endpoint.turbo.lib
-                      turbo_list_x86_64_msvc)
+                      endpoint.turbo.lib)

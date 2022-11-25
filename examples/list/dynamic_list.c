@@ -21,7 +21,8 @@ int main() {
 				  i++)
 		crisp_dynamic_list_push_front(&list, &i, sizeof(crisp_u64));
 
-	crisp_dynamic_list_iterator iterator;
-	crisp_dynamic_list_begin   (&list, &iterator);
-	crisp_dynamic_list_for_each(&iterator, &print_value);
+	crisp_dynamic_list_iterator begin, end;
+	crisp_dynamic_list_begin   (&list, &begin);
+	crisp_dynamic_list_end     (&list, &end);
+	crisp_dynamic_list_for_each(&begin, &end, &print_value);
 }

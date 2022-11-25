@@ -23,4 +23,4 @@ void*
 
 void
 	crisp_list_for_each
-		(crisp_list_iterator*, void(*)(void*));
+		(crisp_list_iterator*, crisp_list_iterator*, void(*)(void*));

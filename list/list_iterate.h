@@ -15,4 +15,4 @@ void*
 
 void
 	__list_iterator_for_each
-		(__list_iterator*, void(*)(void*));
+		(__list_iterator*, __list_iterator*, void(*)(void*));

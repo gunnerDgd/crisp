@@ -13,7 +13,7 @@ target_link_libraries(examples.list.list PUBLIC
 target_link_libraries(examples.list.dynamic_list PUBLIC
                       crisp.base.lib
                       crisp.list.lib
-                      endpoint.base.lib
+                      endpoint.allocator.lib
                       endpoint.list.lib)
 
 if(FEATURE_CRISP_TURBO)

@@ -52,3 +52,7 @@ typedef struct
 
 #define __list_entity_pop_at(pEntity, pNode)\
 	((__list_controller*)((pEntity)->controller))->pop_at(&((pEntity)->head), pNode)
+
+extern __list_node
+	   __list_node_placeholder_front,
+	   __list_node_placeholder_back ;

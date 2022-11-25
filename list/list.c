@@ -1,10 +1,31 @@
 #include "list.h"
 
+__list_node
+__list_node_placeholder_front = 
+	{
+		.next   = 0,
+		.prev   = 0,
+
+		.head   = 0,
+		.entity = 0
+	},
+__list_node_placeholder_back = 
+	{
+		.next   = 0,
+		.prev   = 0,
+
+		.head   = 0,
+		.entity = 0
+	};
+
 void
 	__list_head_initialize
 		(__list_head* pHead) {
-	pHead->backmost  = 0;
-	pHead->frontmost = 0;
+	pHead->backmost  = &__list_node_placeholder_back ;
+	pHead->frontmost = &__list_node_placeholder_front;
+
+	pHead->frontmost->next = pHead->backmost ;
+	pHead->backmost ->prev = pHead->frontmost;
 }
 
 void
@@ -25,7 +46,7 @@ void
 void
 	__list_iterator_initialize_begin
 		(__list_head* pHead, __list_iterator* pIterator) {
-	pIterator->node = pHead->frontmost;
+	pIterator->node = pHead->frontmost->next;
 }
 
 void

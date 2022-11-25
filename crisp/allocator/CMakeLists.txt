@@ -3,6 +3,6 @@ project(crisp.endpoint.allocator
         VERSION 0.1.0
         LANGUAGES C)
 
-add_library(endpoint.allocator.standard_library STATIC
+add_library(endpoint.allocator.lib STATIC
             standard_library.h
             standard_library.c)
