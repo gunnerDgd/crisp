@@ -5,8 +5,10 @@ project(crisp.examples.atomic
 
 add_executable(examples.atomic.spsc spsc.c)
 target_link_libraries(examples.atomic.spsc PUBLIC
-                      base.allocator.stdlib
-                      endpoint.allocator.standard_library
-                      queue.queue
-                      atomic.spsc
-                      endpoint.atomic)
+                      crisp.arch.x86_64.msvc
+                      crisp.base.lib
+                      crisp.atomic.lib
+                      crisp.queue.lib
+                      endpoint.queue.lib
+                      endpoint.allocator.lib
+                      endpoint.atomic.lib)

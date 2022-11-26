@@ -19,6 +19,6 @@ void
 void
 	crisp_spsc_cleanup
 		(crisp_spsc* pHead) {
-	__queue_entity* spsc = pHead;
-	__queue_head_cleanup(spsc->head);
+	__queue_head_cleanup
+		(((__queue_entity*)pHead)->head);
 }

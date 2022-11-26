@@ -3,7 +3,7 @@ project(crisp.queue
         VERSION 0.1.0
         LANGUAGES C)
 
-add_library(queue.queue STATIC
+add_library(crisp.queue.lib STATIC
             queue.h
             queue_controller.h
             queue.c

@@ -58,6 +58,10 @@ endif()
 if(FEATURE_CRISP_ATOMIC)
         add_subdirectory(atomic)
         add_subdirectory(crisp/atomic)
+
+        if(OPTION_BUILD_EXAMPLE)
+                add_subdirectory(examples/atomic)
+        endif()
 endif()
 
 if(FEATURE_CRISP_TURBO)

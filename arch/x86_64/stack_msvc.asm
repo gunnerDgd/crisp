@@ -12,11 +12,10 @@ section .text
 
 __atomic_stack_push:
     mov rax, qword[rcx]
-__do_stack_push:
     mov     qword[rdx], rax
-    cmpxchg qword[rcx], rdx
 
-    jnz __do_stack_push
+    cmpxchg qword[rcx], rdx
+    jnz     __atomic_stack_push
     ret
 
 ;__atomic_dynamic_stack_node*
@@ -27,9 +26,9 @@ __do_stack_push:
 
 __atomic_stack_pop:
     mov rax, qword[rcx]
-__do_stack_pop:
     mov rbx, qword[rax] ; next pointer
+
     cmpxchg  qword[rcx], rbx
-    jnz __do_stack_pop
+    jnz      __atomic_stack_pop
 
     ret
