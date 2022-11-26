@@ -3,7 +3,7 @@ project(crisp.endpoint.stack
         VERSION 0.1.0
         LANGUAGES C)
 
-add_library(endpoint.stack STATIC
+add_library(endpoint.stack.lib STATIC
             type.h
             stack.h
             dynamic_stack.h
