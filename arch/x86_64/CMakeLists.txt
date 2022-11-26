@@ -14,7 +14,8 @@ project(crisp.arch
 add_library(crisp.arch.x86_64.msvc
             spsc_msvc.asm
             stack_msvc.asm
-            turbo_list_msvc.asm)
+            turbo_list_msvc.asm
+            turbo_stack_msvc.asm)
 
 set_target_properties(crisp.arch.x86_64.msvc
                       PROPERTIES
