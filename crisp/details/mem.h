@@ -9,11 +9,11 @@ typedef struct
         mem_handle_t;
 
 typedef struct mem_trait_t {
-    c_u64_t (*copy)       (struct mem_t*, struct mem_t*) ;
-    c_u64_t (*copy_from)  (struct mem_t*, void*, c_u64_t);
-    c_u64_t (*copy_to)    (struct mem_t*, void*, c_u64_t);
-    c_u64_t (*move)       (struct mem_t*, struct mem_t*) ;
-    void*   (*get_pointer)(struct mem_t*)                ;
+    c_u64_t (*copy)       (struct mem_t*, struct mem_t*)                  ;
+    c_u64_t (*copy_from)  (struct mem_t*, void*, c_u64_t)                 ;
+    c_u64_t (*copy_to)    (struct mem_t*, void*, c_u64_t)                 ;
+    c_u64_t (*move)       (struct mem_t*, struct mem_t*)                  ;
+    void*   (*get_pointer)(struct mem_t*)                                 ;
 }   mem_trait_t;
 
 typedef struct
@@ -39,12 +39,24 @@ c_u64_t
         (mem_t*, mem_t*);
 
 c_u64_t
+    mem_copy_with_offset
+        (mem_t*, c_u64_t, mem_t*, c_u64_t);
+
+c_u64_t
     mem_copy_from
         (mem_t*, void*, c_u64_t);
 
 c_u64_t
+    mem_copy_from_with_offset
+        (mem_t*, c_u64_t, void*, c_u64_t);
+
+c_u64_t
     mem_copy_to
         (mem_t*, void*, c_u64_t);
+
+c_u64_t
+    mem_copy_to_with_offset
+        (mem_t*, c_u64_t, void*, c_u64_t);
 
 c_u64_t
     mem_move
