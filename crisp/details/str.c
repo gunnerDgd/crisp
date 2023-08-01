@@ -6,7 +6,7 @@
 c_bool_t
 	str_init(str_t* par_str, alloc_t* par_str_alloc) {
 		par_str->alloc     = par_str_alloc;
-		par_str->alloc_mem = mem_init(par_str->alloc, 16); if (!par_str) return false;
+		par_str->alloc_mem = mem_init(par_str->alloc, 16); if (!par_str->alloc_mem) return false;
 		
 		par_str->off_back  = 0;
 		par_str->off_front = 0;
@@ -19,7 +19,7 @@ c_bool_t
 c_bool_t
 	str_init_as_clone(str_t* par_str, str_t* par_str_clone) {
 		par_str->alloc     = par_str_clone->alloc;
-		par_str->alloc_mem = mem_init(par_str->alloc, par_str->alloc_mem->handle.size); if (!par_str) return false;
+		par_str->alloc_mem = mem_init(par_str->alloc, par_str->alloc_mem->handle.size); if (!par_str->alloc_mem) return false;
 		par_str->ptr       = mem_ptr (par_str->alloc_mem);
 
 		memcpy(par_str->ptr, par_str_clone->ptr + par_str_clone->off_front, (par_str_clone->off_back - par_str_clone->off_front));
