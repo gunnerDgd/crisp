@@ -49,7 +49,7 @@ struct mem_t*
                 mem->handle.size  = par_alloc_clone->handle.size ;
                 mem->handle.alloc = par_alloc                    ;
 
-                mem_copy(mem, par_alloc_clone);
+                memcpy(mem->handle.ptr, par_alloc_clone->handle.ptr, mem->handle.size);
         return  mem;
 }
 

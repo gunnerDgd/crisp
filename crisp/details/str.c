@@ -185,7 +185,7 @@ c_u64_t
 }
 
 c_u64_t
-	str_find_ptr(str_t* par_str, c_u64_t par_off, const char* par_find) {
+	str_find_cstr(str_t* par_str, c_u64_t par_off, const char* par_find) {
 		c_u64_t len		 = (par_str ->off_back - par_str ->off_front),
 				len_find = strlen(par_find);
 

@@ -61,7 +61,7 @@ c_u64_t
 		(str_t*, c_u64_t, str_t*);
 
 c_u64_t
-	str_find_ptr
+	str_find_cstr
 		(str_t*, c_u64_t, const char*);
 
 c_bool_t
