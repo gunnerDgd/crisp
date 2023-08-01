@@ -22,15 +22,15 @@ c_bool_t
 
 c_u64_t
     c_mem_copy
-        (c_mem_t, c_mem_t);
+        (c_mem_t, c_u64_t, c_mem_t, c_u64_t);
 
 c_u64_t
     c_mem_copy_from
-        (c_mem_t, void*, c_u64_t);
+        (c_mem_t, c_u64_t, void*, c_u64_t);
 
 c_u64_t
     c_mem_copy_to
-        (c_mem_t, void*, c_u64_t);
+        (c_mem_t, c_u64_t, void*, c_u64_t);
 
 c_u64_t
     c_mem_move

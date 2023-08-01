@@ -7,6 +7,8 @@
 #include <string.h>
 #include <stdlib.h>
 
+#include <Windows.h>
+
 c_bool_t
     cstd_alloc_init(alloc_t* par_alloc){
         return true;
