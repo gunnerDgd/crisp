@@ -5,7 +5,7 @@
 #include <crisp/type_atomic.h>
 
 typedef struct
-    alloc_handle_t { c_u64_t handle[248]; }
+    alloc_handle_t { c_u8_t handle[248]; }
         alloc_handle_t;
 
 typedef struct alloc_trait_t {

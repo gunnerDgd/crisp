@@ -7,6 +7,12 @@
 #include <stdbool.h>
 #endif
 
+#ifdef CRISP_PRESET_WIN32
+#include <stdint.h>
+#include <stddef.h>
+#include <stdbool.h>
+#endif
+
 typedef uint8_t  c_u8_t ;
 typedef uint16_t c_u16_t;
 typedef uint32_t c_u32_t;

@@ -1,12 +1,11 @@
 cmake_minimum_required(VERSION 3.10)
 
-add_compile_definitions(CRISP_PRESET_LINUX)
+add_compile_definitions(CRISP_PRESET_WIN32)
 add_compile_definitions(CRISP_PRESET_ARCH_X86_64)
 
 enable_language    (ASM_NASM)
 set                (CMAKE_ASM_NASM_COMPILE_OBJECT "<CMAKE_ASM_NASM_COMPILER> <INCLUDES> <FLAGS> -o <OBJECT> <SOURCE>")
 add_compile_options("$<$<COMPILE_LANGUAGE:ASM_NASM>:-f $<IF:$<BOOL:$<TARGET_PROPERTY:NASM_OBJ_FORMAT>>, \ $<TARGET_PROPERTY:NASM_OBJ_FORMAT>, ${CMAKE_ASM_NASM_OBJECT_FORMAT}>>")
-
 
 project    (crisp)
 add_library(crisp STATIC
@@ -31,9 +30,6 @@ add_library(crisp STATIC
         ${CMAKE_SOURCE_DIR}/crisp/details/str.h
         ${CMAKE_SOURCE_DIR}/crisp/details/str.c
 
-        ${CMAKE_SOURCE_DIR}/crisp/extension/details/file.h
-        ${CMAKE_SOURCE_DIR}/crisp/extension/details/file.c
-
         ${CMAKE_SOURCE_DIR}/crisp/details/atomic.h
         ${CMAKE_SOURCE_DIR}/crisp/atomic.h
         ${CMAKE_SOURCE_DIR}/crisp/atomic.c
@@ -53,9 +49,14 @@ add_library(crisp STATIC
         ${CMAKE_SOURCE_DIR}/crisp/list.h
         ${CMAKE_SOURCE_DIR}/crisp/list.c
 
-        ${CMAKE_SOURCE_DIR}/crisp/extension/file.c
-        ${CMAKE_SOURCE_DIR}/crisp/extension/file.c
+        ${CMAKE_SOURCE_DIR}/crisp/str.h
+        ${CMAKE_SOURCE_DIR}/crisp/str.c
 )
 
-add_library          (crisp-arch ${CMAKE_SOURCE_DIR}/crisp/details-arch/x86_64/x86_64_gcc_atomic.asm)
-set_target_properties(crisp-arch PROPERTIES NASM_OBJ_FORMAT elf64)
+add_library          (crisp-arch ${CMAKE_SOURCE_DIR}/crisp/details-arch/x86_64/x86_64_msvc_atomic.asm)
+set_target_properties(crisp-arch PROPERTIES NASM_OBJ_FORMAT win64)
+
+if(CRISP_BUILD_EXAMPLES)
+        add_executable       (crisp-example.str ${CMAKE_SOURCE_DIR}/crisp-example/str.c)
+        target_link_libraries(crisp-example.str crisp crisp-arch)
+endif()
