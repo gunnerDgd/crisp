@@ -7,6 +7,8 @@
 #include <string.h>
 #include <stdlib.h>
 
+#include <Windows.h>
+
 c_bool_t
     cstd_alloc_init(alloc_t* par_alloc){
         return true;
@@ -47,7 +49,7 @@ struct mem_t*
                 mem->handle.size  = par_alloc_clone->handle.size ;
                 mem->handle.alloc = par_alloc                    ;
 
-                mem_copy(mem, par_alloc_clone);
+                memcpy(mem->handle.ptr, par_alloc_clone->handle.ptr, mem->handle.size);
         return  mem;
 }
 

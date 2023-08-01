@@ -33,8 +33,8 @@ list_element_t*
     list_push_back(list_t* par_list, object_t* par_object) {
         if(!par_list->alloc) return 0;
 
-        mem_t          *ret_mem = mem_init(par_list->alloc, sizeof(list_element_t)); if(!ret_mem) return 0;
-        list_element_t *ret     = mem_ptr (ret_mem);
+        mem_t          *ret_mem   = mem_init(par_list->alloc, sizeof(list_element_t)); if(!ret_mem) return 0;
+        list_element_t *ret       = mem_ptr (ret_mem);
 
                         ret->mem  =  ret_mem;
                         ret->next = &par_list->end;
@@ -49,8 +49,8 @@ list_element_t*
 
 list_element_t*
     list_push_front(list_t* par_list, object_t* par_object) {
-        mem_t          *ret_mem = mem_init(par_list->alloc, sizeof(list_element_t)); if(!ret_mem) return 0;
-        list_element_t *ret     = mem_ptr (ret_mem);
+        mem_t          *ret_mem   = mem_init(par_list->alloc, sizeof(list_element_t)); if(!ret_mem) return 0;
+        list_element_t *ret       = mem_ptr (ret_mem);
 
                         ret->next =  par_list->begin.next;
                         ret->prev = &par_list->begin;
@@ -67,8 +67,9 @@ list_element_t*
         if(!par_at)                   return 0;
         if (par_at->list != par_list) return 0;
 
-        mem_t          *ret_mem = mem_init(par_list->alloc, sizeof(list_element_t)); if(!ret_mem) return 0;
-        list_element_t *ret     = mem_ptr (ret_mem);
+        mem_t          *ret_mem   = mem_init(par_list->alloc, sizeof(list_element_t)); if(!ret_mem) return 0;
+        list_element_t *ret       = mem_ptr (ret_mem);
+
                         ret->mem  = ret_mem     ;
                         ret->prev = par_at      ;
                         ret->next = par_at->next;
@@ -82,44 +83,35 @@ list_element_t*
 
 object_t*
     list_pop_front(list_t* par_list) {
-        list_element_t *ret_elem = par_list->begin.next;
+        list_element_t *ret_elem = par_list->begin.next; if (ret_elem == &par_list->end) return 0;
         object_t       *ret      = ret_elem->elem;
 
-        if(ret_elem == &par_list->end) return 0;
-
-        ret_elem->prev->next = ret_elem->next;
-        ret_elem->next->prev = ret_elem->prev;
+                        ret_elem->prev->next = ret_elem->next;
+                        ret_elem->next->prev = ret_elem->prev;
 
         mem_deinit(ret_elem->mem);
-
         return (object_deinit(ret)) ? 0 : ret;
 }
 
 object_t*
     list_pop_back(list_t* par_list) {
-        list_element_t *ret_elem = par_list->end.prev;
+        list_element_t *ret_elem = par_list->end.prev; if (ret_elem == &par_list->begin) return 0;
         object_t       *ret      = ret_elem->elem;
 
-        if(ret_elem == &par_list->begin) return 0;
-
-        ret_elem->prev->next = ret_elem->next;
-        ret_elem->next->prev = ret_elem->prev;
+                        ret_elem->prev->next = ret_elem->next;
+                        ret_elem->next->prev = ret_elem->prev;
 
         mem_deinit(ret_elem->mem);
-
         return (object_deinit(ret)) ? 0 : ret;
 }
 
 object_t*
     list_pop_at(list_t* par_list, list_element_t* par_pop) {
-        if(par_pop->list != par_list) return 0;
+        object_t *ret = par_pop->elem; if (par_pop->list != par_list) return 0;
 
-        object_t *ret = par_pop->elem;
-
-        par_pop->prev->next = par_pop->next;
-        par_pop->next->prev = par_pop->prev;
+                        par_pop->prev->next = par_pop->next;
+                        par_pop->next->prev = par_pop->prev;
 
         mem_deinit(par_pop->mem);
-
         return (object_deinit(ret)) ? 0 : ret;
 }

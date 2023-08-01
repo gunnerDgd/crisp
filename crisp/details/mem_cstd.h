@@ -8,6 +8,10 @@ c_u64_t
         (mem_t*, mem_t*);
 
 c_u64_t
+    cstd_mem_copy_with_offset
+        (mem_t*, mem_t*);
+
+c_u64_t
     cstd_mem_copy_from
         (mem_t*, void*, c_u64_t);
 
