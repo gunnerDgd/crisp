@@ -31,9 +31,6 @@ add_library(crisp STATIC
         ${CMAKE_SOURCE_DIR}/crisp/details/str.h
         ${CMAKE_SOURCE_DIR}/crisp/details/str.c
 
-        ${CMAKE_SOURCE_DIR}/crisp/extension/details/file.h
-        ${CMAKE_SOURCE_DIR}/crisp/extension/details/file.c
-
         ${CMAKE_SOURCE_DIR}/crisp/details/atomic.h
         ${CMAKE_SOURCE_DIR}/crisp/atomic.h
         ${CMAKE_SOURCE_DIR}/crisp/atomic.c
@@ -52,9 +49,6 @@ add_library(crisp STATIC
 
         ${CMAKE_SOURCE_DIR}/crisp/list.h
         ${CMAKE_SOURCE_DIR}/crisp/list.c
-
-        ${CMAKE_SOURCE_DIR}/crisp/extension/file.c
-        ${CMAKE_SOURCE_DIR}/crisp/extension/file.c
 )
 
 add_library          (crisp-arch ${CMAKE_SOURCE_DIR}/crisp/details-arch/x86_64/x86_64_gcc_atomic.asm)

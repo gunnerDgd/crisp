@@ -26,5 +26,5 @@ c_bool_t
 
 void*
     c_object_ptr(c_object_t par_object) {
-        return par_object.ptr;
+        return (c_u8_t*)par_object.ptr + sizeof(object_t);
 }
