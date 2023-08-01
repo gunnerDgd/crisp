@@ -2,8 +2,8 @@
 #include "details/object.h"
 
 c_object_t
-    c_object_init(c_alloc_t* par_object, c_u64_t par_object_size) {
-        c_object_t ret = { .ptr = object_init(par_object, par_object_size) };
+    c_object_init(c_alloc_t* par_object, c_object_trait_t* par_trait, c_u64_t par_object_size) {
+        c_object_t ret = { .ptr = object_init(par_object, par_trait, par_object_size) };
         return     ret;
 }
 

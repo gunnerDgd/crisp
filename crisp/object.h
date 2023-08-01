@@ -7,17 +7,16 @@
 #include <crisp/alloc.h>
 #include <crisp/mem.h>
 
-#define c_object_type(name, element)     \
-    typedef struct name {                \
-        struct { c_u64_t __head__[3]; }; \
-        element                          \
-    }   name;
-
-c_handle_t(c_object_t)
+c_handle_t    (c_object_t)
+typedef struct c_object_trait_t {
+    void (*init_as_clone)(void*, void*);
+    void (*init_as_ref)  (void*);
+    void (*deinit)       (void*);
+}   c_object_trait_t;
 
 c_object_t
     c_object_init
-        (c_alloc_t*, c_u64_t);
+        (c_alloc_t*, c_object_trait_t*, c_u64_t);
 
 c_object_t
     c_object_init_as_clone
