@@ -20,8 +20,3 @@ c_bool_t
     c_object_deinit(c_object_t* par_object) {
         return object_deinit(par_object);
 }
-
-void*
-    c_object_ptr(c_object_t* par_object) {
-        return ((object_t*)par_object)->self;
-}
