@@ -8,14 +8,15 @@
 #include <crisp/details/alloc.h>
 
 typedef struct object_trait_t {
-	c_bool_t (*init)		 (struct object_t*, void*);
-    c_bool_t (*init_as_clone)(struct object_t*, struct object_t*);
-    c_bool_t (*init_as_ref)  (struct object_t*);
-    c_bool_t (*deinit)       (struct object_t*);
+	c_bool_t (*init)		 (void*, void*);
+    c_bool_t (*init_as_clone)(void*, struct object_t*);
+    c_bool_t (*init_as_ref)  (void*);
+    c_bool_t (*deinit)       (void*);
 }   object_trait_t;
 
 typedef struct object_t {
     mem_t          *mem  ;
+	void		   *self ;
     alloc_t        *alloc;
     c_atomic_u64_t  ref  ;
     object_trait_t *trait;
