@@ -33,8 +33,4 @@ c_object_t*
 c_bool_t
     c_object_deinit
         (c_object_t*);
-
-void*
-    c_object_ptr
-        (c_object_t*);
 #endif
