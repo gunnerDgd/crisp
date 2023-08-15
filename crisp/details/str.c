@@ -132,7 +132,14 @@ void
 
 void
 	str_push_front_cstr(str_t* par_str, const char* par_push) {
-		
+		mem_t  *mem_str	     = par_str ->alloc_mem;
+		c_u64_t len_str		 = par_str ->off_back - par_str ->off_front,
+				len_str_push = strlen(par_push);
+
+		if (par_str->off_front < len_str_push) str_reserve_front(par_str, len_str_push);
+
+		par_str->off_front -= len_str_push;
+		memcpy(par_str->ptr + par_str->off_front, par_push, len_str_push);
 }
 
 void
@@ -209,7 +216,7 @@ c_bool_t
 	str_gt(str_t *par_lhs, str_t* par_rhs) {
 		c_u64_t len_lhs = (par_lhs->off_back - par_lhs->off_front),
 				len_rhs = (par_rhs->off_back - par_rhs->off_front);
-		int         res = strncmp(par_lhs->ptr, par_rhs->ptr, max(len_lhs, len_rhs));
+		int         res = strncmp(par_lhs->ptr, par_rhs->ptr, (len_lhs > len_rhs) ? len_lhs : len_rhs);
 
 		return (res) ? (res > 0) : (len_lhs > len_rhs);
 }
@@ -218,7 +225,7 @@ c_bool_t
 	str_lt(str_t *par_lhs, str_t* par_rhs) {
 		c_u64_t len_lhs = (par_lhs->off_back - par_lhs->off_front),
 				len_rhs = (par_rhs->off_back - par_rhs->off_front);
-		int         res = strncmp(par_lhs->ptr, par_rhs->ptr, max(len_lhs, len_rhs));
+		int         res = strncmp(par_lhs->ptr, par_rhs->ptr, (len_lhs > len_rhs) ? len_lhs : len_rhs);
 
 		return (res) ? (res < 0) : (len_lhs < len_rhs);
 }
