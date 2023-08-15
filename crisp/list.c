@@ -17,69 +17,48 @@ c_bool_t
 }
 
 c_list_elem_t
-    c_list_push_back(c_list_t* par_list, c_object_t par_object) {
-        c_handle_init(c_list_elem_t, ret, list_push_back(par_list, par_object.ptr));
-        return        ret;
+    c_list_push_back(c_list_t* par_list, c_object_t* par_object) {
+        return list_push_back(par_list, par_object);
 }
 
 c_list_elem_t
-    c_list_push_front(c_list_t* par_list, c_object_t par_object) {
-        c_handle_init(c_list_elem_t, ret, list_push_front(par_list, par_object.ptr));
-        return ret;
+    c_list_push_front(c_list_t* par_list, c_object_t* par_object) {
+        return list_push_front(par_list, par_object);
 }
 
 c_list_elem_t
-    c_list_push_at(c_list_t* par_list, c_object_t par_push, c_list_elem_t par_push_at) {
-        c_handle_init(c_list_elem_t, ret, list_push_at(par_list, c_handle_ptr(par_push), c_handle_ptr(par_push_at)));
-        return        ret;
+    c_list_push_at(c_list_t* par_list, c_object_t* par_push, c_list_elem_t par_push_at) {
+        return list_push_at(par_list, par_push, par_push_at);
 }
 
-c_object_t
+c_object_t*
     c_list_pop_front(c_list_t* par_list) {
-        c_handle_init(c_object_t, ret, list_pop_front(par_list));
-        return ret;
+        return list_pop_front(par_list);
 }
 
-c_object_t
+c_object_t*
     c_list_pop_back(c_list_t* par_list) {
-        c_handle_init(c_object_t, ret, list_pop_back(par_list));
-        return ret;
+        return list_pop_back(par_list);
 }
 
-c_object_t
+c_object_t*
     c_list_pop_at(c_list_t* par_list, c_list_elem_t par_pop_at) {
-        c_handle_init(c_object_t, ret, list_pop_at(par_list, c_handle_ptr(par_pop_at)));
-        return ret;
+        return list_pop_at(par_list, par_pop_at);
 }
 
 c_list_elem_t
     c_list_elem_next(c_list_elem_t par_elem) {
-        list_element_t *ret_elem = c_handle_typed_ptr(par_elem, list_element_t*);
-        c_handle_init(c_list_elem_t, ret, 0);
-
-        if(!ret_elem) return ret;
-        ret.ptr = ret_elem->next;
-
-        return ret;
+        list_element_t *ret_elem = par_elem;
+		return (ret_elem->next) ? ret_elem : 0;
 }
 
 c_list_elem_t
     c_list_elem_prev(c_list_elem_t par_elem) {
-        list_element_t *ret_elem = c_handle_typed_ptr(par_elem, list_element_t*);
-        c_handle_init(c_list_elem_t, ret, 0);
-
-        if(!ret_elem) return ret;
-        ret.ptr = ret_elem->prev;
-
-        return ret;
+        list_element_t *ret_elem = par_elem;
+		return (ret_elem->next) ? ret_elem : 0;
 }
 
-c_object_t
+c_object_t*
     c_list_elem_object(c_list_elem_t par_elem) {
-        list_element_t *ret_elem = c_handle_typed_ptr(par_elem, list_element_t*);
-        c_handle_init(c_object_t, ret, 0);
-
-        if(!ret_elem) return ret;
-        c_handle_ptr(par_elem) = ret_elem->elem;
-        return ret;
+        return (par_elem) ? ((list_element_t*)par_elem)->elem : 0;
 }

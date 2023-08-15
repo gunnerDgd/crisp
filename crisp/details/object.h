@@ -8,9 +8,10 @@
 #include <crisp/details/alloc.h>
 
 typedef struct object_trait_t {
-    void (*init_as_clone)(void*, void*);
-    void (*init_as_ref)  (void*);
-    void (*deinit)       (void*);
+	c_bool_t (*init)		 (struct object_t*, void*);
+    c_bool_t (*init_as_clone)(struct object_t*, struct object_t*);
+    c_bool_t (*init_as_ref)  (struct object_t*);
+    c_bool_t (*deinit)       (struct object_t*);
 }   object_trait_t;
 
 typedef struct object_t {
@@ -22,7 +23,7 @@ typedef struct object_t {
 
 object_t*
     object_init
-        (alloc_t*, object_trait_t*, c_u64_t);
+        (alloc_t*, c_u64_t, object_trait_t*, void*);
 
 object_t*
     object_init_as_clone

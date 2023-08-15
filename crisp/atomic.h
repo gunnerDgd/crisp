@@ -68,4 +68,102 @@ c_atomic_u64_t
     c_atomic_sub_u64
         (c_atomic_u64_t *, c_atomic_u64_t );
 
+
+c_atomic_i8_t
+    c_atomic_inc_i8
+        (c_atomic_i8_t *, c_atomic_i8_t );
+
+c_atomic_i16_t
+    c_atomic_inc_i16
+        (c_atomic_i16_t *, c_atomic_i16_t );
+
+c_atomic_i32_t
+    c_atomic_inc_i32
+        (c_atomic_i32_t *, c_atomic_i32_t );
+
+c_atomic_i64_t
+    c_atomic_inc_i64
+        (c_atomic_i64_t *, c_atomic_i64_t );
+
+c_atomic_u8_t
+    c_atomic_inc_u8
+        (c_atomic_u8_t *, c_atomic_u8_t );
+
+c_atomic_u16_t
+    c_atomic_inc_u16
+        (c_atomic_u16_t *, c_atomic_u16_t );
+
+c_atomic_u32_t
+    c_atomic_inc_u32
+        (c_atomic_u32_t *, c_atomic_u32_t );
+
+c_atomic_u64_t
+    c_atomic_inc_u64
+        (c_atomic_u64_t *, c_atomic_u64_t );
+
+
+c_atomic_i8_t
+    c_atomic_dec_i8
+        (c_atomic_i8_t *, c_atomic_i8_t );
+
+c_atomic_i16_t
+    c_atomic_dec_i16
+        (c_atomic_i16_t *, c_atomic_i16_t );
+
+c_atomic_i32_t
+    c_atomic_dec_i32
+        (c_atomic_i32_t *, c_atomic_i32_t );
+
+c_atomic_i64_t
+    c_atomic_dec_i64
+        (c_atomic_i64_t *, c_atomic_i64_t );
+
+c_atomic_u8_t
+    c_atomic_dec_u8
+        (c_atomic_u8_t *, c_atomic_u8_t );
+
+c_atomic_u16_t
+    c_atomic_dec_u16
+        (c_atomic_u16_t *, c_atomic_u16_t );
+
+c_atomic_u32_t
+    c_atomic_dec_u32
+        (c_atomic_u32_t *, c_atomic_u32_t );
+
+c_atomic_u64_t
+    c_atomic_dec_u64
+        (c_atomic_u64_t *, c_atomic_u64_t );
+
+
+c_atomic_i8_t
+    c_atomic_cmpxchg_i8
+        (c_atomic_i8_t *, c_atomic_i8_t );
+
+c_atomic_i16_t
+    c_atomic_cmpxchg_i16
+        (c_atomic_i16_t *, c_atomic_i16_t );
+
+c_atomic_i32_t
+    c_atomic_cmpxchg_i32
+        (c_atomic_i32_t *, c_atomic_i32_t );
+
+c_atomic_i64_t
+    c_atomic_cmpxchg_i64
+        (c_atomic_i64_t *, c_atomic_i64_t );
+
+c_atomic_u8_t
+    c_atomic_cmpxchg_u8
+        (c_atomic_u8_t *, c_atomic_u8_t );
+
+c_atomic_u16_t
+    c_atomic_cmpxchg_u16
+        (c_atomic_u16_t *, c_atomic_u16_t );
+
+c_atomic_u32_t
+    c_atomic_cmpxchg_u32
+        (c_atomic_u32_t *, c_atomic_u32_t );
+
+c_atomic_u64_t
+    c_atomic_cmpxchg_u64
+        (c_atomic_u64_t *, c_atomic_u64_t );
 #endif

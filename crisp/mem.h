@@ -6,7 +6,7 @@
 
 #include <crisp/alloc.h>
 
-c_handle_t(c_mem_t)
+typedef void* c_mem_t;
 
 c_mem_t
     c_mem_init

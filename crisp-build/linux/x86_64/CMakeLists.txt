@@ -49,7 +49,16 @@ add_library(crisp STATIC
 
         ${CMAKE_SOURCE_DIR}/crisp/list.h
         ${CMAKE_SOURCE_DIR}/crisp/list.c
+
+        ${CMAKE_SOURCE_DIR}/crisp/str.h
+        ${CMAKE_SOURCE_DIR}/crisp/str.c
 )
 
 add_library          (crisp-arch ${CMAKE_SOURCE_DIR}/crisp/details-arch/x86_64/x86_64_gcc_atomic.asm)
 set_target_properties(crisp-arch PROPERTIES NASM_OBJ_FORMAT elf64)
+
+add_executable(crisp-test-str    ${CMAKE_SOURCE_DIR}/crisp-example/str.c)
+add_executable(crisp-test-atomic ${CMAKE_SOURCE_DIR}/crisp-example/atomic.c)
+
+target_link_libraries(crisp-test-str    crisp crisp-arch)
+target_link_libraries(crisp-test-atomic crisp crisp-arch)
