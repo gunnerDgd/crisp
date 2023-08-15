@@ -3,17 +3,16 @@
 
 object_t*
     object_init(alloc_t* par_alloc, c_u64_t par_alloc_size, object_trait_t* par_trait, void* par_init) {
-		if(par_alloc_size <= sizeof(object_t)) return 0;
-
-        mem_t    *object_mem = mem_init(par_alloc, par_alloc_size);
+        mem_t    *object_mem = mem_init(par_alloc, par_alloc_size + sizeof(object_t));
         object_t *object     = mem_ptr (object_mem);
 
                   object->mem   = object_mem;
                   object->ref   =          1;
                   object->alloc =  par_alloc;
                   object->trait =  par_trait;
+				  object->self  = (c_u8_t*)object + sizeof(object_t);
 
-		if(!object->trait->init(object, par_init)) {
+		if(!object->trait->init(object->self, par_init)) {
 			mem_deinit(object->mem);
 			return 0;
 		}
@@ -30,8 +29,9 @@ object_t*
                   object->ref   =                       1;
                   object->alloc = par_object_clone->alloc;
 				  object->trait = par_object_clone->trait;
+				  object->self  = (c_u8_t*)object + sizeof(object_t);
 
-        if(!object->trait->init_as_clone(object, par_object_clone)) {
+        if(!object->trait->init_as_clone(object->self, par_object_clone->self)) {
 			mem_deinit(object->mem);
 			return 0;
 		}
@@ -43,7 +43,7 @@ object_t*
         c_u64_t ref;
         do { ref = par_object->ref; } while(atomic_cmpxchg64(&par_object->ref, ref + 1) != ref);
 
-               par_object->trait->init_as_ref(par_object);
+               par_object->trait->init_as_ref(par_object->self);
         return par_object;
 }
 
@@ -53,7 +53,7 @@ c_bool_t
         do { ref = par_object->ref; } while(atomic_cmpxchg64(&par_object->ref, ref - 1) != ref);
 
         if(ref == 0) {
-            par_object->trait->deinit(par_object);
+            par_object->trait->deinit(par_object->self);
             mem_deinit(par_object->mem);
             return true;
         }
