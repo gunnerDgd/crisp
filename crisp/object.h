@@ -7,7 +7,9 @@
 #include <crisp/alloc.h>
 #include <crisp/mem.h>
 
-typedef void* c_object_t;
+typedef struct
+	c_object_t { c_u64_t handle[4]; }
+		c_object_t;
 
 typedef struct c_object_trait_t {
     c_bool_t (*init)		 (c_object_t, void*);
@@ -16,23 +18,23 @@ typedef struct c_object_trait_t {
     c_bool_t (*deinit)       (c_object_t);
 }   c_object_trait_t;
 
-c_object_t
+c_object_t*
     c_object_init
         (c_alloc_t*, c_u64_t, c_object_trait_t*, void*);
 
-c_object_t
+c_object_t*
     c_object_init_as_clone
-        (c_object_t);
+        (c_object_t*);
 
 c_object_t*
     c_object_init_as_ref
-        (c_object_t);
+        (c_object_t*);
 
 c_bool_t
     c_object_deinit
-        (c_object_t);
+        (c_object_t*);
 
 void*
     c_object_ptr
-        (c_object_t);
+        (c_object_t*);
 #endif
