@@ -9,10 +9,10 @@
 
 typedef void*  c_obj_t;
 typedef struct c_obj_trait_t {
-    c_bool_t (*init)		 (c_obj_t, void*);
-    c_bool_t (*init_as_clone)(c_obj_t, c_obj_t*);
-    c_bool_t (*init_as_ref)  (c_obj_t);
-    c_bool_t (*deinit)       (c_obj_t);
+    c_bool_t (*init)		 (void*, void*);
+    c_bool_t (*init_as_clone)(void*, void*);
+    c_bool_t (*init_as_ref)  (void*);
+    c_bool_t (*deinit)       (void*);
 }   c_obj_trait_t;
 
 c_obj_t

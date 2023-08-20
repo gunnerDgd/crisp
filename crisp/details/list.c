@@ -42,7 +42,8 @@ list_element_t*
 
                         ret->elem =  obj_init_as_ref(par_object);
                         ret->list =  par_list;
-                                     par_list->end.prev = ret;
+                                     par_list->end.prev->next = ret;
+									 par_list->end.prev       = ret;
 
         return          ret;
 }
@@ -57,7 +58,8 @@ list_element_t*
 
                         ret->elem = obj_init_as_ref(par_object);
                         ret->list = par_list;
-                                    par_list->begin.next = ret;
+                                    par_list->begin.next->prev = ret;
+									par_list->begin.next       = ret;
 
         return          ret;
 }

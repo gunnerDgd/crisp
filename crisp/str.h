@@ -75,4 +75,8 @@ const char*
 	c_str_ptr
 		(c_str_t*);
 
+c_u64_t
+	c_str_len
+		(c_str_t*);
+
 #endif

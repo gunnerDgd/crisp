@@ -83,3 +83,15 @@ c_bool_t
 	c_str_lt(c_str_t* par_lhs, c_str_t* par_rhs) {
 		return str_lt(par_lhs, par_rhs);
 }
+
+const char*
+	c_str_ptr(c_str_t* par_str) {
+		str_t* str = par_str;
+		return str->ptr + str->off_front;
+}
+
+c_u64_t
+	c_str_len(c_str_t* par_str) {
+		str_t* str = par_str;
+		return str->off_back - str->off_front;
+}

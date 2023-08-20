@@ -1,4 +1,4 @@
-#include <crisp/atomic.h>
+#include "crisp/atomic.h"
 #include <stdio.h>
 
 int main() {

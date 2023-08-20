@@ -1,8 +1,5 @@
 cmake_minimum_required(VERSION 3.10)
 
-add_compile_definitions(CRISP_PRESET_LINUX)
-add_compile_definitions(CRISP_PRESET_ARCH_X86_64)
-
 enable_language    (ASM_NASM)
 set                (CMAKE_ASM_NASM_COMPILE_OBJECT "<CMAKE_ASM_NASM_COMPILER> <INCLUDES> <FLAGS> -o <OBJECT> <SOURCE>")
 add_compile_options("$<$<COMPILE_LANGUAGE:ASM_NASM>:-f $<IF:$<BOOL:$<TARGET_PROPERTY:NASM_OBJ_FORMAT>>, \ $<TARGET_PROPERTY:NASM_OBJ_FORMAT>, ${CMAKE_ASM_NASM_OBJECT_FORMAT}>>")
@@ -56,9 +53,3 @@ add_library(crisp STATIC
 
 add_library          (crisp-arch ${CMAKE_SOURCE_DIR}/crisp/details-arch/x86_64/x86_64_gcc_atomic.asm)
 set_target_properties(crisp-arch PROPERTIES NASM_OBJ_FORMAT elf64)
-
-add_executable(crisp-test-str    ${CMAKE_SOURCE_DIR}/crisp-example/str.c)
-add_executable(crisp-test-atomic ${CMAKE_SOURCE_DIR}/crisp-example/atomic.c)
-
-target_link_libraries(crisp-test-str    crisp crisp-arch)
-target_link_libraries(crisp-test-atomic crisp crisp-arch)
