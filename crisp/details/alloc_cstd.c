@@ -27,27 +27,25 @@ struct mem_t*
         c_u8_t *mem_raw = malloc(par_alloc_size + sizeof(mem_t));
         mem_t  *mem     = mem_raw;
 
-                mem->handle_trait = &mem_global_trait      ;
-                mem->handle.ptr   = mem_raw + sizeof(mem_t);
-                mem->handle.size  = par_alloc_size         ;
-                mem->handle.alloc = par_alloc              ;
+                mem->mem_trait 	    = &mem_global_trait;
+                mem->mem_alloc_size = par_alloc_size   ;
+                mem->mem_alloc 		= par_alloc        ;
 
         return  mem;
 }
 
 struct mem_t*
     cstd_mem_init_as_clone(alloc_t* par_alloc, struct mem_t* par_alloc_clone) {
-        if(par_alloc_clone->handle.alloc->handle_trait != &alloc_global_trait) return 0;
+        if(par_alloc_clone->mem_alloc->handle_trait != &alloc_global_trait) return 0;
 
-        c_u8_t *mem_raw = malloc(par_alloc_clone->handle.size + sizeof(mem_t));
+        c_u8_t *mem_raw = malloc(par_alloc_clone->mem_alloc_size + sizeof(mem_t));
         mem_t  *mem     = mem_raw;
 
-                mem->handle_trait = par_alloc_clone->handle_trait;
-                mem->handle.ptr   = mem_raw + sizeof(mem_t)      ;
-                mem->handle.size  = par_alloc_clone->handle.size ;
-                mem->handle.alloc = par_alloc                    ;
+                mem->mem_trait 		= par_alloc_clone->mem_trait	 ;
+                mem->mem_alloc_size = par_alloc_clone->mem_alloc_size;
+                mem->mem_alloc 	    = par_alloc                      ;
 
-                memcpy(mem->handle.ptr, par_alloc_clone->handle.ptr, mem->handle.size);
+				mem_copy_to(par_alloc_clone, mem_raw, par_alloc_clone->mem_alloc_size);
         return  mem;
 }
 

@@ -2,7 +2,7 @@
 #define CRISP_LIST_H
 
 #include <crisp/alloc.h>
-#include <crisp/object.h>
+#include <crisp/obj.h>
 
 typedef struct
     c_list_t { c_u64_t handle[11];}
@@ -24,25 +24,25 @@ c_bool_t
 
 c_list_elem_t
     c_list_push_back
-        (c_list_t*, c_object_t*);
+        (c_list_t*, c_obj_t*);
 
 c_list_elem_t
     c_list_push_front
-        (c_list_t*, c_object_t*);
+        (c_list_t*, c_obj_t*);
 
 c_list_elem_t
     c_list_push_at
-        (c_list_t*, c_object_t*, c_list_elem_t);
+        (c_list_t*, c_obj_t*, c_list_elem_t);
 
-c_object_t*
+c_obj_t*
     c_list_pop_front
         (c_list_t*);
 
-c_object_t*
+c_obj_t*
     c_list_pop_back
         (c_list_t*);
 
-c_object_t*
+c_obj_t*
     c_list_pop_at
         (c_list_t*, c_list_elem_t);
 
@@ -54,7 +54,7 @@ c_list_elem_t
     c_list_elem_prev
         (c_list_elem_t);
 
-c_object_t*
+c_obj_t*
     c_list_elem_object
         (c_list_elem_t);
 

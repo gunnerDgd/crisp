@@ -19,7 +19,7 @@ c_bool_t
 c_bool_t
 	str_init_as_clone(str_t* par_str, str_t* par_str_clone) {
 		par_str->alloc     = par_str_clone->alloc;
-		par_str->alloc_mem = mem_init(par_str->alloc, par_str->alloc_mem->handle.size); if (!par_str->alloc_mem) return false;
+		par_str->alloc_mem = mem_init(par_str->alloc, par_str->alloc_mem->mem_alloc_size); if (!par_str->alloc_mem) return false;
 		par_str->ptr       = mem_ptr (par_str->alloc_mem);
 
 		memcpy(par_str->ptr, par_str_clone->ptr + par_str_clone->off_front, (par_str_clone->off_back - par_str_clone->off_front));
@@ -50,10 +50,10 @@ void
 		mem_t *mem = par_str->alloc_mem,
 			  *mem_new;
 		
-		par_rsv = (mem->handle.size > par_rsv) ? (mem->handle.size << 1) : (mem->handle.size + par_rsv);
+		par_rsv = (mem->mem_alloc_size > par_rsv) ? (mem->mem_alloc_size << 1) : (mem->mem_alloc_size + par_rsv);
 		mem_new = mem_init(par_str->alloc, par_rsv);
 		
-		memcpy	  (mem_ptr(mem_new), mem_ptr(mem), mem->handle.size);
+		memcpy	  (mem_ptr(mem_new), mem_ptr(mem), mem->mem_alloc_size);
 		mem_deinit(mem);
 		
 		par_str->alloc_mem = mem_new;
@@ -66,10 +66,10 @@ void
 			  *mem_new;
 		
 		par_str->off_front += par_rsv;
-		par_rsv = (mem->handle.size > par_rsv) ? (mem->handle.size << 1) : (mem->handle.size + par_rsv);
+		par_rsv = (mem->mem_alloc_size > par_rsv) ? (mem->mem_alloc_size << 1) : (mem->mem_alloc_size + par_rsv);
 
 		mem_new = mem_init(par_str->alloc, par_rsv);
-		memcpy	  (mem_ptr(mem_new) + par_str->off_front, mem_ptr(mem), mem->handle.size);
+		memcpy	  (mem_ptr(mem_new) + par_str->off_front, mem_ptr(mem), mem->mem_alloc_size);
 		mem_deinit(mem);
 
 		par_str->alloc_mem = mem_new;
@@ -84,7 +84,7 @@ void
 		c_u64_t len_str		 = par_str ->off_back - par_str ->off_front,
 				len_str_push = par_push->off_back - par_push->off_front;
 
-		if ((mem_str->handle.size - par_str->off_back) > len_str_push) {
+		if ((mem_str->mem_alloc_size - par_str->off_back) > len_str_push) {
 			memcpy(par_str->ptr + par_str->off_back, par_push->ptr + par_str->off_front, len_str_push);
 			par_str->off_back += len_str_push;
 			
@@ -103,7 +103,7 @@ void
 		c_u64_t len_str	 	 = par_str->off_back - par_str->off_front,
 				len_str_push = strlen(par_cstr);
 
-		if ((mem_str->handle.size - par_str->off_back) > len_str_push) {
+		if ((mem_str->mem_alloc_size - par_str->off_back) > len_str_push) {
 			memcpy(par_str->ptr + par_str->off_back, par_cstr, len_str_push);
 			par_str->off_back += len_str_push;
 

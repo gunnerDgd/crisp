@@ -8,10 +8,6 @@ typedef struct
     c_alloc_t { c_u8_t handle[256]; }
         c_alloc_t;
 
-c_alloc_t*
-	c_global_alloc
-		();
-
 c_bool_t
     c_alloc_init
         (c_alloc_t*);
