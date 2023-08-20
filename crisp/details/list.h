@@ -1,13 +1,13 @@
 #ifndef CRISP_DETAILS_LIST_H
 #define CRISP_DETAILS_LIST_H
 
-#include <crisp/details/object.h>
+#include <crisp/details/obj.h>
 
 typedef struct list_element_t {
     mem_t                 *mem        ;
     struct list_element_t *prev, *next;
     struct list_t         *list;
-    object_t              *elem;
+    obj_t                 *elem;
 }   list_element_t;
 
 typedef struct
@@ -28,25 +28,25 @@ c_bool_t
 
 list_element_t*
     list_push_back
-        (list_t*, object_t*);
+        (list_t*, obj_t*);
 
 list_element_t*
     list_push_front
-        (list_t*, object_t*);
+        (list_t*, obj_t*);
 
 list_element_t*
     list_push_at
-        (list_t*, object_t*, list_element_t*);
+        (list_t*, obj_t*, list_element_t*);
 
-object_t*
+obj_t*
     list_pop_front
         (list_t*);
 
-object_t*
+obj_t*
     list_pop_back
         (list_t*);
 
-object_t*
+obj_t*
     list_pop_at
         (list_t*, list_element_t*);
 

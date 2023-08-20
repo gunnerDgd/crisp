@@ -25,8 +25,8 @@ add_library(crisp STATIC
         ${CMAKE_SOURCE_DIR}/crisp/details/mem_cstd.h
         ${CMAKE_SOURCE_DIR}/crisp/details/mem_cstd.c
 
-        ${CMAKE_SOURCE_DIR}/crisp/details/object.h
-        ${CMAKE_SOURCE_DIR}/crisp/details/object.c
+        ${CMAKE_SOURCE_DIR}/crisp/details/obj.h
+        ${CMAKE_SOURCE_DIR}/crisp/details/obj.c
 
         ${CMAKE_SOURCE_DIR}/crisp/details/str.h
         ${CMAKE_SOURCE_DIR}/crisp/details/str.c
@@ -44,8 +44,8 @@ add_library(crisp STATIC
         ${CMAKE_SOURCE_DIR}/crisp/mem.h
         ${CMAKE_SOURCE_DIR}/crisp/mem.c
 
-        ${CMAKE_SOURCE_DIR}/crisp/object.h
-        ${CMAKE_SOURCE_DIR}/crisp/object.c
+        ${CMAKE_SOURCE_DIR}/crisp/obj.h
+        ${CMAKE_SOURCE_DIR}/crisp/obj.c
 
         ${CMAKE_SOURCE_DIR}/crisp/list.h
         ${CMAKE_SOURCE_DIR}/crisp/list.c
