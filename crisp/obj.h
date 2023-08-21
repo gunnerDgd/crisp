@@ -20,6 +20,10 @@ c_obj_t
         (c_mem_t, c_obj_trait_t*, c_u32_t, ...);
 
 c_obj_t
+	c_obj_init_from_varg
+		(c_mem_t, c_obj_trait_t*, c_u32_t, va_list);
+
+c_obj_t
     c_obj_init_as_clone
         (c_mem_t, c_obj_t);
 

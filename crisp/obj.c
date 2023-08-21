@@ -12,6 +12,12 @@ c_obj_t
 }
 
 c_obj_t
+    c_obj_init_from_varg(c_mem_t par_mem, c_obj_trait_t* par_trait, c_u32_t par_arg_count, va_list par_arg) {
+		c_obj_t ret = obj_init(par_mem, par_trait, par_arg_count, par_arg);
+		return  ret;
+}
+
+c_obj_t
     c_obj_init_as_clone(c_mem_t par_mem, c_obj_t par_object) {
         return obj_init_as_clone(par_mem, par_object);
 }
