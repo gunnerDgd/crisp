@@ -36,3 +36,8 @@ void*
 	c_obj_ptr(c_obj_t par_object) {
 		return (c_u8_t*)par_object + sizeof(obj_t);
 }
+
+c_obj_trait_t*
+	c_obj_trait(c_obj_t par_object) {
+		return ((obj_t*)par_object)->trait;
+}
