@@ -39,4 +39,8 @@ void*
 	c_obj_ptr
 		(c_obj_t);
 
+c_obj_trait_t*
+	c_obj_trait
+		(c_obj_t);
+
 #endif
