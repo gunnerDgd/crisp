@@ -5,6 +5,8 @@
 #include <stdint.h>
 #include <stddef.h>
 #include <stdbool.h>
+
+#include <stdarg.h>
 #endif
 
 #ifdef CRISP_PRESET_WIN32
@@ -22,5 +24,8 @@ typedef int16_t  c_i16_t;
 typedef int32_t  c_i32_t;
 typedef int64_t  c_i64_t;
 typedef bool     c_bool_t;
+
+#define c_false  0
+#define c_true   1
 
 #endif
