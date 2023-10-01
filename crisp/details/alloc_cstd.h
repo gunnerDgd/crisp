@@ -1,30 +1,33 @@
-#ifndef CRISP_DETAILS_ALLOC_CSTD_H
-#define CRISP_DETAILS_ALLOC_CSTD_H
+#ifndef __DETAILS_ALLOC_CSTD_H__
+#define __DETAILS_ALLOC_CSTD_H__
 
-#include <crisp/details/alloc.h>
+#include "mem.h"
+#include "alloc.h"
 
-c_bool_t
+extern __alloc_trait cstd_alloc_trait;
+
+bool_t
     cstd_alloc_init
-        (alloc_t*);
+        (__alloc*);
 
-c_bool_t
+bool_t
     cstd_alloc_init_as_clone
-        (alloc_t*, alloc_t*);
+        (__alloc*, __alloc*);
 
-c_bool_t
+void
     cstd_alloc_deinit
-        (alloc_t*);
+        (__alloc*);
 
-struct mem_t*
+__mem*
     cstd_mem_init
-        (alloc_t*, c_u64_t);
+        (__alloc*, u64_t);
 
-struct mem_t*
+__mem*
     cstd_mem_init_as_clone
-        (alloc_t*, struct mem_t*);
+        (__alloc*, __mem*);
 
-c_bool_t
+bool_t
     cstd_mem_deinit
-        (alloc_t*, struct mem_t*);
+        (__alloc*, __mem*);
 
 #endif

@@ -1,46 +1,51 @@
-#ifndef CRISP_OBJECT_H
-#define CRISP_OBJECT_H
+#ifndef __OBJECT_H__
+#define __OBJECT_H__
 
-#include <crisp/type_atomic.h>
-#include <crisp/type.h>
+#include "alloc.h"
+#include "mem.h"
+#include "str.h"
 
-#include <crisp/alloc.h>
-#include <crisp/mem.h>
+typedef struct obj 		 { u64_t obj[4]; } obj;
+typedef struct obj_trait {
+    bool_t (*init)		   (obj*, u32_t, va_list);
+    bool_t (*init_as_clone)(obj*, obj*);
+    bool_t (*init_as_ref)  (obj*);
+    void   (*deinit)       (obj*);
 
-typedef void*  c_obj_t;
-typedef struct c_obj_trait_t {
-    c_bool_t (*init)		 (void*, c_u32_t, va_list);
-    c_bool_t (*init_as_clone)(void*, void*);
-    c_bool_t (*init_as_ref)  (void*);
-    void 	 (*deinit)       (void*);
-}   c_obj_trait_t;
+	u64_t  (*size)		   ()	 ;
+	str*   (*name)		   (obj*);
+}   obj_trait;
 
-c_obj_t
-    c_obj_init
-        (c_mem_t, c_obj_trait_t*, c_u32_t, ...);
+obj*
+    obj_init
+        (alloc*, obj_trait*, u32_t, ...);
 
-c_obj_t
-	c_obj_init_from_varg
-		(c_mem_t, c_obj_trait_t*, c_u32_t, va_list);
+obj*
+	obj_init_from_varg
+		(alloc*, obj_trait*, u32_t, va_list);
 
-c_obj_t
-    c_obj_init_as_clone
-        (c_mem_t, c_obj_t);
+obj*
+    obj_init_as_clone
+        (obj*);
 
-c_obj_t
-    c_obj_init_as_ref
-        (c_obj_t);
+obj*
+    obj_init_as_ref
+        (obj*);
 
-c_mem_t
-    c_obj_deinit
-        (c_obj_t);
+mem
+    obj_deinit
+        (obj*);
 
-void*
-	c_obj_ptr
-		(c_obj_t);
+obj_trait*
+	obj_get_trait
+		(obj*);
 
-c_obj_trait_t*
-	c_obj_trait
-		(c_obj_t);
+str*
+	obj_name
+		(obj*);
+
+u64_t
+	obj_use_count
+		(obj*);
 
 #endif

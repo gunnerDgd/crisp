@@ -1,69 +1,69 @@
-#ifndef CRISP_LIST_H
-#define CRISP_LIST_H
+#ifndef __LIST_H__
+#define __LIST_H__
 
-#include <crisp/alloc.h>
-#include <crisp/obj.h>
+#include "alloc.h"
+#include "obj.h"
 
 typedef struct
-    c_list_t { c_u64_t handle[11];}
-        c_list_t;
+    list { u64_t handle[11];}
+        list;
 
-typedef void* c_list_iter_t;
+typedef void* list_iter;
 
-c_bool_t
-    c_list_init
-        (c_list_t*, c_alloc_t*);
+bool_t
+    list_init
+        (list*, alloc*);
 
-c_bool_t
-    c_list_init_as_clone
-        (c_list_t*, c_list_t*);
+bool_t
+    list_init_as_clone
+        (list*, list*);
 
-c_bool_t
-    c_list_deinit
-        (c_list_t*);
+bool_t
+    list_deinit
+        (list*);
 
-c_list_iter_t
-    c_list_push_back
-        (c_list_t*, c_obj_t);
+list_iter
+    list_push_back
+        (list*, obj*);
 
-c_list_iter_t
-    c_list_push_front
-        (c_list_t*, c_obj_t);
+list_iter
+    list_push_front
+        (list*, obj*);
 
-c_list_iter_t
-    c_list_push_at
-        (c_list_t*, c_obj_t, c_list_iter_t);
+list_iter
+    list_push_at
+        (list*, obj*, list_iter);
 
-c_obj_t
-    c_list_pop_front
-        (c_list_t*);
+obj*
+    list_pop_front
+        (list*);
 
-c_obj_t
-    c_list_pop_back
-        (c_list_t*);
+obj*
+    list_pop_back
+        (list*);
 
-c_obj_t
-    c_list_pop_at
-        (c_list_t*, c_list_iter_t);
+obj*
+    list_pop_at
+        (list*, list_iter);
 
-c_list_iter_t
-	c_list_iter_begin
-		(c_list_t*);
+list_iter
+	list_iter_begin
+		(list*);
 
-c_list_iter_t
-	c_list_iter_end
-		(c_list_t*);
+list_iter
+	list_iter_end
+		(list*);
 
-c_list_iter_t
-    c_list_iter_next
-        (c_list_iter_t);
+list_iter
+    list_iter_next
+        (list_iter);
 
-c_list_iter_t
-    c_list_iter_prev
-        (c_list_iter_t);
+list_iter
+    list_iter_prev
+        (list_iter);
 
-c_obj_t*
-    c_list_iter_object
-        (c_list_iter_t);
+obj*
+    list_iter_object
+        (list_iter);
 
 #endif

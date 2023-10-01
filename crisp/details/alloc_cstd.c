@@ -7,50 +7,55 @@
 #include <string.h>
 #include <stdlib.h>
 
-c_bool_t
-    cstd_alloc_init(alloc_t* par_alloc){
-        return true;
+__alloc_trait cstd_alloc_trait = {
+	.init 		   	   = &cstd_alloc_init		  ,
+	.init_as_clone 	   = &cstd_alloc_init_as_clone,
+	.deinit		   	   = &cstd_alloc_deinit       ,
+
+	.mem_init		   = &cstd_mem_init			  ,
+	.mem_init_as_clone = &cstd_mem_init_as_clone  ,
+	.mem_deinit		   = &cstd_mem_deinit
+};
+
+bool_t
+    cstd_alloc_init(__alloc* par_alloc) {
+        return true_t;
 }
 
-c_bool_t
-    cstd_alloc_init_as_clone(alloc_t* par_alloc, alloc_t* par_alloc_clone) {
-        return true;
+bool_t
+    cstd_alloc_init_as_clone(__alloc* par_alloc, __alloc* par_alloc_clone) {
+        return true_t;
 }
 
-c_bool_t
-    cstd_alloc_deinit(alloc_t* par_alloc) {
-        return true;
+void
+    cstd_alloc_deinit(__alloc* par_alloc) {
 }
 
-struct mem_t*
-    cstd_mem_init(alloc_t* par_alloc, c_u64_t par_alloc_size) {
-        c_u8_t *mem_raw = malloc(par_alloc_size + sizeof(mem_t));
-        mem_t  *mem     = mem_raw;
-
-                mem->mem_trait 	    = &mem_global_trait;
-                mem->mem_alloc_size = par_alloc_size   ;
-                mem->mem_alloc 		= par_alloc        ;
+__mem*
+    cstd_mem_init(__alloc* par_alloc, u64_t par_alloc_size) {
+        __mem *mem     		   = malloc(par_alloc_size + sizeof(__mem));
+               mem->trait 	   = &cstd_mem_trait;
+               mem->alloc_size = par_alloc_size ;
+               mem->alloc 	   = par_alloc      ;
 
         return  mem;
 }
 
-struct mem_t*
-    cstd_mem_init_as_clone(alloc_t* par_alloc, struct mem_t* par_alloc_clone) {
-        if(par_alloc_clone->mem_alloc->handle_trait != &alloc_global_trait) return 0;
+__mem*
+    cstd_mem_init_as_clone(__alloc* par_alloc, __mem* par_alloc_clone) {
+        u8_t  *mem_raw = malloc(par_alloc_clone->alloc_size + sizeof(__mem));
+        __mem *mem     = mem_raw;
 
-        c_u8_t *mem_raw = malloc(par_alloc_clone->mem_alloc_size + sizeof(mem_t));
-        mem_t  *mem     = mem_raw;
+               mem->trait 	   = par_alloc_clone->trait	    ;
+               mem->alloc_size = par_alloc_clone->alloc_size;
+               mem->alloc 	   = par_alloc                  ;
 
-                mem->mem_trait 		= par_alloc_clone->mem_trait	 ;
-                mem->mem_alloc_size = par_alloc_clone->mem_alloc_size;
-                mem->mem_alloc 	    = par_alloc                      ;
-
-				mem_copy_to(par_alloc_clone, mem_raw, par_alloc_clone->mem_alloc_size);
+		__mem_copy_to(par_alloc_clone, mem_raw, par_alloc_clone->alloc_size);
         return  mem;
 }
 
-c_bool_t
-    cstd_mem_deinit(alloc_t* par_alloc, struct mem_t* par_dealloc) {
+bool_t
+    cstd_mem_deinit(__alloc* par_alloc, __mem* par_dealloc) {
         free(par_dealloc);
         return true;
 }

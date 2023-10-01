@@ -1,27 +1,33 @@
-#ifndef CRISP_DETAILS_ALLOC_H
-#define CRISP_DETAILS_ALLOC_H
+#ifndef __DETAILS_ALLOC_H__
+#define __DETAILS_ALLOC_H__
 
-#include <crisp/type.h>
-#include <crisp/type_atomic.h>
+#include "../type.h"
+#include "../type_atomic.h"
 
-typedef struct alloc_trait_t {
-    c_bool_t      (*init)             (struct alloc_t*);
-    c_bool_t      (*init_as_clone)    (struct alloc_t*, struct alloc_t*);
-    c_bool_t      (*deinit)           (struct alloc_t*);
+typedef struct __alloc_trait {
+    bool_t        (*init)             (struct __alloc*);
+    bool_t        (*init_as_clone)    (struct __alloc*, struct __alloc*);
+    void          (*deinit)           (struct __alloc*);
 
-    struct mem_t* (*mem_init)         (struct alloc_t*, c_u64_t);
-    struct mem_t* (*mem_init_as_clone)(struct alloc_t*, struct mem_t*);
-    c_bool_t      (*mem_deinit)       (struct alloc_t*, struct mem_t*);
-}   alloc_trait_t;
+    struct __mem* (*mem_init)         (struct __alloc*, u64_t);
+    struct __mem* (*mem_init_as_clone)(struct __alloc*, struct __mem*);
+    bool_t        (*mem_deinit)       (struct __alloc*, struct __mem*);
+}   __alloc_trait;
 
 typedef struct
-	alloc_t { c_u8_t handle [256]; alloc_trait_t* handle_trait;}
-		alloc_t;
+	__alloc { __alloc_trait* handle_trait; u8_t handle [248]; }
+		__alloc;
 
-#define alloc_init(par_alloc)                           ((alloc_t*)par_alloc)->handle_trait->init         (par_alloc)
-#define alloc_init_as_clone(par_alloc, par_alloc_clone) ((alloc_t*)par_alloc)->handle_trait->init_as_clone(par_alloc, par_alloc_clone)
-#define alloc_deinit(par_alloc)                         ((alloc_t*)par_alloc)->handle_trait->deinit       (par_alloc)
+bool_t
+	__alloc_init
+		(__alloc*, __alloc_trait*);
 
-extern alloc_trait_t alloc_global_trait;
+bool_t
+	__alloc_init_as_clone
+		(__alloc*, __alloc*);
+
+void
+	__alloc_deinit
+		(__alloc*);
 
 #endif

@@ -1,43 +1,51 @@
 #include "obj.h"
 #include "details/obj.h"
 
-c_obj_t
-    c_obj_init(c_mem_t par_mem, c_obj_trait_t* par_trait, c_u32_t par_arg_count, ...) {
+obj*
+    obj_init(alloc* par_alloc, obj_trait* par_trait, u32_t par_arg_count, ...) {
     	va_list  ret_args;
 		va_start(ret_args, par_arg_count);
-		c_obj_t  ret = obj_init(par_mem, par_trait, par_arg_count, ret_args);
+		obj*     ret = __obj_init((par_alloc) ? par_alloc : get_default_alloc(), par_trait, par_arg_count, ret_args);
 
 		va_end  (ret_args);
 		return   ret;
 }
 
-c_obj_t
-    c_obj_init_from_varg(c_mem_t par_mem, c_obj_trait_t* par_trait, c_u32_t par_arg_count, va_list par_arg) {
-		c_obj_t ret = obj_init(par_mem, par_trait, par_arg_count, par_arg);
-		return  ret;
+obj*
+    obj_init_from_varg(alloc* par_alloc, obj_trait* par_trait, u32_t par_arg_count, va_list par_arg) {
+		obj*   ret = __obj_init((par_alloc) ? par_alloc : get_default_alloc(), par_trait, par_arg_count, par_arg);
+		return ret;
 }
 
-c_obj_t
-    c_obj_init_as_clone(c_mem_t par_mem, c_obj_t par_object) {
-        return obj_init_as_clone(par_mem, par_object);
+obj*
+    obj_init_as_clone(obj* par_object) {
+        return __obj_init_as_clone(par_object);
 }
 
-c_obj_t
-    c_obj_init_as_ref(c_obj_t par_object) {
-        return obj_init_as_ref(par_object);
+obj*
+    obj_init_as_ref(obj* par_object) {
+        return __obj_init_as_ref(par_object);
 }
 
-c_mem_t
-    c_obj_deinit(c_obj_t par_object) {
-        return obj_deinit(par_object);
+mem
+    obj_deinit(obj* par_object) {
+        return __obj_deinit(par_object);
 }
 
-void*
-	c_obj_ptr(c_obj_t par_object) {
-		return (c_u8_t*)par_object + sizeof(obj_t);
+obj_trait*
+	obj_get_trait(obj* par_object) {
+		return ((__obj*)par_object)->trait;
 }
 
-c_obj_trait_t*
-	c_obj_trait(c_obj_t par_object) {
-		return ((obj_t*)par_object)->trait;
+str*
+	obj_name(obj* par_object) {
+		if(((__obj*)par_object)->trait->name)
+			return ((__obj*)par_object)->trait->name(par_object);
+		else
+			return 0;
+}
+
+u64_t
+	obj_use_count(obj* par_object) {
+		return ((__obj*)par_object)->ref;
 }

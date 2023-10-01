@@ -1,43 +1,40 @@
-#ifndef CRISP_MEM_H
-#define CRISP_MEM_H
+#ifndef __MEM_H__
+#define __MEM_H__
 
-#include <crisp/type.h>
-#include <crisp/type_atomic.h>
+#include "alloc.h"
 
-#include <crisp/alloc.h>
+typedef void* mem;
 
-typedef void* c_mem_t;
+mem
+    mem_init
+        (alloc*, u64_t);
 
-c_mem_t
-    c_mem_init
-        (c_alloc_t*, c_u64_t);
+mem
+    mem_init_as_clone
+        (mem);
 
-c_mem_t
-    c_mem_init_as_clone
-        (c_mem_t);
+bool_t
+    mem_deinit
+        (mem);
 
-c_bool_t
-    c_mem_deinit
-        (c_mem_t);
+u64_t
+    mem_copy_from
+        (mem, void*, u64_t);
 
-c_u64_t
-    c_mem_copy_from
-        (c_mem_t, void*, c_u64_t);
+u64_t
+    mem_copy_to
+        (mem, void*, u64_t);
 
-c_u64_t
-    c_mem_copy_to
-        (c_mem_t, void*, c_u64_t);
+u64_t
+    mem_move
+        (mem, mem);
 
-c_u64_t
-    c_mem_move
-        (c_mem_t, c_mem_t);
-
-c_u64_t
-    c_mem_size
-        (c_mem_t);
+u64_t
+    mem_size
+        (mem);
 
 void*
-    c_mem_ptr
-        (c_mem_t);
+    mem_ptr
+        (mem);
 
 #endif

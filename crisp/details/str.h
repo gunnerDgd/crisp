@@ -1,79 +1,91 @@
-#ifndef CRISP_DETAILS_STR_H
-#define CRISP_DETAILS_STR_H
+#ifndef __DETAILS_STR_H__
+#define __DETAILS_STR_H__
 
-#include <crisp/details/mem.h>
-#include <crisp/details/alloc.h>
+#include "mem.h"
+#include "alloc.h"
 
-typedef struct str_t {
-	alloc_t *alloc	  ;
-	mem_t	*alloc_mem;
+typedef struct __str {
+	__alloc *alloc	  ;
+	__mem	*alloc_mem;
 
-	c_u64_t  off_front, off_back;
+	u64_t    off_front, off_back;
 	char*    ptr;
-}	str_t;
+}	__str;
 
-c_bool_t
-	str_init
-		(str_t*, alloc_t*);
+bool_t
+	__str_init
+		(__str*, __alloc*);
 
-c_bool_t
-	str_init_as_clone
-		(str_t*, str_t*);
+bool_t
+	__str_init_as_clone
+		(__str*, __str*);
 
-c_bool_t
-	str_deinit
-		(str_t*);
-
-void
-	str_reserve_back
-		(str_t*, c_u64_t);
+bool_t
+	__str_deinit
+		(__str*);
 
 void
-	str_reserve_front
-		(str_t*, c_u64_t);
+	__str_reserve_back
+		(__str*, u64_t);
 
 void
-	str_push_back
-		(str_t*, str_t*);
+	__str_reserve_front
+		(__str*, u64_t);
 
 void
-	str_push_back_cstr
-		(str_t*, const char*);
+	__str_push_back
+		(__str*, __str*);
 
 void
-	str_push_front
-		(str_t*, str_t*);
+	__str_push_back_cstr
+		(__str*, const char*);
 
 void
-	str_push_front_cstr
-		(str_t*, const char*);
+	__str_push_front
+		(__str*, __str*);
 
 void
-	str_push_at
-		(str_t*, c_u64_t, str_t*);
+	__str_push_front_cstr
+		(__str*, const char*);
 
 void
-	str_push_at_cstr
-		(str_t*, c_u64_t, const char*);
+	__str_push_at
+		(__str*, u64_t, __str*);
 
-c_u64_t
-	str_find
-		(str_t*, c_u64_t, str_t*);
+void
+	__str_push_at_cstr
+		(__str*, u64_t, const char*);
 
-c_u64_t
-	str_find_cstr
-		(str_t*, c_u64_t, const char*);
+u64_t
+	__str_find
+		(__str*, u64_t, __str*);
 
-c_bool_t
-	str_eq
-		(str_t*, str_t*);
+u64_t
+	__str_find_from_cstr
+		(__str*, u64_t, const char*);
 
-c_bool_t
-	str_gt
-		(str_t*, str_t*);
+bool_t
+	__str_eq
+		(__str*, __str*);
 
-c_bool_t
-	str_lt
-		(str_t*, str_t*);
+bool_t
+	__str_eq_from_cstr
+		(__str*, const char*);
+
+bool_t
+	__str_gt
+		(__str*, __str*);
+
+bool_t
+	__str_gt_from_cstr
+		(__str*, const char*);
+
+bool_t
+	__str_lt
+		(__str*, __str*);
+
+bool_t
+	__str_lt_from_cstr
+		(__str*, const char*);
 
 #endif

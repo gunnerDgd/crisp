@@ -1,22 +1,24 @@
-#ifndef CRISP_DETAILS_MEM_CSTD_H
-#define CRISP_DETAILS_MEM_CSTD_H
+#ifndef __DETAILS_MEM_CSTD_H__
+#define __DETAILS_MEM_CSTD_H__
 
-#include <crisp/details/mem.h>
+#include "mem.h"
 
-c_u64_t
+extern __mem_trait cstd_mem_trait;
+
+u64_t
     cstd_mem_copy_from
-        (mem_t*, void*, c_u64_t);
+        (__mem*, void*, u64_t);
 
-c_u64_t
+u64_t
     cstd_mem_copy_to
-        (mem_t*, void*, c_u64_t);
+        (__mem*, void*, u64_t);
 
-c_u64_t
+u64_t
     cstd_mem_move
-        (mem_t*, mem_t*);
+        (__mem*, __mem*);
 
 void*
     cstd_mem_ptr
-        (mem_t*);
+        (__mem*);
 
 #endif

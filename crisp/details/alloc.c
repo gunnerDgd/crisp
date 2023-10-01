@@ -1,13 +1,20 @@
 #include "alloc.h"
 #include "alloc_cstd.h"
 
-alloc_trait_t
-alloc_global_trait = {
-        .init              = cstd_alloc_init         ,
-        .init_as_clone     = cstd_alloc_init_as_clone,
-        .deinit            = cstd_alloc_deinit       ,
+bool_t
+	__alloc_init(__alloc* par_alloc, __alloc_trait* par_alloc_trait) {
+			   par_alloc->handle_trait = (par_alloc_trait) ? par_alloc_trait : &cstd_alloc_trait;
+		return par_alloc->handle_trait->init(par_alloc);
+}
 
-        .mem_init          = cstd_mem_init           ,
-        .mem_init_as_clone = cstd_mem_init_as_clone  ,
-        .mem_deinit        = cstd_mem_deinit
-};
+bool_t
+	__alloc_init_as_clone(__alloc* par_alloc, __alloc* par_alloc_clone) {
+			   par_alloc->handle_trait = par_alloc_clone->handle_trait;
+		return par_alloc->handle_trait->init_as_clone(par_alloc, par_alloc_clone);
+}
+
+void
+	__alloc_deinit(__alloc* par_alloc) {
+		par_alloc->handle_trait->deinit(par_alloc);
+		par_alloc->handle_trait = 0;
+}

@@ -3,95 +3,94 @@
 #include "details/alloc.h"
 #include "details/str.h"
 
-
-c_bool_t
-	c_str_init(c_str_t* par_str, c_alloc_t* par_alloc) {
-		return str_init(par_str, par_alloc);
+bool_t
+	str_init(str* par_str, alloc* par_alloc) {
+		return __str_init(par_str, par_alloc);
 }
 
-c_bool_t
-	c_str_init_as_clone(c_str_t* par_str, c_str_t* par_str_clone) {
-		return str_init_as_clone(par_str, par_str_clone);
+bool_t
+	str_init_as_clone(str* par_str, str* par_str_clone) {
+		return __str_init_as_clone(par_str, par_str_clone);
 }
 
-c_bool_t
-	c_str_deinit(c_str_t* par_str) {
-		return str_deinit(par_str);
-}
-
-void
-	c_str_reserve_back(c_str_t* par_str, c_u64_t par_size) {
-		str_reserve_back(par_str, par_size);
+bool_t
+	str_deinit(str* par_str) {
+		return __str_deinit(par_str);
 }
 
 void
-	c_str_reserve_front(c_str_t* par_str, c_u64_t par_size) {
-		str_reserve_front(par_str, par_size);
+	str_reserve_back(str* par_str, u64_t par_size) {
+		__str_reserve_back(par_str, par_size);
 }
 
 void
-	c_str_push_back(c_str_t* par_str, c_str_t* par_size) {
-		str_push_back(par_str, par_size);
+	str_reserve_front(str* par_str, u64_t par_size) {
+		__str_reserve_front(par_str, par_size);
 }
 
 void
-	c_str_push_back_cstr(c_str_t* par_str, const char* par_push) {
-		str_push_back_cstr(par_str, par_push);
+	str_push_back(str* par_str, str* par_size) {
+		__str_push_back(par_str, par_size);
 }
 
 void
-	c_str_push_front(c_str_t* par_str, c_str_t* par_push) {
-		str_push_front(par_str, par_push);
+	str_push_back_cstr(str* par_str, const char* par_push) {
+		__str_push_back_cstr(par_str, par_push);
 }
 
 void
-	c_str_push_front_cstr(c_str_t* par_str, const char* par_push) {
-		str_push_front_cstr(par_str, par_push);
+	str_push_front(str* par_str, str* par_push) {
+		__str_push_front(par_str, par_push);
 }
 
 void
-	c_str_push_at(c_str_t* par_str, c_u64_t par_off, c_str_t* par_push) {
-		str_push_at(par_str, par_off, par_push);
+	str_push_front_cstr(str* par_str, const char* par_push) {
+		__str_push_front_cstr(par_str, par_push);
 }
 
 void
-	c_str_push_at_cstr(c_str_t* par_str, c_u64_t par_off, const char* par_push) {
-		str_push_at_cstr(par_str, par_off, par_push);
+	str_push_at(str* par_str, u64_t par_off, str* par_push) {
+		__str_push_at(par_str, par_off, par_push);
 }
 
-c_u64_t
-	c_str_find(c_str_t* par_str, c_u64_t par_off, c_str_t* par_find) {
-		return str_find(par_str, par_off, par_find);
+void
+	str_push_at_cstr(str* par_str, u64_t par_off, const char* par_push) {
+		__str_push_at_cstr(par_str, par_off, par_push);
 }
 
-c_u64_t
-	c_str_find_cstr(c_str_t* par_str, c_u64_t par_off, const char* par_find) {
-		return str_find_cstr(par_str, par_off, par_find);
+u64_t
+	str_find(str* par_str, u64_t par_off, str* par_find) {
+		return __str_find(par_str, par_off, par_find);
 }
 
-c_bool_t
-	c_str_eq(c_str_t* par_lhs, c_str_t* par_rhs) {
-		return str_eq(par_lhs, par_rhs);
+u64_t
+	str_find_from_cstr(str* par_str, u64_t par_off, const char* par_find) {
+		return __str_find_from_cstr(par_str, par_off, par_find);
 }
 
-c_bool_t
-	c_str_gt(c_str_t* par_lhs, c_str_t* par_rhs) {
-		return str_gt(par_lhs, par_rhs);
+bool_t
+	str_eq(str* par_lhs, str* par_rhs) {
+		return __str_eq(par_lhs, par_rhs);
 }
 
-c_bool_t
-	c_str_lt(c_str_t* par_lhs, c_str_t* par_rhs) {
-		return str_lt(par_lhs, par_rhs);
+bool_t
+	str_gt(str* par_lhs, str* par_rhs) {
+		return __str_gt(par_lhs, par_rhs);
+}
+
+bool_t
+	str_lt(str* par_lhs, str* par_rhs) {
+		return __str_lt(par_lhs, par_rhs);
 }
 
 const char*
-	c_str_ptr(c_str_t* par_str) {
-		str_t* str = par_str;
+	str_ptr(str* par_str) {
+		__str *str = par_str;
 		return str->ptr + str->off_front;
 }
 
-c_u64_t
-	c_str_len(c_str_t* par_str) {
-		str_t* str = par_str;
+u64_t
+	str_len(str* par_str) {
+		__str* str = par_str;
 		return str->off_back - str->off_front;
 }

@@ -1,53 +1,53 @@
-#ifndef CRISP_DETAILS_LIST_H
-#define CRISP_DETAILS_LIST_H
+#ifndef __DETAILS_LIST_H__
+#define __DETAILS_LIST_H__
 
-#include <crisp/details/obj.h>
+#include "obj.h"
 
-typedef struct list_element_t {
-    mem_t                 *mem        ;
-    struct list_element_t *prev, *next;
-    struct list_t         *list;
-    obj_t                 *elem;
-}   list_element_t;
+typedef struct __list_elem {
+    __mem              *mem        ;
+    struct __list_elem *prev, *next;
+    struct list_t      *list;
+    __obj              *elem;
+}   __list_elem;
 
 typedef struct
-    list_t { alloc_t *alloc; list_element_t begin, end; }
-        list_t;
+    __list { __alloc *alloc; __list_elem begin, end; }
+        __list;
 
-c_bool_t
-    list_init
-        (list_t*, alloc_t*);
+bool_t
+    __list_init
+        (__list*, __alloc*);
 
-c_bool_t
-    list_init_as_clone
-        (list_t*, list_t*);
+bool_t
+    __list_init_as_clone
+        (__list*, __list*);
 
-c_bool_t
-    list_deinit
-        (list_t*);
+bool_t
+    __list_deinit
+        (__list*);
 
-list_element_t*
-    list_push_back
-        (list_t*, obj_t*);
+__list_elem*
+    __list_push_back
+        (__list*, __obj*);
 
-list_element_t*
-    list_push_front
-        (list_t*, obj_t*);
+__list_elem*
+    __list_push_front
+        (__list*, __obj*);
 
-list_element_t*
-    list_push_at
-        (list_t*, obj_t*, list_element_t*);
+__list_elem*
+    __list_push_at
+        (__list*, __obj*, __list_elem*);
 
-obj_t*
-    list_pop_front
-        (list_t*);
+__obj*
+    __list_pop_front
+        (__list*);
 
-obj_t*
-    list_pop_back
-        (list_t*);
+__obj*
+    __list_pop_back
+        (__list*);
 
-obj_t*
-    list_pop_at
-        (list_t*, list_element_t*);
+__obj*
+    __list_pop_at
+        (__list*, __list_elem*);
 
 #endif

@@ -1,37 +1,30 @@
-#include <crisp/alloc.h>
-#include <crisp/details/alloc.h>
+#include "alloc.h"
+#include "details/alloc.h"
 
-static c_alloc_t c_alloc_global	 		 ;
-static c_bool_t  c_alloc_global_init = false;
+alloc  default_alloc	 		 ;
+bool_t default_alloc_init = false;
 
-c_alloc_t*
-	c_global_alloc() {
-		if(!c_alloc_global_init) {
-			c_alloc_global_init = true;
-			if(!c_alloc_init(&c_alloc_global)) {
-				c_alloc_global_init = false;
-				return 0;
-			}
-
-			return &c_alloc_global;
+alloc*
+	get_default_alloc() {
+		if(!default_alloc_init) {
+			if(!alloc_init(&default_alloc)) return 0;
+			default_alloc_init = true;
 		}
-		return &c_alloc_global;
+
+		return &default_alloc;
 }
 
-c_bool_t
-    c_alloc_init(c_alloc_t* par_alloc) {
-        alloc_t* ptr_alloc               = par_alloc;
-                 ptr_alloc->handle_trait = &alloc_global_trait;
-
-        return alloc_init(ptr_alloc);
+bool_t
+    alloc_init(alloc* par_alloc) {
+        return __alloc_init(par_alloc, 0);
 }
 
-c_bool_t
-    c_alloc_init_as_clone(c_alloc_t *par_alloc, c_alloc_t *par_alloc_clone) {
-        return alloc_init_as_clone(par_alloc, par_alloc_clone);
+bool_t
+    alloc_init_as_clone(alloc *par_alloc, alloc *par_alloc_clone) {
+        return __alloc_init_as_clone(par_alloc, par_alloc_clone);
 }
 
-c_bool_t
-    c_alloc_deinit(c_alloc_t* par_alloc) {
-        return alloc_deinit(par_alloc);
+void
+    alloc_deinit(alloc* par_alloc) {
+        return __alloc_deinit(par_alloc);
 }

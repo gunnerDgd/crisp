@@ -3,36 +3,38 @@
 #include <crisp/obj.h>
 #include <crisp/list.h>
 
-c_bool_t TestInit(void* par_test, int par_arg_count, va_list par_arg) {
-	printf("%d %d\n", par_arg_count, va_arg(par_arg, int));
-	return c_true;
+bool_t TestInit(obj* par_test, u32_t par_arg_count, va_list par_arg) {
+	//printf("%d %d\n", par_arg_count, va_arg(par_arg, int));
+	return true_t;
 }
 
-typedef struct Test 		     { int i; } Test;
-c_obj_trait_t  TestObjectTrait = {
+typedef struct Test 		 { obj head; int i; } Test;
+obj_trait  TestObjectTrait = {
 	.init 		   = TestInit,
-	.init_as_clone = 0,
-	.init_as_ref   = 0,
-	.deinit 	   = 0,
+	.init_as_clone = 		0,
+	.init_as_ref   = 		0,
+	.deinit 	   = 		0
 };
 
 int main() {
-	c_list_t     list;
-	c_list_init(&list, c_global_alloc());
+	list       list;
+	list_init(&list, get_default_alloc());
 
 	for(int i = 0 ; i < 10 ; i++) {
-		c_obj_t obj     = c_obj_init(c_global_alloc(), sizeof(Test), &TestObjectTrait, 1, i);
-		Test*   obj_ptr = c_obj_ptr(obj);
+		Test* obj = obj_init(get_default_alloc(), sizeof(Test), &TestObjectTrait, 1, i);
 
-		obj_ptr->i = i;
-		c_list_push_front(&list, obj);
+		obj->i = i;
+		list_push_front(&list, obj);
+		printf("Use Count : %d\n", obj_use_count(obj));
+		obj_deinit(obj);
+		printf("Use Count : %d\n", obj_use_count(obj));
 	}
 
-	c_list_iter_t iter = c_list_iter_begin(&list);
-	while(iter != c_list_iter_end(&list)) {
-		Test* ptr = c_obj_ptr(c_list_iter_object(iter));
+	list_iter iter = list_iter_begin(&list);
+	while(iter != list_iter_end(&list)) {
+		Test* ptr = list_iter_object(iter);
 		printf("%d\n", ptr->i);
 
-		iter = c_list_iter_next(iter);
+		iter = list_iter_next(iter);
 	}
 }
