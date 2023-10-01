@@ -1,7 +1,7 @@
 #ifndef __TYPE_H__
 #define __TYPE_H__
 
-#ifdef CRISP_PRESET_LINUX
+#ifdef PRESET_LINUX
 #include <stdint.h>
 #include <stddef.h>
 #include <stdbool.h>
@@ -9,7 +9,7 @@
 #include <stdarg.h>
 #endif
 
-#ifdef CRISP_PRESET_WIN32
+#ifdef PRESET_WIN32
 #include <stdint.h>
 #include <stddef.h>
 #include <stdbool.h>

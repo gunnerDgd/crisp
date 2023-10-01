@@ -1,10 +1,9 @@
 #include "alloc.h"
-#include "alloc_cstd.h"
 
 bool_t
 	__alloc_init(__alloc* par_alloc, __alloc_trait* par_alloc_trait) {
-			   par_alloc->handle_trait = (par_alloc_trait) ? par_alloc_trait : &cstd_alloc_trait;
-		return par_alloc->handle_trait->init(par_alloc);
+			   par_alloc->handle_trait = par_alloc_trait;
+		return par_alloc->handle_trait->init(par_alloc) ;
 }
 
 bool_t

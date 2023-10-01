@@ -32,7 +32,7 @@ bool_t
 
 bool_t
 	__str_deinit(__str* par_str) {
-		if(!__mem_deinit(par_str->alloc_mem)) return false_t;
+		__mem_deinit(par_str->alloc_mem);
 
 		par_str->alloc	   = 0;
 		par_str->alloc_mem = 0;
@@ -53,7 +53,7 @@ void
 		par_rsv = (mem->alloc_size > par_rsv) ? (mem->alloc_size << 1) : (mem->alloc_size + par_rsv);
 		mem_new = __mem_init(par_str->alloc, par_rsv);
 
-		memcpy	    (__mem_ptr(mem_new), __mem_ptr(mem), mem->alloc_size);
+		memcpy	    (mem_new->ptr, mem->ptr, mem->alloc_size);
 		__mem_deinit(mem);
 		
 		par_str->alloc_mem = mem_new;
@@ -69,7 +69,7 @@ void
 		par_rsv = (mem->alloc_size > par_rsv) ? (mem->alloc_size << 1) : (mem->alloc_size + par_rsv);
 
 		mem_new = __mem_init(par_str->alloc, par_rsv);
-		memcpy	  (__mem_ptr(mem_new) + par_str->off_front, __mem_ptr(mem), mem->alloc_size);
+		memcpy	    (mem_new->ptr + par_str->off_front, mem->ptr, mem->alloc_size);
 		__mem_deinit(mem);
 
 		par_str->alloc_mem = mem_new;
@@ -153,9 +153,9 @@ void
 		mem = __mem_init(par_str->alloc, len + len_push); if (!mem) return;
 		par_str->off_back = 0;
 		
-		memcpy(__mem_ptr(mem)					 , par_str ->ptr + par_str ->off_front, par_off)					; par_str->off_back += par_off;
-		memcpy(__mem_ptr(mem) + par_str->off_back, par_push->ptr + par_push->off_front, len_push)					; par_str->off_back += len_push;
-		memcpy(__mem_ptr(mem) + par_str->off_back, par_str ->ptr + par_str ->off_front + par_off, (len - par_off)); par_str->off_back += (len - par_off);
+		memcpy(mem->ptr					   , par_str ->ptr + par_str ->off_front, par_off)					; par_str->off_back += par_off;
+		memcpy(mem->ptr + par_str->off_back, par_push->ptr + par_push->off_front, len_push)					; par_str->off_back += len_push;
+		memcpy(mem->ptr + par_str->off_back, par_str ->ptr + par_str ->off_front + par_off, (len - par_off)); par_str->off_back += (len - par_off);
 
 		__mem_deinit(mem);
 }
@@ -171,9 +171,9 @@ void
 		mem = __mem_init(par_str->alloc, len + len_push); if (!mem) return;
 		par_str->off_back = 0;
 		
-		memcpy(__mem_ptr(mem)					 , par_str ->ptr + par_str ->off_front, par_off)					; par_str->off_back += par_off;
-		memcpy(__mem_ptr(mem) + par_str->off_back, par_push							, len_push)					; par_str->off_back += len_push;
-		memcpy(__mem_ptr(mem) + par_str->off_back, par_str ->ptr + par_str ->off_front + par_off, (len - par_off)); par_str->off_back += (len - par_off);
+		memcpy(mem->ptr,  par_str->ptr + par_str ->off_front, par_off)										; par_str->off_back += par_off;
+		memcpy(mem->ptr + par_str->off_back, par_push							, len_push)					; par_str->off_back += len_push;
+		memcpy(mem->ptr + par_str->off_back, par_str ->ptr + par_str ->off_front + par_off, (len - par_off)); par_str->off_back += (len - par_off);
 
 		__mem_deinit(mem);
 }

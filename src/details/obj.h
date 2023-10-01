@@ -17,9 +17,11 @@ typedef struct __obj_trait {
 	struct __str*(*name)    	 (struct __obj*);
 }   __obj_trait;
 
-typedef struct
-	__obj { __mem *mem; atomic_u64_t ref; __obj_trait *trait; }
-		__obj;
+typedef struct __obj  { 
+    __mem       *mem  ; 
+    atomic_u64_t ref  ; 
+    __obj_trait *trait; 
+}   __obj;
 
 __obj*
     __obj_init

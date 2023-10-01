@@ -4,14 +4,14 @@
 #include "../type.h"
 #include "../type_atomic.h"
 
-typedef struct __alloc_trait {
-    bool_t        (*init)             (struct __alloc*);
+typedef struct __alloc_trait											{
+    bool_t        (*init)             (struct __alloc*)					;
     bool_t        (*init_as_clone)    (struct __alloc*, struct __alloc*);
-    void          (*deinit)           (struct __alloc*);
+    void          (*deinit)           (struct __alloc*)					;
 
-    struct __mem* (*mem_init)         (struct __alloc*, u64_t);
-    struct __mem* (*mem_init_as_clone)(struct __alloc*, struct __mem*);
-    bool_t        (*mem_deinit)       (struct __alloc*, struct __mem*);
+    struct __mem* (*mem_init)         (struct __alloc*, u64_t)			;
+    struct __mem* (*mem_init_as_clone)(struct __alloc*, struct __mem*)  ;
+    void          (*mem_deinit)       (struct __alloc*, struct __mem*)  ;
 }   __alloc_trait;
 
 typedef struct
