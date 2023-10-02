@@ -13,6 +13,8 @@
 #include <stdint.h>
 #include <stddef.h>
 #include <stdbool.h>
+
+#include <stdarg.h>
 #endif
 
 typedef uint8_t  u8_t ;

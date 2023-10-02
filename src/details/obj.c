@@ -4,8 +4,8 @@
 __obj*
     __obj_init(__alloc* par_alloc, __obj_trait* par_trait, u32_t par_arg_count, va_list par_arg) {
 		__mem* ret_mem    = __mem_init(par_alloc, par_trait->size());
-        __obj *ret 	      = __mem_ptr (ret_mem)			   		    ; if(ret_mem->alloc_size <= sizeof(__obj)) return 0;
-               ret->mem   =   ret_mem;
+        __obj *ret 	      = ret_mem->ptr			   		        ; if(ret_mem->alloc_size <= sizeof(__obj)) return 0;
+               ret->mem   = ret_mem  ;
                ret->ref   =         1;
                ret->trait = par_trait;
 
@@ -22,8 +22,8 @@ __obj*
 __obj*
     __obj_init_as_clone(__obj* par_object_clone) {
 		__mem *ret_mem    = __mem_init_as_clone(par_object_clone->mem); if(!ret_mem) return 0;
-		__obj *ret	      = __mem_ptr(ret_mem);
-			   ret->mem   =  		        ret_mem;
+		__obj *ret	      = ret_mem->ptr		   ;
+			   ret->mem   = ret_mem				   ;
                ret->ref   =         	          1;
 			   ret->trait = par_object_clone->trait;
 
@@ -49,15 +49,11 @@ __obj*
         return par_object;
 }
 
-__mem*
+void
     __obj_deinit(__obj* par_object) {
         u64_t ref;
         do  { ref = par_object->ref; } while(__atomic_cmpxchg64(&par_object->ref, ref, ref - 1) != ref);
 
-        if(ref == 0) {
-            	   par_object->trait->deinit(par_object);
-            return par_object->mem;
-        }
-
-        return 0;
+        if(ref == 0)
+			par_object->trait->deinit(par_object);
 }

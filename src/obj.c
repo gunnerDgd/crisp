@@ -1,19 +1,39 @@
 #include "obj.h"
 #include "details/obj.h"
 
+#include "default.h"
+
 obj*
     obj_init(alloc* par_alloc, obj_trait* par_trait, u32_t par_arg_count, ...) {
     	va_list  ret_args;
 		va_start(ret_args, par_arg_count);
-		obj*     ret = __obj_init((par_alloc) ? par_alloc : get_default_alloc(), par_trait, par_arg_count, ret_args);
 
-		va_end  (ret_args);
-		return   ret;
+		obj* ret = obj_init_from_varg (
+			par_alloc	 ,
+			par_trait	 ,
+			par_arg_count, 
+			ret_args
+		);
+
+		va_end(ret_args);
+		return ret;
 }
 
 obj*
     obj_init_from_varg(alloc* par_alloc, obj_trait* par_trait, u32_t par_arg_count, va_list par_arg) {
-		obj*   ret = __obj_init((par_alloc) ? par_alloc : get_default_alloc(), par_trait, par_arg_count, par_arg);
+		if(!par_alloc)
+			par_alloc = get_alloc();
+
+		if (!par_alloc)
+			return 0;
+
+		obj* ret = __obj_init (
+			par_alloc	 , 
+			par_trait	 , 
+			par_arg_count, 
+			par_arg
+		);
+
 		return ret;
 }
 
@@ -27,9 +47,9 @@ obj*
         return __obj_init_as_ref(par_object);
 }
 
-mem
+void
     obj_deinit(obj* par_object) {
-        return __obj_deinit(par_object);
+        __obj_deinit(par_object);
 }
 
 obj_trait*

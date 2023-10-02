@@ -4,12 +4,10 @@
 #include "mem.h"
 #include "alloc.h"
 
-typedef struct __str {
-	__alloc *alloc	  ;
-	__mem	*alloc_mem;
-
-	u64_t    off_front, off_back;
-	char*    ptr;
+typedef struct __str    {
+	__alloc *alloc	    ;
+	__mem	*mem		;
+	u64_t    front, back;
 }	__str;
 
 bool_t
@@ -38,7 +36,7 @@ void
 
 void
 	__str_push_back_cstr
-		(__str*, const char*);
+		(__str*, const char*, u64_t);
 
 void
 	__str_push_front
@@ -46,7 +44,7 @@ void
 
 void
 	__str_push_front_cstr
-		(__str*, const char*);
+		(__str*, const char*, u64_t);
 
 void
 	__str_push_at
@@ -54,7 +52,7 @@ void
 
 void
 	__str_push_at_cstr
-		(__str*, u64_t, const char*);
+		(__str*, u64_t, const char*, u64_t);
 
 u64_t
 	__str_find
@@ -62,7 +60,7 @@ u64_t
 
 u64_t
 	__str_find_from_cstr
-		(__str*, u64_t, const char*);
+		(__str*, u64_t, const char*, u64_t);
 
 bool_t
 	__str_eq
@@ -70,7 +68,7 @@ bool_t
 
 bool_t
 	__str_eq_from_cstr
-		(__str*, const char*);
+		(__str*, const char*, u64_t);
 
 bool_t
 	__str_gt
@@ -78,7 +76,7 @@ bool_t
 
 bool_t
 	__str_gt_from_cstr
-		(__str*, const char*);
+		(__str*, const char*, u64_t);
 
 bool_t
 	__str_lt
@@ -86,6 +84,6 @@ bool_t
 
 bool_t
 	__str_lt_from_cstr
-		(__str*, const char*);
+		(__str*, const char*, u64_t);
 
 #endif

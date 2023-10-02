@@ -15,5 +15,5 @@ elseif(WIN32)
     add_compile_definitions(PRESET_WIN32)
 endif ()
 
-add_executable       (examples-mem-alloc mem/alloc.c)
-target_link_libraries(examples-mem-alloc build build-arch)
+add_executable       (examples-mem-mem mem/mem.c)
+target_link_libraries(examples-mem-mem build build-arch)

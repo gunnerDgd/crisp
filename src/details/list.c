@@ -22,11 +22,14 @@ bool_t
 
         while(push_cur->next)
             __list_push_back(par_list, __obj_init_as_clone(push_cur->elem));
+
+        return true_t;
 }
 
-bool_t
+void
     __list_deinit(__list* par_deinit) {
-        while(__list_pop_front(par_deinit));
+        while(par_deinit->begin.next != &par_deinit->end)
+            __list_pop_front(par_deinit);
 }
 
 __list_elem*
@@ -34,32 +37,31 @@ __list_elem*
         if(!par_list->alloc) return 0;
 
         __mem       *ret_mem   = __mem_init(par_list->alloc, sizeof(__list_elem)); if(!ret_mem) return 0;
-        __list_elem *ret       = __mem_ptr (ret_mem);
+        __list_elem *ret       = ret_mem->ptr      ;
+                     ret->mem  = ret_mem		   ;
+                     ret->next = &par_list->end	   ;
+                     ret->prev =  par_list->end.prev;
 
-                        ret->mem  =  ret_mem		   ;
-                        ret->next = &par_list->end	   ;
-                        ret->prev =  par_list->end.prev;
+                     ret->elem = __obj_init_as_ref(par_object);
+                     ret->list = par_list;
+                                 par_list->end.prev->next = ret;
+								 par_list->end.prev       = ret;
 
-                        ret->elem =  __obj_init_as_ref(par_object);
-                        ret->list =  par_list;
-                                     par_list->end.prev->next = ret;
-									 par_list->end.prev       = ret;
-
-        return          ret;
+        return       ret;
 }
 
 __list_elem*
     __list_push_front(__list* par_list, __obj* par_object) {
         __mem       *ret_mem   = __mem_init(par_list->alloc, sizeof(__list_elem)); if(!ret_mem) return 0;
-        __list_elem *ret       = __mem_ptr (ret_mem);
+        __list_elem *ret       = ret_mem->ptr;
 
                      ret->next =  par_list->begin.next;
                      ret->prev = &par_list->begin;
 
                      ret->elem = __obj_init_as_ref(par_object);
                      ret->list = par_list;
-                                    par_list->begin.next->prev = ret;
-									par_list->begin.next       = ret;
+                                 par_list->begin.next->prev = ret;
+								 par_list->begin.next       = ret;
 
         return       ret;
 }
@@ -70,49 +72,49 @@ __list_elem*
         if (par_at->list != par_list) return 0;
 
         __mem       *ret_mem   = __mem_init(par_list->alloc, sizeof(__list_elem)); if(!ret_mem) return 0;
-        __list_elem *ret       = __mem_ptr (ret_mem);
+        __list_elem *ret       = ret_mem->ptr;
 
-                        ret->mem  = ret_mem     ;
-                        ret->prev = par_at      ;
-                        ret->next = par_at->next;
+                     ret->mem  = ret_mem     ;
+                     ret->prev = par_at      ;
+                     ret->next = par_at->next;
 
-                        ret->elem = __obj_init_as_ref(par_object);
-                        ret->list = par_list;
-                                    par_at->next = ret;
+                     ret->elem = __obj_init_as_ref(par_object);
+                     ret->list = par_list;
+                                 par_at->next = ret;
 
-        return          ret;
+        return       ret;
 }
 
-__obj*
+void
     __list_pop_front(__list* par_list) {
-        __list_elem *ret_elem = par_list->begin.next; if (ret_elem == &par_list->end) return 0;
+        __list_elem *ret_elem = par_list->begin.next; if (ret_elem == &par_list->end) return;
         __obj       *ret      = ret_elem->elem;
 
                      ret_elem->prev->next = ret_elem->next;
                      ret_elem->next->prev = ret_elem->prev;
 
-        		__mem_deinit(ret_elem->mem);
-        return (__obj_deinit(ret)) ? 0 : ret;
+        __mem_deinit(ret_elem->mem);
+        __obj_deinit(ret);
 }
 
-__obj*
+void
     __list_pop_back(__list* par_list) {
-        __list_elem *ret_elem = par_list->end.prev; if (ret_elem == &par_list->begin) return 0;
+        __list_elem *ret_elem = par_list->end.prev; if (ret_elem == &par_list->begin) return;
         __obj       *ret      = ret_elem->elem;
 
                      ret_elem->prev->next = ret_elem->next;
                      ret_elem->next->prev = ret_elem->prev;
 
-        	    __mem_deinit(ret_elem->mem);
-        return (__obj_deinit(ret)) ? 0 : ret;
+        __mem_deinit(ret_elem->mem);
+        __obj_deinit(ret);
 }
 
-__obj*
+void
     __list_pop_at(__list* par_list, __list_elem* par_pop) {
-        __obj *ret = par_pop->elem; if (par_pop->list != par_list) return 0;
+        __obj *ret = par_pop->elem; if (par_pop->list != par_list) return;
                      par_pop->prev->next = par_pop->next;
                      par_pop->next->prev = par_pop->prev;
 
-        	    __mem_deinit(par_pop->mem);
-        return (__obj_deinit(ret)) ? 0 : ret;
+        __mem_deinit(par_pop->mem);
+        __obj_deinit(ret);
 }

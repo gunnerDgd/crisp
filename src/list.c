@@ -11,9 +11,9 @@ bool_t
         return __list_init_as_clone(par_list, par_list_clone);
 }
 
-bool_t
+void
     list_deinit(list* par_list) {
-        return __list_deinit(par_list);
+        __list_deinit(par_list);
 }
 
 list_iter
@@ -31,19 +31,19 @@ list_iter
         return __list_push_at(par_list, par_push, par_push_at);
 }
 
-obj*
+void
     list_pop_front(list* par_list) {
-        return __list_pop_front(par_list);
+        __list_pop_front(par_list);
 }
 
-obj*
+void
     list_pop_back(list* par_list) {
-        return __list_pop_back(par_list);
+        __list_pop_back(par_list);
 }
 
-obj*
+void
     list_pop_at(list* par_list, list_iter par_pop_at) {
-        return __list_pop_at(par_list, par_pop_at);
+        __list_pop_at(par_list, par_pop_at);
 }
 
 list_iter

@@ -22,7 +22,7 @@ bool_t
     __list_init_as_clone
         (__list*, __list*);
 
-bool_t
+void
     __list_deinit
         (__list*);
 
@@ -38,15 +38,15 @@ __list_elem*
     __list_push_at
         (__list*, __obj*, __list_elem*);
 
-__obj*
+void
     __list_pop_front
         (__list*);
 
-__obj*
+void
     __list_pop_back
         (__list*);
 
-__obj*
+void
     __list_pop_at
         (__list*, __list_elem*);
 

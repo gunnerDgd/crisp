@@ -32,7 +32,7 @@ obj*
     obj_init_as_ref
         (obj*);
 
-mem
+void
     obj_deinit
         (obj*);
 

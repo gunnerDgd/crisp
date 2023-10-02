@@ -33,7 +33,7 @@ void
 
 void
 	str_push_back_cstr
-		(str*, const char*);
+		(str*, const char*, u64_t);
 
 void
 	str_push_front
@@ -41,7 +41,7 @@ void
 
 void
 	str_push_front_cstr
-		(str*, const char*);
+		(str*, const char*, u64_t);
 
 void
 	str_push_at
@@ -49,7 +49,7 @@ void
 
 void
 	str_push_at_cstr
-		(str*, u64_t, const char*);
+		(str*, u64_t, const char*, u64_t);
 
 u64_t
 	str_find
@@ -57,7 +57,7 @@ u64_t
 
 u64_t
 	str_find_from_cstr
-		(str*, u64_t, const char*);
+		(str*, u64_t, const char*, u64_t);
 
 bool_t
 	str_eq

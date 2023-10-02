@@ -35,7 +35,7 @@ __obj*
     __obj_init_as_ref
         (__obj*);
 
-__mem*
+void
     __obj_deinit
         (__obj*);
 

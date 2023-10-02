@@ -18,7 +18,7 @@ bool_t
     list_init_as_clone
         (list*, list*);
 
-bool_t
+void
     list_deinit
         (list*);
 
@@ -34,15 +34,15 @@ list_iter
     list_push_at
         (list*, obj*, list_iter);
 
-obj*
+void
     list_pop_front
         (list*);
 
-obj*
+void
     list_pop_back
         (list*);
 
-obj*
+void
     list_pop_at
         (list*, list_iter);
 

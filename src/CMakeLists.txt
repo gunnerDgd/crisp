@@ -8,6 +8,12 @@ elseif (PRESET_AARCH64)
     add_compile_definitions(PRESET_AARCH64)
 endif  ()
 
+if     (PRESET_DEFAULT_BAREMETAL)
+    add_compile_definitions(PRESET_DEFAULT_BAREMETAL)
+elseif (PRESET_DEFAULT_CSTD)
+    add_compile_definitions(PRESET_DEFAULT_CSTD)
+endif  ()
+
 if(UNIX AND NOT APPLE)
     set                    (PRESET_LINUX ON)
     add_compile_definitions(PRESET_LINUX)
@@ -51,6 +57,9 @@ add_library (build STATIC
     mem.h
     mem.c
 
+    ptr.h
+    ptr.c
+
     atomic.h
     atomic.c
 
@@ -63,11 +72,17 @@ add_library (build STATIC
     obj.h
     obj.c
 
+    default.h
+    default.c
+
     details/alloc.h
     details/alloc.c
         
     details/mem.h
     details/mem.c
+
+    details/ptr.h
+    details/ptr.c
 
     details/atomic.h
 

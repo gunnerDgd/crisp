@@ -4,23 +4,23 @@
 #include "../type.h"
 #include "../type_atomic.h"
 
-typedef struct __ptr     {
-    struct __mem* mem    ;
-    u64_t         mem_cur;
-}   __ptr;
+typedef struct __mem_trait       {
+    bool_t (*rd8) (void*, u8_t *);
+    bool_t (*rd16)(void*, u16_t*);
+    bool_t (*rd32)(void*, u32_t*);
+    bool_t (*rd64)(void*, u64_t*);
 
-typedef struct __mem_trait         {
-    bool_t (*rd8)  (__ptr*, u8_t *);
-    bool_t (*rd16) (__ptr*, u16_t*);
-    bool_t (*rd32) (__ptr*, u32_t*);
-    bool_t (*rd64) (__ptr*, u64_t*);
-    u64_t  (*read) (__ptr*, void*, u64_t);
+    bool_t (*wr8) (void*, u8_t)  ;
+    bool_t (*wr16)(void*, u16_t) ;
+    bool_t (*wr32)(void*, u32_t) ;
+    bool_t (*wr64)(void*, u64_t) ;
 
-    bool_t (*wr8)  (__ptr*, u8_t)  ;
-    bool_t (*wr16) (__ptr*, u16_t) ;
-    bool_t (*wr32) (__ptr*, u32_t) ;
-    bool_t (*wr64) (__ptr*, u64_t) ;
-    u64_t  (*write)(__ptr*, void*, u64_t);
+    u64_t  (*copy)(void*, void*, u64_t);
+    u64_t  (*move)(void*, void*, u64_t);
+
+    bool_t (*eq)  (void*, void*, u64_t);
+    bool_t (*lt)  (void*, void*, u64_t);
+    bool_t (*gt)  (void*, void*, u64_t);
 }   __mem_trait;
 
 typedef struct __mem          {
