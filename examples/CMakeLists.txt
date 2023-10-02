@@ -17,3 +17,6 @@ endif ()
 
 add_executable       (examples-mem-mem mem/mem.c)
 target_link_libraries(examples-mem-mem build build-arch)
+
+add_executable       (examples-obj-obj obj/obj.c)
+target_link_libraries(examples-obj-obj build build-arch)

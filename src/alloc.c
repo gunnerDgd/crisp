@@ -6,8 +6,6 @@
 
 #include "default.h"
 
-
-
 #ifdef PRESET_DEFAULT_BAREMETAL
 
 alloc       *default_alloc       = 0;

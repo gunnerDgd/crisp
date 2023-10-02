@@ -54,6 +54,8 @@ void
         u64_t ref;
         do  { ref = par_object->ref; } while(__atomic_cmpxchg64(&par_object->ref, ref, ref - 1) != ref);
 
-        if(ref == 0)
+		if (par_object->ref == 0) {
 			par_object->trait->deinit(par_object);
+			__mem_deinit(par_object->mem);
+		}
 }

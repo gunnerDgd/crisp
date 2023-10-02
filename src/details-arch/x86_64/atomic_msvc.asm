@@ -111,20 +111,20 @@ __atomic_dec64:
 
 __atomic_cmpxchg8:
     mov          al        , dl
-    lock cmpxchg byte [rcx], dl
+    lock cmpxchg byte [rcx], r8b
     ret
 
 __atomic_cmpxchg16:
     mov          ax        , dx
-    lock cmpxchg word [rcx], dx
+    lock cmpxchg word [rcx], r8w
     ret
 
 __atomic_cmpxchg32:
     mov          eax       , edx
-    lock cmpxchg dword[rcx], edx
+    lock cmpxchg dword[rcx], r8d
     ret
 
 __atomic_cmpxchg64:
     mov          rax       , rdx
-    lock cmpxchg qword[rcx], rdx
+    lock cmpxchg qword[rcx], r8
     ret
