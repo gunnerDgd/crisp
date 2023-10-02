@@ -64,16 +64,24 @@ bool_t
 		(str*, str*);
 
 bool_t
+	str_eq_from_cstr
+		(str*, const char*, u64_t);
+
+bool_t
 	str_gt
 		(str*, str*);
+
+bool_t
+	str_gt_from_cstr
+		(str*, const char*, u64_t);
 
 bool_t
 	str_lt
 		(str*, str*);
 
-const char*
-	str_ptr
-		(str*);
+bool_t
+	str_lt_from_cstr
+		(str*, const char*, u64_t);
 
 u64_t
 	str_len

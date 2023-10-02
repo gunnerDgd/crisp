@@ -3,9 +3,16 @@
 #include "details/alloc.h"
 #include "details/str.h"
 
+#include "default.h"
+
 bool_t
 	str_init
 		(str* par_str, alloc* par_alloc) {
+			if(!par_alloc)
+				par_alloc = get_alloc();
+			if(!par_alloc)
+				return false_t;
+
 			return __str_init(par_str, par_alloc);
 }
 
@@ -88,15 +95,33 @@ bool_t
 }
 
 bool_t
+	str_eq_from_cstr
+		(str* par_lhs, const char* par_rhs, u64_t par_rhs_len) {
+			return __str_eq_from_cstr(par_lhs, par_rhs, par_rhs_len);
+}
+
+bool_t
 	str_gt
 		(str* par_lhs, str* par_rhs) {
 			return __str_gt(par_lhs, par_rhs);
 }
 
 bool_t
+	str_gt_from_cstr
+		(str* par_lhs, const char* par_rhs, u64_t par_rhs_len) {
+			return __str_gt_from_cstr(par_lhs, par_rhs, par_rhs_len);
+}
+
+bool_t
 	str_lt
 		(str* par_lhs, str* par_rhs) {
 			return __str_lt(par_lhs, par_rhs);
+}
+
+bool_t
+	str_lt_from_cstr
+		(str* par_lhs, const char* par_rhs, u64_t par_rhs_len) {
+			return __str_lt_from_cstr(par_lhs, par_rhs, par_rhs_len);
 }
 
 u64_t

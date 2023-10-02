@@ -23,3 +23,6 @@ target_link_libraries(examples-obj-obj build build-arch)
 
 add_executable       (examples-list-list list/list.c)
 target_link_libraries(examples-list-list build build-arch)
+
+add_executable       (examples-str-str str/str.c)
+target_link_libraries(examples-str-str build build-arch)
