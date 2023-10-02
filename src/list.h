@@ -47,23 +47,23 @@ void
         (list*, list_iter);
 
 list_iter
-	list_iter_begin
+	list_begin
 		(list*);
 
 list_iter
-	list_iter_end
+	list_end
 		(list*);
 
 list_iter
-    list_iter_next
+    list_next
         (list_iter);
 
 list_iter
-    list_iter_prev
+    list_prev
         (list_iter);
 
 obj*
-    list_iter_object
+    list_obj
         (list_iter);
 
 #endif

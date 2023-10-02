@@ -1,18 +1,33 @@
 #include "list.h"
 #include "details/list.h"
 
+#include "default.h"
+
 bool_t
-    list_init(list* par_list, alloc* par_alloc) {
-        return __list_init(par_list, par_alloc);
+    list_init
+        (list* par_list, alloc* par_alloc) {
+            if(!par_alloc)
+                par_alloc = get_alloc();
+            if(!par_alloc)
+                return false_t;
+
+            return __list_init(par_list, par_alloc);
 }
 
 bool_t
-    list_init_as_clone(list* par_list, list* par_list_clone) {
-        return __list_init_as_clone(par_list, par_list_clone);
+    list_init_as_clone
+        (list* par_list, list* par_list_clone) {
+            if(!((__list*)par_list_clone)->alloc)
+                return false_t;
+
+            return __list_init_as_clone(par_list, par_list_clone);
 }
 
 void
     list_deinit(list* par_list) {
+        if(!((__list*)par_list)->alloc)
+            return;
+
         __list_deinit(par_list);
 }
 
@@ -47,30 +62,30 @@ void
 }
 
 list_iter
-	list_iter_begin(list* par_list) {
+	list_begin(list* par_list) {
 		__list* list = par_list;
 		return (list->begin.next->elem) ? list->begin.next : 0;
 }
 
 list_iter
-	list_iter_end(list* par_list) {
+	list_end(list* par_list) {
 		__list* list = par_list;
 		return &list->end;
 }
 
 list_iter
-    list_iter_next(list_iter par_elem) {
+    list_next(list_iter par_elem) {
         __list_elem *ret_elem = par_elem;
 		return 	    (ret_elem) ? ret_elem->next : 0;
 }
 
 list_iter
-    list_iter_prev(list_iter par_elem) {
+    list_prev(list_iter par_elem) {
         __list_elem *ret_elem = par_elem;
-		return      (ret_elem->next) ? ret_elem : 0;
+		return      (ret_elem) ? ret_elem->prev : 0;
 }
 
 obj*
-    list_iter_object(list_iter par_elem) {
+    list_obj(list_iter par_elem) {
         return (par_elem) ? ((__list_elem*)par_elem)->elem : 0;
 }
