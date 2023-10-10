@@ -15,6 +15,7 @@ bool_t
 	ListElementInit
 		(struct ListElement* par_obj, u32_t par_arg_count, va_list par_arg) {
 			par_obj->value = va_arg(par_arg, u64_t);
+			return true_t;
 }
 
 obj_trait ListElementTrait = {
@@ -33,6 +34,8 @@ int main() {
 		list_push_front(&List, obj_init(0, &ListElementTrait, 1, i));
 	}
 
-	for(list_iter it = list_begin(&List) ; it != list_end(&List) ; it = list_next(it))
-		printf("List Element : %d\n", ((struct ListElement*)list_obj(it))->value);
+	it i = list_begin(&List), i_end = list_end(&List);
+
+	for( ; !it_eq(&i, &i_end) ; it_next(&i))
+		printf("List Element : %d\n", ((struct ListElement*)it_get(&i))->value);
 }

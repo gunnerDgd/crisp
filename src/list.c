@@ -1,5 +1,7 @@
 #include "list.h"
+
 #include "details/list.h"
+#include "details/list_it.h"
 
 #include "default.h"
 
@@ -31,19 +33,43 @@ void
         __list_deinit(par_list);
 }
 
-list_iter
-    list_push_back(list* par_list, obj* par_object) {
-        return __list_push_back(par_list, par_object);
+it
+    list_push_back
+        (list* par_list, obj* par_object) {
+            it    ret;
+            __it *ret_it = &ret;
+
+            ret_it->it        = __list_push_back(par_list, par_object);
+            ret_it->it_parent = par_list;
+            ret_it->trait     = &__list_it_trait;
+
+            return ret;
 }
 
-list_iter
-    list_push_front(list* par_list, obj* par_object) {
-        return __list_push_front(par_list, par_object);
+it
+    list_push_front
+        (list* par_list, obj* par_object) {
+            it    ret;
+            __it *ret_it = &ret;
+
+            ret_it->it        = __list_push_front(par_list, par_object);
+            ret_it->it_parent = par_list;
+            ret_it->trait     = &__list_it_trait;
+
+            return ret;
 }
 
-list_iter
-    list_push_at(list* par_list, obj* par_push, list_iter par_push_at) {
-        return __list_push_at(par_list, par_push, par_push_at);
+it
+    list_push_at
+        (list* par_list, obj* par_object, it* par_at) {
+            it    ret;
+            __it *ret_it = &ret;
+
+            ret_it->it        = __list_push_at(par_list, par_object, ((__it*)par_at)->it);
+            ret_it->it_parent = par_list;
+            ret_it->trait     = &__list_it_trait;
+
+            return ret;
 }
 
 void
@@ -57,35 +83,22 @@ void
 }
 
 void
-    list_pop_at(list* par_list, list_iter par_pop_at) {
-        __list_pop_at(par_list, par_pop_at);
+    list_pop_at(list* par_list, it* par_at) {
+        __list_pop_at(par_list, ((__it*)par_at)->it);
 }
 
-list_iter
+it
 	list_begin(list* par_list) {
-		__list* list = par_list;
-		return (list->begin.next->elem) ? list->begin.next : 0;
+        it ret;
+        __list_it_begin(par_list, &ret);
+        
+        return ret;
 }
 
-list_iter
+it
 	list_end(list* par_list) {
-		__list* list = par_list;
-		return &list->end;
-}
+        it ret;
+        __list_it_end(par_list, &ret);
 
-list_iter
-    list_next(list_iter par_elem) {
-        __list_elem *ret_elem = par_elem;
-		return 	    (ret_elem) ? ret_elem->next : 0;
-}
-
-list_iter
-    list_prev(list_iter par_elem) {
-        __list_elem *ret_elem = par_elem;
-		return      (ret_elem) ? ret_elem->prev : 0;
-}
-
-obj*
-    list_obj(list_iter par_elem) {
-        return (par_elem) ? ((__list_elem*)par_elem)->elem : 0;
+        return ret;
 }

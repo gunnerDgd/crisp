@@ -75,6 +75,9 @@ add_library (build STATIC
     default.h
     default.c
 
+    it.h
+    it.c
+
     details/alloc.h
     details/alloc.c
         
@@ -92,6 +95,12 @@ add_library (build STATIC
     details/list.h
     details/list.c
 
+    details/list_it.h
+    details/list_it.c
+
     details/obj.h
     details/obj.c
+
+    details/it.h
+    details/it.c
 )

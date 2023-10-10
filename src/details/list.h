@@ -3,7 +3,7 @@
 
 #include "obj.h"
 
-typedef struct __list_elem {
+typedef struct __list_elem         {
     __mem              *mem        ;
     struct __list_elem *prev, *next;
     struct list_t      *list;
