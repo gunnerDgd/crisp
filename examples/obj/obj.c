@@ -33,7 +33,7 @@ u64_t
 		return sizeof(obj) + 32;	
 }
 
-obj_trait TestObjTrait = {
+obj_trait TestObjTrait				  = {
 	.init		   = &TestObjInit		,
 	.init_as_clone = &TestObjInitAsClone,
 	.init_as_ref   = &TestObjInitAsRef  ,
@@ -42,9 +42,9 @@ obj_trait TestObjTrait = {
 };
 
 int main() {
-	obj* TestObj = obj_init(0, &TestObjTrait, 0);
-	obj_init_as_ref(TestObj);
+	obj* TestObj = make(&TestObjTrait) from (0);
+	ref (TestObj);
 
-	obj_deinit(TestObj); printf("Object Deinit Operation (Use Count : %d)\n", obj_use_count(TestObj));
-	obj_deinit(TestObj);
+	del(TestObj); printf("Object Deinit Operation (Use Count : %d)\n", use_count(TestObj));
+	del(TestObj);
 }
