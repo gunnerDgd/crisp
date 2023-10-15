@@ -48,4 +48,13 @@ u64_t
 	obj_use_count
 		(obj*);
 
+#define make(par_type) obj_init(0, par_type, 
+#define from(...)      __VA_ARGS__)
+
+#define ref(par_obj)       obj_init_as_ref  (par_obj)
+#define clone(par_obj)     obj_init_as_clone(par_obj)
+#define del(par_obj)       obj_deinit       (par_obj)
+#define name_of(par_obj)   obj_name         (par_obj)
+#define use_count(par_obj) obj_use_count    (par_obj)
+
 #endif
