@@ -2,6 +2,7 @@
 #define __STR_H__
 
 #include "alloc.h"
+#include "ptr.h"
 
 typedef struct
 	str { u64_t handle[6]; }
@@ -85,6 +86,14 @@ bool_t
 
 u64_t
 	str_len
+		(str*);
+
+ptr
+	str_ptr
+		(str*);
+
+const char*
+	str_raw_ptr
 		(str*);
 
 #endif

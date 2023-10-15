@@ -21,4 +21,8 @@ u64_t
     mem_size
         (mem);
 
+u8_t*
+    mem_raw_ptr
+        (mem);
+
 #endif
