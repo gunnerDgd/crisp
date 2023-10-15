@@ -129,3 +129,15 @@ u64_t
 		(str* par_str) {
 			return ((__str*)par_str)->back - ((__str*)par_str)->front;
 }
+
+ptr
+	str_ptr
+		(str* par_str) {
+			return mem_ptr(((__str*)par_str)->mem, 0);
+}
+
+const char*
+	str_raw_ptr
+		(str* par_str) {
+			return ((__str*)par_str)->mem->ptr + ((__str*)par_str)->front;
+}

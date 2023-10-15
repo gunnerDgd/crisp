@@ -38,3 +38,9 @@ u64_t
     mem_size(mem par_mem) {
         return ((__mem*)par_mem)->alloc_size;
 }
+
+u8_t*
+    mem_raw_ptr
+        (mem par_mem) {
+            return ((__mem*)par_mem)->ptr;
+}
