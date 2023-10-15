@@ -56,5 +56,6 @@ u64_t
 #define del(par_obj)       obj_deinit       (par_obj)
 #define name_of(par_obj)   obj_name         (par_obj)
 #define use_count(par_obj) obj_use_count    (par_obj)
+#define trait_of(par_obj)  obj_get_trait    (par_obj)
 
 #endif
