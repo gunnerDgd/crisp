@@ -21,28 +21,13 @@ typedef struct  __it	 {
 }	__it;
 
 
-bool_t
-	__it_next
-		(__it*);
+bool_t __it_next(__it*);
 
-void*
-	__it_get
-		(__it*);
+void*  __it_get (__it*);
+void*  __it_set (__it*, void*);
 
-void*
-	__it_set
-		(__it*, void*);
-
-bool_t
-	__it_eq
-		(__it*, __it*);
-
-bool_t
-	__it_lt
-		(__it*, __it*);
-
-bool_t
-	__it_gt
-		(__it*, __it*);
+bool_t __it_eq  (__it*, __it*);
+bool_t __it_lt  (__it*, __it*);
+bool_t __it_gt  (__it*, __it*);
 
 #endif

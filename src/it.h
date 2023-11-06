@@ -6,28 +6,13 @@
 
 typedef struct it { u64_t it[4]; } it;
 
-bool_t
-	it_next
-		(it*);
+bool_t it_next(it*);
 
-void*
-	it_get
-		(it*);
+void*  it_get (it*);
+void*  it_set (it*, void*);
 
-void*
-	it_set
-		(it*, void*);
-
-bool_t
-	it_eq
-		(it*, it*);
-
-bool_t
-	it_lt
-		(it*, it*);
-
-bool_t
-	it_gt
-		(it*, it*);
+bool_t it_eq  (it*, it*);
+bool_t it_lt  (it*, it*);
+bool_t it_gt  (it*, it*);
 
 #endif

@@ -16,39 +16,19 @@ typedef struct obj_trait {
 	str*   (*name)		   (obj*);
 }   obj_trait;
 
-obj*
-    obj_init
-        (alloc*, obj_trait*, u32_t, ...);
+obj* obj_init          (alloc*, obj_trait*, u32_t, ...);
+obj* obj_init_from_varg(alloc*, obj_trait*, u32_t, va_list);
+obj* obj_init_as_clone (obj*);
+obj* obj_init_as_ref   (obj*);
+void obj_deinit		   (obj*);
 
-obj*
-	obj_init_from_varg
-		(alloc*, obj_trait*, u32_t, va_list);
+obj_trait* obj_get_trait(obj*);
+str*	   obj_name     (obj*);
+u64_t      obj_use_count(obj*);
 
-obj*
-    obj_init_as_clone
-        (obj*);
-
-obj*
-    obj_init_as_ref
-        (obj*);
-
-void
-    obj_deinit
-        (obj*);
-
-obj_trait*
-	obj_get_trait
-		(obj*);
-
-str*
-	obj_name
-		(obj*);
-
-u64_t
-	obj_use_count
-		(obj*);
-
-#define make(par_type) obj_init(0, par_type, 
+#ifndef __cplusplus
+#define make(par_type) obj_init           (0, par_type,
+#define vmake(par_type) obj_init_from_varg(0, par_type
 #define from(...)      __VA_ARGS__)
 
 #define ref(par_obj)       obj_init_as_ref  (par_obj)
@@ -58,4 +38,5 @@ u64_t
 #define use_count(par_obj) obj_use_count    (par_obj)
 #define trait_of(par_obj)  obj_get_trait    (par_obj)
 
+#endif
 #endif

@@ -1,19 +1,18 @@
 #ifndef __DETAILS_MEM_H__
 #define __DETAILS_MEM_H__
 
-#include "../type.h"
-#include "../type_atomic.h"
+#include "alloc.h"
 
-typedef struct __mem_trait       {
-    bool_t (*rd8) (void*, u8_t *);
-    bool_t (*rd16)(void*, u16_t*);
-    bool_t (*rd32)(void*, u32_t*);
-    bool_t (*rd64)(void*, u64_t*);
+typedef struct __mem_trait             {
+    bool_t (*rd8) (void*, u8_t *)      ;
+    bool_t (*rd16)(void*, u16_t*)      ;
+    bool_t (*rd32)(void*, u32_t*)      ;
+    bool_t (*rd64)(void*, u64_t*)      ;
 
-    bool_t (*wr8) (void*, u8_t)  ;
-    bool_t (*wr16)(void*, u16_t) ;
-    bool_t (*wr32)(void*, u32_t) ;
-    bool_t (*wr64)(void*, u64_t) ;
+    bool_t (*wr8) (void*, u8_t)        ;
+    bool_t (*wr16)(void*, u16_t)       ;
+    bool_t (*wr32)(void*, u32_t)       ;
+    bool_t (*wr64)(void*, u64_t)       ;
 
     u64_t  (*copy)(void*, void*, u64_t);
     u64_t  (*move)(void*, void*, u64_t);
