@@ -29,16 +29,8 @@ typedef struct __mem          {
     __mem_trait    *trait     ;
 }	__mem;
 
-__mem*
-    __mem_init
-        (struct __alloc*, u64_t);
-
-__mem*
-    __mem_init_as_clone
-        (__mem*);
-
-void
-    __mem_deinit
-        (__mem*);
+__mem* __mem_init         (struct __alloc*, u64_t);
+__mem* __mem_init_as_clone(__mem*);
+void   __mem_deinit       (__mem*);
 
 #endif

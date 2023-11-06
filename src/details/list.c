@@ -1,12 +1,40 @@
 #include "list.h"
 
-__obj_trait __list_trait                = {
-    .init          = &__list_init         ,
-    .init_as_clone = &__list_init_as_clone,
-    .init_as_ref   =                     0,
-    .deinit        = &__list_deinit       ,
-    .name          =                     0,
-    .size          = &__list_size
+bool_t
+    __list_obj_init
+        (__list* par_list, u32_t par_count, va_list par) {
+            __alloc* alloc = va_arg(par, __alloc*);
+            if     (!alloc) alloc = global_alloc;
+            if     (!alloc) return false_t;
+
+            return __list_init(par_list, alloc);
+}
+
+bool_t
+    __list_obj_init_as_clone
+        (__list* par, __list* par_clone) {
+            return __list_init_as_clone(par, par_clone);
+}
+
+void
+    __list_obj_deinit
+        (__list* par) {
+            __list_deinit(par);
+}
+
+u64_t
+    __list_obj_size() {
+        return sizeof(__list);
+}
+
+
+__obj_trait __list_trait                    = {
+    .init          = &__list_obj_init         ,
+    .init_as_clone = &__list_obj_init_as_clone,
+    .init_as_ref   =                         0,
+    .deinit        = &__list_obj_deinit       ,
+    .name          =                         0,
+    .size          = &__list_obj_size
 };
 
 bool_t
@@ -41,11 +69,6 @@ void
         (__list* par) {
             while(par->begin.next != &par->end)
                 __list_pop_front(par);
-}
-
-u64_t
-    __list_size() {
-        return sizeof(__list);
 }
 
 __list_elem*

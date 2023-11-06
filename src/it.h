@@ -15,4 +15,13 @@ bool_t it_eq  (it*, it*);
 bool_t it_lt  (it*, it*);
 bool_t it_gt  (it*, it*);
 
+#define next(par)		      it_next(&par)
+#define get(par)		      it_get (&par)
+#define get_as(par, par_type) ((par_type)get(par))
+#define set(par)		      it_set (&par)
+#define eq(par, par_cmp)      it_eq  (&par, &par_cmp)
+#define neq(par, par_cmp)    !it_eq  (&par, &par_cmp)
+#define lt(par, par_cmp)      it_lt  (&par, &par_cmp)
+#define gt(par, par_cmp)      it_gt  (&par, &par_cmp)
+
 #endif

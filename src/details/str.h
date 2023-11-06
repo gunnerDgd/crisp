@@ -16,7 +16,6 @@ typedef struct	   __str      {
 bool_t __str_init		  (__str*, __alloc*);
 bool_t __str_init_as_clone(__str*, __str*)  ;
 bool_t __str_deinit		  (__str*)		    ;
-u64_t  __str_size		  ()				;
 
 void   __str_rsv_back (__str*, u64_t);
 void   __str_rsv_front(__str*, u64_t);
