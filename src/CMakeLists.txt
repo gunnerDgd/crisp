@@ -1,5 +1,5 @@
 project(build)
-set    (C_STANDARD 11)
+set    (CMAKE_C_STANDARD 11)
 if     (PRESET_X86_64)
     add_compile_definitions(PRESET_X86_64)
 elseif (PRESET_X86)
@@ -28,26 +28,34 @@ elseif (CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
     add_compile_definitions(PRESET_COMPILER_MSVC)
 endif()
 
+if     (PRESET_ENV_BAREMETAL)
+    add_compile_definitions(PRESET_ENV_BAREMETAL)
+elseif (PRESET_ENV_CSTD)
+    add_compile_definitions(PRESET_ENV_CSTD)
+endif  ()
+
 if   (PRESET_X86_64)
     enable_language      (ASM_NASM)
     set                  (CMAKE_ASM_NASM_COMPILE_OBJECT "<CMAKE_ASM_NASM_COMPILER> <INCLUDES> <FLAGS> -o <OBJECT> <SOURCE>")
     add_compile_options  ("$<$<COMPILE_LANGUAGE:ASM_NASM>:-f $<IF:$<BOOL:$<TARGET_PROPERTY:NASM_OBJ_FORMAT>>, \ $<TARGET_PROPERTY:NASM_OBJ_FORMAT>, ${CMAKE_ASM_NASM_OBJECT_FORMAT}>>")
 
     if    (PRESET_COMPILER_GCC)
-            add_library          (build-arch details-arch/x86_64/atomic_gcc.asm)
-            set_target_properties(build-arch PROPERTIES NASM_OBJ_FORMAT elf64)
+            add_library          (build-arch-asm details-arch/x86_64/asm/atomic_gcc.asm)
+            set_target_properties(build-arch-asm PROPERTIES NASM_OBJ_FORMAT elf64)
     elseif(PRESET_COMPILER_MSVC)
-            add_library          (build-arch details-arch/x86_64/atomic_msvc.asm)
-            set_target_properties(build-arch PROPERTIES NASM_OBJ_FORMAT win64)
+            add_library          (build-arch-asm details-arch/x86_64/asm/atomic_msvc.asm details-arch/x86_64/asm/task_msvc.asm)
+            set_target_properties(build-arch-asm PROPERTIES NASM_OBJ_FORMAT win64)
     endif ()
+
+    add_library(build-arch STATIC
+        details-arch/x86_64/task.h
+        details-arch/x86_64/task.c
+    )
 endif()
 
-if     (PRESET_ENV_BAREMETAL)
-    add_compile_definitions(PRESET_ENV_BAREMETAL)
-elseif (PRESET_ENV_CSTD)
-    add_compile_definitions(PRESET_ENV_CSTD)
-    add_subdirectory       (preset/cstd)
-endif  ()
+if(PRESET_ENV_CSTD)
+    add_subdirectory(preset/cstd)
+endif()
 
 
 add_library (build STATIC
@@ -77,6 +85,9 @@ add_library (build STATIC
 
     it.h
     it.c
+
+    task.h
+    task.c
 
     details/alloc.h
     details/alloc.c

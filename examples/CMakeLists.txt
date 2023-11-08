@@ -16,13 +16,16 @@ elseif(WIN32)
 endif ()
 
 add_executable       (examples-mem-mem mem/mem.c)
-target_link_libraries(examples-mem-mem build build-arch build-preset)
+target_link_libraries(examples-mem-mem build build-arch build-arch-asm build-preset)
 
 add_executable       (examples-obj-obj obj/obj.c)
-target_link_libraries(examples-obj-obj build build-arch build-preset)
+target_link_libraries(examples-obj-obj build build-arch build-arch-asm build-preset)
 
 add_executable       (examples-list-list list/list.c)
-target_link_libraries(examples-list-list build build-arch build-preset)
+target_link_libraries(examples-list-list build build-arch build-arch-asm build-preset)
 
 add_executable       (examples-str-str str/str.c)
-target_link_libraries(examples-str-str build build-arch build-preset)
+target_link_libraries(examples-str-str build build-arch build-arch-asm build-preset)
+
+add_executable       (examples-task-task task/task.c)
+target_link_libraries(examples-task-task build build-arch build-arch-asm build-preset)
