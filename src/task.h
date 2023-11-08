@@ -13,4 +13,9 @@ void   task_deinit		 (obj*)		 ;
 bool_t task_run		     (obj*)		 ;
 bool_t task_yield		 (obj*)		 ;
 
+#ifndef __cplusplus
+#define run(par)   task_run  (par)
+#define yield(par) task_yield(par)
+#endif
+
 #endif
