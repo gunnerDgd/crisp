@@ -10,19 +10,16 @@ typedef struct
     list { u64_t handle[16];}
         list;
 
-bool_t list_init         (list*, alloc*);
-bool_t list_init_as_clone(list*, list*) ;
-void   list_deinit       (list*)        ;
+it     list_push_back (list*, obj*)     ;
+it     list_push_front(list*, obj*)     ;
+it     list_push_at   (list*, obj*, it*);
 
-it   list_push_back (list*, obj*)     ;
-it   list_push_front(list*, obj*)     ;
-it   list_push_at   (list*, obj*, it*);
+void   list_pop_front(list*)	   ;
+void   list_pop_back (list*)	   ;
+void   list_pop_at   (list*, it*);
 
-void list_pop_front(list*)	   ;
-void list_pop_back (list*)	   ;
-void list_pop_at   (list*, it*);
-
-it list_begin(list*);
-it list_end  (list*);
+it     list_begin(list*);
+it     list_end  (list*);
+bool_t list_empty(list*);
 
 #endif

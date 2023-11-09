@@ -1,5 +1,5 @@
-global __task_start
-global __task_switch
+global __asm_cpu_start
+global __asm_cpu_switch
 
 section .text
 
@@ -26,7 +26,7 @@ section .text
 %define __cpu_r15 0x80
 
 ;	void
-;		__task_start
+;		__asm_cpu_start
 ;			(__task_cpu* ret, __task_cpu* cur, void(*fn)(void*), void* fn_arg)
 ;
 ;	RCX : ret 
@@ -34,7 +34,7 @@ section .text
 ;	R8  : fn
 ;	R9  : fn_arg
 ;
-__task_start:
+__asm_cpu_start:
 	mov qword[rcx + __cpu_rax], rax
 	mov qword[rcx + __cpu_rbx], rbx
 	mov qword[rcx + __cpu_rcx], rcx
@@ -67,13 +67,13 @@ __task_start:
 	
 ;
 ;	void
-;		__task_switch
+;		__asm_cpu_switch
 ;			(__task_cpu* ret, __task_cpu* cur)
 ;
 ;	RCX : ret
 ;	RDX : cur
 ;
-__task_switch:
+__asm_cpu_switch:
 	mov qword[rcx + __cpu_rax], rax
 	mov qword[rcx + __cpu_rbx], rbx
 	mov qword[rcx + __cpu_rcx], rcx

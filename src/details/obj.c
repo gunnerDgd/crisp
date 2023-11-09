@@ -20,6 +20,19 @@ __obj*
 		return ret;
 }
 
+bool_t 
+	__obj_init_at
+		(__obj* par_obj, __obj_trait* par_trait, u32_t par_count, va_list par) {
+			par_obj->mem   =		 0;
+			par_obj->trait = par_trait;
+			par_obj->ref   =		 1;
+
+			if (par_obj->trait->init)
+				return par_obj->trait->init(par_obj, par_count, par);
+			
+			return true_t;
+}
+
 __obj*
     __obj_init_as_clone
 		(__obj* par) {
@@ -57,8 +70,8 @@ void
 			u64_t ref;
 			do  { ref = par->ref; } while(__atomic_cmpxchg64(&par->ref, ref, ref - 1) != ref);
 
-			if (par->ref == 0)		   {
-				par->trait->deinit(par);
-				__mem_deinit(par->mem) ;
+			if (par->ref == 0)					   {
+				par->trait->deinit(par)			   ;
+				if(par->mem) __mem_deinit(par->mem);
 			}
 }

@@ -5,33 +5,6 @@
 
 obj_trait* list_t = &__list_trait;
 
-bool_t
-    list_init
-        (list* par, alloc* par_alloc) {
-            if(!par_alloc) par_alloc = get_alloc();
-            if(!par_alloc) return false_t;
-
-            return __list_init(par, par_alloc);
-}
-
-bool_t
-    list_init_as_clone
-        (list* par, list* par_clone) {
-            if(!((__list*)par_clone)->alloc)
-                return false_t;
-
-            return __list_init_as_clone(par, par_clone);
-}
-
-void
-    list_deinit
-        (list* par) {
-            if(!((__list*)par)->alloc)
-                return;
-
-            __list_deinit(par);
-}
-
 it
     list_push_back
         (list* par, obj* par_object) {
@@ -86,7 +59,11 @@ void
 void
     list_pop_at
         (list* par, it* par_at) {
-            __list_pop_at(par, ((__it*)par_at)->it);
+            __it        *it      = par_at                      ;
+            __list_elem *it_next = ((__list_elem*)it->it)->next;
+
+            __list_pop_at(par, it->it);
+            it->it = it_next;
 }
 
 it
@@ -105,4 +82,10 @@ it
             __list_it_end(par, &ret);
 
             return ret;
+}
+
+bool_t
+    list_empty
+        (list* par) {
+            return __list_empty(par);
 }

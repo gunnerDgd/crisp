@@ -20,6 +20,22 @@ obj*
 			return ret;
 }
 
+obj* 
+	obj_init_at
+		(obj* par_obj, obj_trait* par_trait, u32_t par_count, ...) {
+			va_list  par;
+			va_start(par, par_count); bool_t ret = obj_init_at_from_varg(par_obj, par_trait, par_count, par);
+			va_end  (par);
+
+			return ret;
+}
+
+obj* 
+	obj_init_at_from_varg
+		(obj* par_obj, obj_trait* par_trait, u32_t par_count, va_list par) {
+			return __obj_init_at(par_obj, par_trait, par_count, par);
+}
+
 obj*
     obj_init_as_clone
 		(obj* par) {

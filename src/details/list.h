@@ -17,9 +17,10 @@ typedef struct     __list      {
     __list_elem begin, end;
 }   __list;
 
-bool_t       __list_init         (__list*, __alloc*);
-bool_t       __list_init_as_clone(__list*, __list*) ;
-void         __list_deinit       (__list*)          ;
+bool_t       __list_init         (__list*, u32_t, va_list);
+bool_t       __list_init_as_clone(__list*, __list*)       ;
+void         __list_deinit       (__list*)                ;
+u64_t        __list_size         ()                       ;
 
 __list_elem* __list_push_back    (__list*, __obj*)              ;
 __list_elem* __list_push_front   (__list*, __obj*)              ;
@@ -28,5 +29,6 @@ __list_elem* __list_push_at      (__list*, __obj*, __list_elem*);
 void         __list_pop_front    (__list*)              ;
 void         __list_pop_back     (__list*)              ;
 void         __list_pop_at       (__list*, __list_elem*);
+bool_t       __list_empty        (__list*)              ;
 
 #endif

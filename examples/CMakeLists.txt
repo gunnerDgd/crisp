@@ -27,5 +27,8 @@ target_link_libraries(examples-list-list build build-arch build-arch-asm build-p
 add_executable       (examples-str-str str/str.c)
 target_link_libraries(examples-str-str build build-arch build-arch-asm build-preset)
 
-add_executable       (examples-task-task task/task.c)
-target_link_libraries(examples-task-task build build-arch build-arch-asm build-preset)
+add_executable       (examples-coro-coro coro/coro.c)
+target_link_libraries(examples-coro-coro build build-arch build-arch-asm build-preset)
+
+add_executable       (examples-sched-sched sched/sched.c)
+target_link_libraries(examples-sched-sched build build-arch build-arch-asm build-preset)

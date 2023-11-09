@@ -1,51 +1,26 @@
 #include "list.h"
 
-bool_t
-    __list_obj_init
-        (__list* par_list, u32_t par_count, va_list par) {
-            __alloc* alloc = va_arg(par, __alloc*);
-            if     (!alloc) alloc = global_alloc;
-            if     (!alloc) return false_t;
 
-            return __list_init(par_list, alloc);
-}
-
-bool_t
-    __list_obj_init_as_clone
-        (__list* par, __list* par_clone) {
-            return __list_init_as_clone(par, par_clone);
-}
-
-void
-    __list_obj_deinit
-        (__list* par) {
-            __list_deinit(par);
-}
-
-u64_t
-    __list_obj_size() {
-        return sizeof(__list);
-}
-
-
-__obj_trait __list_trait                    = {
-    .init          = &__list_obj_init         ,
-    .init_as_clone = &__list_obj_init_as_clone,
-    .init_as_ref   =                         0,
-    .deinit        = &__list_obj_deinit       ,
-    .name          =                         0,
-    .size          = &__list_obj_size
+__obj_trait __list_trait                = {
+    .init          = &__list_init         ,
+    .init_as_clone = &__list_init_as_clone,
+    .init_as_ref   =                     0,
+    .deinit        = &__list_deinit       ,
+    .name          =                     0,
+    .size          = &__list_size
 };
 
 bool_t
     __list_init
-        (__list* par, __alloc* par_alloc) {
-            par->begin.next = &par->end;
-            par->begin.prev =         0;
+        (__list* par_list, u32_t par_count, va_list par) {
+            __alloc* alloc = (par_count == 0) ? global_alloc : va_arg(par, __alloc*);
 
-            par->end.prev   = &par->begin;
-            par->end.next   =           0;
-            par->alloc      = par_alloc  ;
+            par_list->begin.next = &par_list->end;
+            par_list->begin.prev =              0;
+
+            par_list->end.prev   = &par_list->begin;
+            par_list->end.next   =                0;
+            par_list->alloc      = alloc;
 
             return true_t;
 }
@@ -55,9 +30,14 @@ bool_t
         (__list* par, __list* par_clone) {
             if(!par_clone->alloc) return false_t;
 
-            __list_init (par, par_clone->alloc);
-            __list_elem *push_cur = par_clone->begin.next;
+            par->begin.next = &par->end;
+            par->begin.prev =         0;
 
+            par->end.prev   =      &par->begin;
+            par->end.next   =                0;
+            par->alloc      = par_clone->alloc;
+
+            __list_elem *push_cur = par_clone->begin.next;
             while(push_cur->next)
                 __list_push_back(par, __obj_init_as_clone(push_cur->elem));
 
@@ -69,6 +49,11 @@ void
         (__list* par) {
             while(par->begin.next != &par->end)
                 __list_pop_front(par);
+}
+
+u64_t
+    __list_size() {
+        return sizeof(__list);
 }
 
 __list_elem*
@@ -95,7 +80,8 @@ __list_elem*
         (__list* par, __obj* par_push) {
             __mem       *ret_mem   = __mem_init(par->alloc, sizeof(__list_elem)); if(!ret_mem) return 0;
             __list_elem *ret       = ret_mem->ptr;
-
+                         
+                         ret->mem  = ret_mem         ;
                          ret->next =  par->begin.next;
                          ret->prev = &par->begin     ;
 
@@ -155,10 +141,16 @@ void
 void
     __list_pop_at
         (__list* par, __list_elem* par_at) {
-            __obj *ret = par_at->elem; if (par_at->list != par) return;
+            __obj *ret = par_at->elem                     ; if (par_at->list != par) return;
                          par_at->prev->next = par_at->next;
                          par_at->next->prev = par_at->prev;
 
             __mem_deinit(par_at->mem);
             __obj_deinit(ret);
+}
+
+bool_t
+    __list_empty
+        (__list* par) {
+            return par->begin.next == &par->end;
 }

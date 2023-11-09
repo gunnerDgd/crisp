@@ -1,48 +1,29 @@
 #include "str.h"
 
-bool_t
-	__str_obj_init
-		(__str* par_str, u32_t par_count, va_list par) {
-			__alloc*    alloc = va_arg(par, __alloc*);
-			if (!alloc) alloc = global_alloc;
-			if (!alloc) return false_t;
 
-			return __str_init(par_str, alloc);
-}
-
-bool_t
-	__str_obj_init_as_clone
-		(__str* par, __str* par_clone) {
-			return __str_init_as_clone(par, par_clone);
-}
-
-void
-	__str_obj_deinit
-		(__str* par) {
-			__str_deinit(par);
-}
-
-u64_t
-	__str_obj_size() {
-		return sizeof(__str);
-}
-
-__obj_trait __str_trait					   = {
-	.init		   = &__str_obj_init		 ,
-	.init_as_clone = &__str_obj_init_as_clone,
-	.init_as_ref   =						0,
-	.deinit		   = &__str_obj_deinit		 ,
-	.name		   =						0,
-	.size		   = &__str_obj_size
+__obj_trait __str_trait				   = {
+	.init		   = &__str_init		 ,
+	.init_as_clone = &__str_init_as_clone,
+	.init_as_ref   =					0,
+	.deinit		   = &__str_deinit		 ,
+	.name		   =					0,
+	.size		   = &__str_size
 };
 
 bool_t
 	__str_init
-		(__str* par, __alloc* par_alloc) {
-			par->alloc = par_alloc;
-			par->mem   = __mem_init(par->alloc, 16); if (!par->mem) return false_t;
+		(__str* par_str, u32_t par_count, va_list par) {
+			__alloc* alloc  = (par_count == 0) ? global_alloc : va_arg(par, __alloc*);
+			if (!alloc)
+				return false_t;
+			
+			par_str->alloc = alloc;
+			par_str->mem   = __mem_init(par_str->alloc, 16); 
+			
+			if (!par_str->mem) 
+				return false_t;
 		
-			par->front = 0; par->back  = 0;
+			par_str->front = 0; par_str->back  = 0;
 			return true_t;
 }
 
@@ -73,6 +54,11 @@ bool_t
 
 			par_str->alloc = 0; par_str->mem = 0;
 			return true_t;
+}
+
+u64_t
+	__str_size() {
+		return sizeof(__str);
 }
 
 void
@@ -415,4 +401,10 @@ bool_t
 				par_cmp							   ,
 				par_len
 			);
+}
+
+bool_t 
+	__str_empty
+		(__str* par_str) {
+			return par_str->front == par_str->back;
 }

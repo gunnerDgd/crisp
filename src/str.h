@@ -7,10 +7,6 @@
 extern struct obj_trait* str_t;
 typedef struct			 str  { u64_t handle[10]; } str;
 
-bool_t str_init		    (str*, alloc*);
-bool_t str_init_as_clone(str*, str*)  ;
-bool_t str_deinit		(str*)        ;
-
 void str_rsv_back (str*, u64_t);
 void str_rsv_front(str*, u64_t);
 
@@ -40,7 +36,8 @@ bool_t str_start_with_from_cstr(str*, const char*, u64_t);
 bool_t str_end_with			   (str*, str*);
 bool_t str_end_with_from_cstr  (str*, const char*, u64_t);
 
-u64_t str_len(str*);
-ptr   str_ptr(str*);
+bool_t str_empty(str*);
+u64_t str_len   (str*);
+ptr   str_ptr   (str*);
 
 #endif

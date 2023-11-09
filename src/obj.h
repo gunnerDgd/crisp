@@ -16,20 +16,24 @@ typedef struct obj_trait {
 	str*   (*name)		   (obj*);
 }   obj_trait;
 
-obj* obj_init          (alloc*, obj_trait*, u32_t, ...);
-obj* obj_init_from_varg(alloc*, obj_trait*, u32_t, va_list);
-obj* obj_init_as_clone (obj*);
-obj* obj_init_as_ref   (obj*);
-void obj_deinit		   (obj*);
+obj* obj_init             (alloc*, obj_trait*, u32_t, ...)    ;
+obj* obj_init_from_varg   (alloc*, obj_trait*, u32_t, va_list);
+obj* obj_init_at          (obj*  , obj_trait*, u32_t, ...)    ;
+obj* obj_init_at_from_varg(obj*  , obj_trait*, u32_t, va_list);
+obj* obj_init_as_clone    (obj*);
+obj* obj_init_as_ref      (obj*);
+void obj_deinit		      (obj*);
 
 obj_trait* obj_get_trait(obj*);
 str*	   obj_name     (obj*);
 u64_t      obj_use_count(obj*);
 
 #ifndef __cplusplus
-#define make(par_type) obj_init           (0, par_type,
-#define vmake(par_type) obj_init_from_varg(0, par_type
-#define from(...)      __VA_ARGS__)
+#define make(par_type)          obj_init             (0   , par_type,
+#define make_at(par, par_type)  obj_init_at          (&par, par_type,
+#define vmake(par_type)         obj_init_from_varg   (0   , par_type,
+#define vmake_at(par, par_type) obj_init_at_from_varg(&par, par_type,
+#define from(...)               __VA_ARGS__)
 
 #define ref(par_obj)       obj_init_as_ref  (par_obj)
 #define clone(par_obj)     obj_init_as_clone(par_obj)

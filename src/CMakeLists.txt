@@ -48,8 +48,10 @@ if   (PRESET_X86_64)
     endif ()
 
     add_library(build-arch STATIC
-        details-arch/x86_64/task.h
-        details-arch/x86_64/task.c
+        details-arch/x86_64/cpu.h
+        details-arch/x86_64/cpu.c
+        details-arch/cpu.h
+        details-arch/cpu.c
     )
 endif()
 
@@ -86,8 +88,17 @@ add_library (build STATIC
     it.h
     it.c
 
+    coro.h
+    coro.c
+
+    sched.h
+    sched.c
+
     task.h
     task.c
+
+    res.h
+    res.c
 
     details/alloc.h
     details/alloc.c
@@ -114,4 +125,16 @@ add_library (build STATIC
 
     details/it.h
     details/it.c
+
+    details/coro.h
+    details/coro.c
+
+    details/sched.h
+    details/sched.c
+
+    details/task.h
+    details/task.c
+
+    details/res.h
+    details/res.c
 )

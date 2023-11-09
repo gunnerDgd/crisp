@@ -13,9 +13,10 @@ typedef struct	   __str      {
 	u64_t    front, back;
 }	__str;
 
-bool_t __str_init		  (__str*, __alloc*);
-bool_t __str_init_as_clone(__str*, __str*)  ;
-bool_t __str_deinit		  (__str*)		    ;
+bool_t __str_init		  (__str*, u32_t, va_list);
+bool_t __str_init_as_clone(__str*, __str*)        ;
+bool_t __str_deinit		  (__str*)		          ;
+u64_t  __str_size		  ()					  ;
 
 void   __str_rsv_back (__str*, u64_t);
 void   __str_rsv_front(__str*, u64_t);
@@ -45,5 +46,7 @@ bool_t __str_start_with			 (__str*, __str*)			 ;
 bool_t __str_start_with_from_cstr(__str*, const char*, u64_t);
 bool_t __str_end_with			 (__str*, __str*)			 ;
 bool_t __str_end_with_from_cstr  (__str*, const char*, u64_t);
+
+bool_t __str_empty(__str*);
 
 #endif
