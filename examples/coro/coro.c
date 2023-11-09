@@ -9,9 +9,10 @@ void test(coro* par_coro, void* par) {
 }
 
 int main() {
-	coro* coro = make(coro_t) from(2, test, 0);
-	printf("Yield Value : %d)\n", yield(coro, 0));
-	printf("Yield Value : %d)\n", yield(coro, 0));
-	printf("Yield Value : %d)\n", yield(coro, 0));
-	yield(coro, 0);
+	coro    coro;
+	make_at(coro, coro_t) from(2, test, 0);
+	printf("Yield Value : %d)\n", yield(&coro, 0));
+	printf("Yield Value : %d)\n", yield(&coro, 0));
+	printf("Yield Value : %d)\n", yield(&coro, 0));
+	yield (&coro, 0);
 }

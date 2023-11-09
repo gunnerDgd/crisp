@@ -4,7 +4,7 @@
 bool_t 
 	__cpu_init
 		(__cpu* par, alloc* par_alloc) {
-			par->stack = mem_init(par_alloc, 4096 * 4);
+			par->stack = mem_init(par_alloc, 4096 * 8);
 			if (!par->stack) return false_t;
 			
 			u64_t stack = ptr_raw(mem_ptr(par->stack));

@@ -13,17 +13,22 @@ obj_trait __sched_trait				     = {
 bool_t 
 	__sched_init
 		(__sched* par_sched, u32_t par_count, va_list par) {
-			alloc* par_alloc = (par_count == 0) ? get_alloc() : va_arg(par, alloc*);
+			void  *par_fn     = va_arg(par, void*);
+			void  *par_fn_arg = va_arg(par, void*);
+			alloc *par_alloc  = (par_count == 2) ? get_alloc() : va_arg(par, alloc*);
 
-			if (!par_alloc) 
-				return false_t;
-			if (!make_at(par_sched->exec, list_t) from(1, par_alloc)) 
-				return false_t;
-			if (!make_at(par_sched->susp, list_t) from(1, par_alloc)) 
-				return false_t;
+			if (!par_alloc)											  return false_t;
+			if (!make_at(par_sched->exec, list_t) from(1, par_alloc)) return false_t;
+			if (!make_at(par_sched->susp, list_t) from(1, par_alloc)) return false_t;
 
-			par_sched->curr = 0;
-			return true_t;
+			par_sched->curr = &par_sched->main;
+			return make_at(par_sched->main, &__task_trait) from (
+				4			    , 
+				par_sched		,
+				par_fn		    ,
+				par_fn_arg		,
+				par_alloc
+			);
 }
 
 bool_t 
@@ -45,41 +50,46 @@ u64_t
 }
 
 bool_t 
-	__sched_exec	    
+	__sched_run
 		(__sched* par) {
-			it exec = list_begin(&par->exec), exec_end = list_end(&par->exec);
-			if (list_empty(par))
-				return false_t;
+			if (list_empty(&par->exec)) return false_t;
 
-			while(neq(exec, exec_end))			  {
-				__task* task = get(exec);
-				if (!task)						  {
-					list_pop_at(&par->curr, &exec);
-					continue;
-				}
+			it      exec_it = list_begin(&par->exec);
+			__task* exec    = get(exec_it)			; if (!exec) return false_t;
+			
+			par->curr = exec;
+			__cpu_switch(&par->cpu, &exec->cpu);
 
-				par->curr = task;
-				__cpu_switch(&par->cpu, &task->cpu);
+			switch(exec->state)				     {
+			case __task_state_stop				 :
+				list_pop_at(&par->exec, &exec_it);
+				break;
+			case __task_state_susp:							     {
+				it susp_it = list_push_back(&par->susp, exec)    ;
+							 list_pop_at   (&par->exec, &exec_it);
 
-				if(task->state == __task_state_stop) {
-					list_pop_at(&par->exec, &exec);
-					task->sched = 0;
-					continue	   ;
-				}
+				exec->sched_it = susp_it;
+				break;
+			}
+			case __task_state_run:								{
+				it run_it = list_push_back(&par->exec, exec)    ;
+							list_pop_at   (&par->exec, &exec_it);
 
-				next(exec);
+				exec->sched_it = run_it;
+				break;
+			}
 			}
 
-			par->curr = 0;
-			return true_t;
+
+		par->curr = 0;
+		return true_t;
 }
 
 bool_t 
-	__sched_run
+	__sched_dispatch
 		(__sched* par, __task* par_task) {
 			if (par_task->sched && par_task->sched != par)
 				return false_t;
-
 			if (par_task->state == __task_state_stop)
 				return false_t;
 			if(par_task->state == __task_state_susp) {
@@ -94,29 +104,11 @@ bool_t
 			par_task->state    = __task_state_run;
 			par_task->sched    = par;
 			par_task->sched_it = list_push_front(&par->exec, par_task);
-			
-			__cpu_start(&par->cpu, &par_task->cpu, __task_main, par_task);
+
+			if (par_task == &par->main) __cpu_start(&par->cpu	   , &par_task->cpu, __task_main, par_task);
+			else					    __cpu_start(&par->curr->cpu, &par_task->cpu, __task_main, par_task);
+
 			return true_t;
-}
-
-void
-	__sched_yield
-		(__sched* par) {
-			if(!par->curr) return;
-			__cpu_switch(&par->curr->cpu, &par->cpu);
-}
-
-void
-	__sched_susp
-		(__sched* par, __task* par_task) {
-			if (par_task->state != __task_state_run) return;
-			if (par_task->sched != par)				 return;
-
-			par_task->state = __task_state_susp;
-			it susp_it = list_push_back(&par->susp, par_task)		    ;
-						 list_pop_at   (&par->exec, &par_task->sched_it);
-
-			par_task->sched_it = susp_it;
 }
 
 __task* 

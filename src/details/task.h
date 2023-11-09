@@ -12,12 +12,15 @@
 
 extern obj_trait __task_trait;
 typedef struct	 __task		 {
-	obj	  head ;
-	u64_t state;
-	__cpu cpu  ;
+	obj	    head ;
+	u64_t   state;
+	__cpu   cpu  ;
 
-	void (*ent)(struct __task*, void*);
-	void  *ent_arg					  ;
+	void* (*ent)(struct __sched*, void*);
+	void   *ent_arg						;
+
+	void		   *ret		 ;
+	struct __task  *ret_await;
 
 	struct __sched *sched   ;
 	it			    sched_it;
@@ -28,5 +31,6 @@ bool_t __task_init         (__task*, u32_t, va_list);
 bool_t __task_init_as_clone(__task*, __task*)		;
 void   __task_deinit	   (__task*)				;
 u64_t  __task_size		   ()						;
+void*  __task_wait		   (__task*)				;
 
 #endif

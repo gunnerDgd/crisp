@@ -1,8 +1,7 @@
 #include "coro.h"
-#include "alloc.h"
 
-__obj_trait __coro_trait				= {
-	.init		   = &__coro_init_as_obj  ,
+obj_trait __coro_trait				    = {
+	.init		   = &__coro_init		  ,
 	.init_as_clone = &__coro_init_as_clone,
 	.init_as_ref   =					 0,
 	.deinit		   = &__coro_deinit		  ,
@@ -27,28 +26,22 @@ void
 
 bool_t 
 	__coro_init
-		(__coro* par, void(*par_fn)(__coro*, void*), void* par_arg, __alloc* par_alloc) {
+		(__coro* par_coro, u32_t par_count, va_list par) {
+			void  *par_fn     = va_arg(par, void*)									;
+			void  *par_fn_arg = va_arg(par, void*)									;
+			alloc *par_alloc  = (par_count == 3) ? va_arg(par, alloc*) : get_alloc();
+
 			if(!par_alloc)
 				return false_t;
 
-			par->ent     = par_fn ;
-			par->ent_arg = par_arg;
+			par_coro->ent     = par_fn    ;
+			par_coro->ent_arg = par_fn_arg;
 
-			if (!__cpu_init(&par->cpu_coro, par_alloc))
+			if (!__cpu_init(&par_coro->cpu_coro, par_alloc))
 				return false_t;
 
-			__cpu_start(&par->cpu, &par->cpu_coro, &__coro_main, par);
+			__cpu_start(&par_coro->cpu, &par_coro->cpu_coro, &__coro_main, par_coro);
 			return true_t;
-}
-
-bool_t 
-	__coro_init_as_obj
-		(__coro* par_coro, u32_t par_count, va_list par) {
-			void    *fn     = va_arg(par, void*)									 ;
-			void    *fn_arg = va_arg(par, void*)									 ;
-			__alloc *alloc  = (par_count == 3) ? va_arg(par, __alloc*) : global_alloc;
-
-			return __coro_init(par_coro, fn, fn_arg, alloc);
 }
 
 bool_t 
