@@ -7,7 +7,7 @@ bool_t
 			par->stack = mem_init(par_alloc, 4096 * 8);
 			if (!par->stack) return false_t;
 			
-			u64_t stack = ptr_raw(mem_ptr(par->stack));
+			u64_t stack  = ptr_raw(mem_ptr(par->stack));
 			par->cpu.rsp = stack + mem_size(par->stack) - 16;
 			par->cpu.rbp = par->cpu.rsp;
 
