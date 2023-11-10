@@ -3,9 +3,10 @@
 
 #include <stdio.h>
 
-void 
+void*
 	test(sched* par, const char* par_str) { 
-		printf("Task Executed !! (Str : %s)\n", par_str); 
+		printf("Task Executed !! (Str : %s)\n", par_str);
+		return 5;
 }
 
 void 
@@ -15,7 +16,7 @@ void
 		task* task2 = async(par, test, "Task 2");
 		task* task3 = async(par, test, "Task 3");
 
-		await(task2); printf("Await Completed\n");
+		printf("Await Completed (Value : %d)\n", await(task2));
 		await(task1);
 		await(task3);
 
