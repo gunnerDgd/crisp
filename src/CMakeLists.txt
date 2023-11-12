@@ -43,7 +43,7 @@ if   (PRESET_X86_64)
             add_library          (build-arch-asm details-arch/x86_64/asm/atomic_gcc.asm)
             set_target_properties(build-arch-asm PROPERTIES NASM_OBJ_FORMAT elf64)
     elseif(PRESET_COMPILER_MSVC)
-            add_library          (build-arch-asm details-arch/x86_64/asm/atomic_msvc.asm details-arch/x86_64/asm/task_msvc.asm)
+            add_library          (build-arch-asm details-arch/x86_64/asm/atomic_msvc.asm details-arch/x86_64/asm/cpu_msvc.asm)
             set_target_properties(build-arch-asm PROPERTIES NASM_OBJ_FORMAT win64)
     endif ()
 
@@ -97,8 +97,8 @@ add_library (build STATIC
     task.h
     task.c
 
-    res.h
-    res.c
+    cpu.h
+    cpu.c
 
     details/alloc.h
     details/alloc.c
@@ -134,7 +134,4 @@ add_library (build STATIC
 
     details/task.h
     details/task.c
-
-    details/res.h
-    details/res.c
 )

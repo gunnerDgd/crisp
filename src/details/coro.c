@@ -16,12 +16,12 @@ u64_t
 
 void   
 	__coro_main
-		(__coro* par) {
-			par->state = __coro_susp; __cpu_switch(&par->cpu_coro, &par->cpu);
+		(cpu* par_cpu, __coro* par) {
+			par->state = __coro_susp; cpu_switch(&par->cpu_coro, &par->cpu);
 			par->state = __coro_run ; par->ent(par, par->ent_arg);
 			par->state = __coro_stop;
 
-			__cpu_switch(&par->cpu_coro, &par->cpu);
+			cpu_switch(&par->cpu_coro, &par->cpu);
 }
 
 bool_t 
@@ -37,31 +37,24 @@ bool_t
 			par_coro->ent     = par_fn    ;
 			par_coro->ent_arg = par_fn_arg;
 
-			if (!__cpu_init(&par_coro->cpu_coro, par_alloc))
-				return false_t;
+			if (!make_at(par_coro->cpu     , cpu_t) from(0))			return false_t;
+			if (!make_at(par_coro->cpu_coro, cpu_t) from(1, par_alloc)) return false_t;
 
-			__cpu_start(&par_coro->cpu, &par_coro->cpu_coro, &__coro_main, par_coro);
+			cpu_run(&par_coro->cpu, &par_coro->cpu_coro, &__coro_main, par_coro);
 			return true_t;
 }
 
 bool_t 
 	__coro_init_as_clone
 		(__coro* par, __coro* par_clone) {
-			par->ent	 = par_clone->ent    ;
-			par->ent_arg = par_clone->ent_arg;
-
-			if (!__cpu_init(&par->cpu_coro, 0))
-				return false_t;
-			
-			__cpu_start(&par->cpu, &par->cpu_coro, &__coro_main, par);
-			return true_t;
+			return false_t;
 }
 
 void 
 	__coro_deinit
 		(__coro* par) {
 			while(par->state == __coro_stop)
-				__cpu_switch(&par->cpu, &par->cpu_coro);
+				cpu_switch(&par->cpu, &par->cpu_coro);
 }
 
 void*
@@ -69,11 +62,11 @@ void*
 		(__coro* par, void* par_yield) {
 			par->ret = par_yield;
 			if (par->state == __coro_run) {
-				par->state = __coro_susp; __cpu_switch(&par->cpu_coro, &par->cpu);
-				par->state = __coro_run ;
+				par->state  = __coro_susp; cpu_switch(&par->cpu_coro, &par->cpu);
+				par->state  = __coro_run ;
 			}
 			else if (par->state == __coro_susp) {
-				par->state = __coro_run ; __cpu_switch(&par->cpu, &par->cpu_coro);
+				par->state = __coro_run ; cpu_switch(&par->cpu, &par->cpu_coro);
 				par->state = __coro_susp;
 			}
 			else

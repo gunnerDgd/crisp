@@ -32,3 +32,6 @@ target_link_libraries(examples-coro-coro build build-arch build-arch-asm build-p
 
 add_executable       (examples-sched-sched sched/sched.c)
 target_link_libraries(examples-sched-sched build build-arch build-arch-asm build-preset)
+
+add_executable       (examples-sched-async sched/async.c)
+target_link_libraries(examples-sched-async build build-arch build-arch-asm build-preset)

@@ -15,6 +15,7 @@ obj*
 		(alloc* par_alloc, obj_trait* par_trait, u32_t par_count, va_list par) {
 			if (!par_alloc) par_alloc = get_alloc();
 			if (!par_alloc) return 0;
+			if (!par_trait) return 0;
 
 			obj*   ret = __obj_init(par_alloc, par_trait, par_count, par);
 			return ret;
@@ -33,6 +34,9 @@ obj*
 obj* 
 	obj_init_at_from_varg
 		(obj* par_obj, obj_trait* par_trait, u32_t par_count, va_list par) {
+			if (!par_obj)   return false_t;
+			if (!par_trait) return false_t;
+
 			return __obj_init_at(par_obj, par_trait, par_count, par);
 }
 

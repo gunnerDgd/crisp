@@ -1,31 +1,35 @@
-#include "task.h"
 #include "sched.h"
+#include "task.h"
 
 #include <stdio.h>
 
 void*
-	test(sched* par, const char* par_str) { 
-		printf("Task Executed !! (Str : %s)\n", par_str);
-		return 5;
+	test(task* par_sched, void* par) {
+		printf("Print : %s\n", par);
+		return 0;
 }
 
-void 
-	async_main(sched* par, void* par_str)       {
-		printf("Async Main Executed !!\n\n")    ;
-		task* task1 = async(par, test, "Task 1");
-		task* task2 = async(par, test, "Task 2");
-		task* task3 = async(par, test, "Task 3");
+void
+	async_main(task* par_task, void* par) {
+		task* task1 = async(test, "Task 1", par_task);
+		task* task2 = async(test, "Task 2", par_task);
+		susp (task1);
+		await(task2);
+		printf("Task 2 Completed\n");
 
-		printf("Await Completed (Value : %d)\n", await(task2));
+		resm (task1);
 		await(task1);
-		await(task3);
 
 		del(task1);
 		del(task2);
-		del(task3);
+		printf("async_main Completed\n");
 }
 
 int main() {
-	sched    *sched = make(sched_t) from(2, async_main, 0);
-	while (sched_run(sched));
+	sched *sched     = make(sched_t) from(0)			   ;
+	task  *main_task = make(task_t)  from(2, async_main, 0);
+
+	sched_dispatch(sched, main_task);
+	while (sched_run(sched))
+		printf("Executor\n");
 }

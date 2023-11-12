@@ -4,6 +4,7 @@
 #ifdef PRESET_X86_64
 #include "../../mem.h"
 #include "../../alloc.h"
+#include "../../obj.h"
 
 typedef struct __cpu_reg		 {
 		union					 {
@@ -18,23 +19,26 @@ typedef struct __cpu_reg		 {
 		}; u64_t xmm[2][8];
 }	__cpu_reg;
 
-typedef struct __cpu	 {
-	mem       stack		 ;
-	u64_t     state		 ;
-	void    (*ent)(void*);
-	void     *ent_arg	 ;
-	__cpu_reg cpu		 ;
+extern obj_trait __cpu_trait			;
+typedef struct   __cpu					{
+	obj		  head						;
+	mem       stack					    ;
+	u64_t     state						;
+	void    (*ent)(struct __cpu*, void*);
+	void     *ent_arg					;
+	__cpu_reg reg						;
 }	__cpu;
 
-bool_t __cpu_init		   (__cpu*, alloc*);
-bool_t __cpu_init_as_clone (__cpu*, __cpu*);
-void   __cpu_deinit	       (__cpu*)		   ;
+bool_t __cpu_init		   (__cpu*, u32_t, va_list);
+bool_t __cpu_init_as_clone (__cpu*, __cpu*)		   ;
+void   __cpu_deinit	       (__cpu*)				   ;
 
-void __cpu_start (__cpu*, __cpu*, void(*)(__cpu*, void*), void*);
-void __cpu_switch(__cpu*, __cpu*)								;
+void  __cpu_run   (__cpu*, __cpu*, void(*)(__cpu*, void*), void*);
+void  __cpu_switch(__cpu*, __cpu*)						 ;
+u64_t __cpu_size  ()									 ;
 
 // Assembly Linkage
-void   __asm_cpu_start (__cpu_reg*, __cpu_reg*, void(*)(__cpu*, void*), void*);
+void   __asm_cpu_run   (__cpu_reg*, __cpu_reg*, void(*)(__cpu*, void*), void*);
 void   __asm_cpu_switch(__cpu_reg*, __cpu_reg*);
 
 #endif

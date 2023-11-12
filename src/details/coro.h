@@ -3,7 +3,7 @@
 
 #include "../obj.h"
 #include "../alloc.h"
-#include "../details-arch/cpu.h"
+#include "../cpu.h"
 
 #define __coro_run  0
 #define __coro_susp 1
@@ -12,7 +12,7 @@
 extern obj_trait __coro_trait;
 typedef struct   __coro      {
 	obj   head           ;
-	__cpu cpu  , cpu_coro;
+	cpu   cpu  , cpu_coro;
 	u64_t state			 ;
 
 	void (*ent)(struct __coro*, void*);

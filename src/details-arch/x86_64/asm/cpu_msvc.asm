@@ -1,4 +1,4 @@
-global __asm_cpu_start
+global __asm_cpu_run
 global __asm_cpu_switch
 
 section .text
@@ -26,15 +26,15 @@ section .text
 %define __cpu_r15 0x80
 
 ;	void
-;		__asm_cpu_start
-;			(__task_cpu* ret, __task_cpu* cur, void(*fn)(void*), void* fn_arg)
+;		__asm_cpu_run
+;			(__cpu_reg* ret, __cpu_reg* cur, void(*fn)(__cpu*, void*), void* fn_arg)
 ;
-;	RCX : ret 
+;   RCX : ret
 ;	RDX : cur
 ;	R8  : fn
 ;	R9  : fn_arg
 ;
-__asm_cpu_start:
+__asm_cpu_run:
 	mov qword[rcx + __cpu_rax], rax
 	mov qword[rcx + __cpu_rbx], rbx
 	mov qword[rcx + __cpu_rcx], rcx
@@ -42,6 +42,9 @@ __asm_cpu_start:
 
 	mov qword[rcx + __cpu_rsi], rsi
 	mov qword[rcx + __cpu_rdi], rdi
+
+	mov rax					  , qword[rsp]
+	mov qword[rcx + __cpu_rip], rax
 
 	mov qword[rcx + __cpu_rbp], rbp
 	mov qword[rcx + __cpu_rsp], rsp
@@ -56,13 +59,11 @@ __asm_cpu_start:
 	mov qword[rcx + __cpu_r14], r14
 	mov qword[rcx + __cpu_r15], r15
 
-	mov rax					  , qword[rsp]
-	mov qword[rcx + __cpu_rip], rax
-
 	mov  rsp, qword[rdx + __cpu_rsp]
 	mov  rbp, qword[rdx + __cpu_rbp]
 
-	mov  rcx, r9
+	mov  rcx, rdx
+	mov  rdx, r9
 	call r8
 	
 ;
