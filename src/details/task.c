@@ -37,10 +37,10 @@ bool_t
 			__task *par_curr   = (par_count >= 3) ? va_arg(par, __task*) : 0		  ;
 			alloc  *par_alloc  = (par_count == 4) ? va_arg(par, alloc*)  : get_alloc();
 
-			if (par_curr)										 {
-			if(!par_curr->sched->curr)			   return false_t;
-			if (par_curr->sched->curr != par_curr) return false_t;
-			}
+			if (par_curr && !par_curr->sched)
+				return false_t;
+			if (par_curr &&  par_curr->sched->curr != par_curr)
+				return false_t;
 			
 			if (!par_alloc)										   return false_t;
 			if (!make_at(par_task->cpu, cpu_t) from(1, par_alloc)) return false_t;
@@ -57,7 +57,7 @@ bool_t
 				return true_t;
 			}
 
-			par_task->sched    = par_curr->sched ;
+			par_task->sched    = ref(par_curr->sched);
 			par_task->sched_it = list_push_back(&par_curr->sched->exec, par_task);
 
 			cpu_run(&par_curr->cpu, &par_task->cpu, __task_main, par_task);
@@ -74,27 +74,26 @@ void
 	__task_deinit
 		(__task* par)	    {
 			del(&par->cpu)  ;
-			if (par->sched)	{
-			if (par->state == __task_state_run)  list_pop_at(&par->sched->exec, &par->sched_it);
-			if (par->state == __task_state_susp) list_pop_at(&par->sched->susp, &par->sched_it);
-			}
-			
-			par->sched = 0;
+			if (par->sched && par->state == __task_state_run)  
+				list_pop_at(&par->sched->exec, &par->sched_it);
+			if (par->sched && par->state == __task_state_susp) 
+				list_pop_at(&par->sched->susp, &par->sched_it);
+			if (par->sched)
+				del(par->sched);
 }
 
 u64_t
-	__task_size() {
+	__task_size()			 {
 		return sizeof(__task);
 }
 
 void* 
 	__task_wait
-		(__task* par)					   {
-			if (!par->sched)	   return 0;
-			if (!par->sched->curr) return 0;
-
-			if (par == par->sched->curr) 
-				return 0;
+		(__task* par)									{
+			if (!par->sched)					return 0;
+			if (!par->sched->curr)				return 0;
+			if (par == par->sched->curr)		return 0;
+			if (par->state != __task_state_run) return 0;
 
 			par->ret_await			= par->sched->curr ;
 			par->sched->curr->state = __task_state_susp;
@@ -109,9 +108,6 @@ void*
 void  
 	__task_susp
 		(__task* par)									 {
-			if (!par->sched)					   return;
-			if (!par->sched->curr)				   return;
-
 			if (par->state != __task_state_run)    return;
 			if (par->sched->curr == par)			     {
 				par->state			  = __task_state_susp;
@@ -132,12 +128,8 @@ void
 void 
 	__task_resm
 		(__task* par)			 					   {
-			if(!par->sched)						 return;
-			if(!par->sched->curr)				 return;
-
 			if (par->sched->curr == par)		 return;
 			if (par->state != __task_state_susp) return;
-
 			
 			__sched* sched   = par->sched;
 			it	     exec_it = list_push_front(&sched->exec, par)			;

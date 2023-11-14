@@ -26,8 +26,8 @@ bool_t
 bool_t
 	__ptr_rd16
 		(__ptr* par, u16_t* par_buf) {
-			if (!par->mem)										  return false_t;
-			if ((par->cur + sizeof(u8_t)) > par->mem->alloc_size) return false_t;
+			if (!par->mem)										   return false_t;
+			if ((par->cur + sizeof(u16_t)) > par->mem->alloc_size) return false_t;
 			
 			return par->mem->trait->rd16(
 				par->mem->ptr + par->cur,
@@ -38,8 +38,8 @@ bool_t
 bool_t
 	__ptr_rd32
 		(__ptr* par, u32_t* par_buf) {
-			if (!par->mem)										  return false_t;
-			if ((par->cur + sizeof(u8_t)) > par->mem->alloc_size) return false_t;
+			if (!par->mem)										   return false_t;
+			if ((par->cur + sizeof(u32_t)) > par->mem->alloc_size) return false_t;
 			
 			return par->mem->trait->rd32(
 				par->mem->ptr + par->cur,
@@ -50,8 +50,8 @@ bool_t
 bool_t
 	__ptr_rd64
 		(__ptr* par, u64_t* par_buf) {
-			if (!par->mem)										  return false_t;
-			if ((par->cur + sizeof(u8_t)) > par->mem->alloc_size) return false_t;
+			if (!par->mem)										   return false_t;
+			if ((par->cur + sizeof(u64_t)) > par->mem->alloc_size) return false_t;
 			
 			return par->mem->trait->rd64(
 				par->mem->ptr + par->cur,
@@ -74,8 +74,8 @@ bool_t
 bool_t
 	__ptr_wr16
 		(__ptr* par, u16_t par_buf) {
-			if (!par->mem)										  return false_t;
-			if ((par->cur + sizeof(u8_t)) > par->mem->alloc_size) return false_t;
+			if (!par->mem)										   return false_t;
+			if ((par->cur + sizeof(u16_t)) > par->mem->alloc_size) return false_t;
 			
 			return par->mem->trait->wr16(
 				par->mem->ptr + par->cur,
@@ -86,8 +86,8 @@ bool_t
 bool_t
 	__ptr_wr32
 		(__ptr* par, u32_t par_buf) {
-			if (!par->mem)										  return false_t;
-			if ((par->cur + sizeof(u8_t)) > par->mem->alloc_size) return false_t;
+			if (!par->mem)										   return false_t;
+			if ((par->cur + sizeof(u32_t)) > par->mem->alloc_size) return false_t;
 			
 			return par->mem->trait->wr32(
 				par->mem->ptr + par->cur,
@@ -98,8 +98,8 @@ bool_t
 bool_t
 	__ptr_wr64
 		(__ptr* par, u64_t par_buf) {
-			if (!par->mem)										  return false_t;
-			if ((par->cur + sizeof(u8_t)) > par->mem->alloc_size) return false_t;
+			if (!par->mem)										   return false_t;
+			if ((par->cur + sizeof(u64_t)) > par->mem->alloc_size) return false_t;
 			
 			return par->mem->trait->wr64(
 				par->mem->ptr + par->cur,

@@ -57,7 +57,7 @@ __obj*
     __obj_init_as_ref
 		(__obj* par) {
 			u64_t ref;
-			do  { ref = par->ref; } while(__atomic_cmpxchg64(&par->ref, ref, ref + 1) != ref);
+			do  { ref = par->ref; } while(__lock_cas64(&par->ref, ref, ref + 1) != ref);
 
 			if (par->trait->init_as_ref)
 				par->trait->init_as_ref(par);
@@ -68,7 +68,7 @@ void
     __obj_deinit
 		(__obj* par) {
 			u64_t ref;
-			do  { ref = par->ref; } while(__atomic_cmpxchg64(&par->ref, ref, ref - 1) != ref);
+			do  { ref = par->ref; } while(__lock_cas64(&par->ref, ref, ref - 1) != ref);
 
 			if (par->ref == 0)					   {
 				par->trait->deinit(par)			   ;
