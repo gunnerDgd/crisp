@@ -18,6 +18,7 @@ bool_t
 			if (!par_alloc)											  return false_t;
 			if (!make_at(par_sched->exec, list_t) from(1, par_alloc)) return false_t;
 			if (!make_at(par_sched->susp, list_t) from(1, par_alloc)) return false_t;
+			if (!make_at(par_sched->stop, list_t) from(1, par_alloc)) return false_t;
 			if (!make_at(par_sched->cpu , cpu_t)  from(0))			  return false_t;
 
 			par_sched->curr = 0;
@@ -35,6 +36,7 @@ void
 		(__sched* par) {
 			del(&par->exec);
 			del(&par->susp);
+			del(&par->stop);
 }
 
 u64_t
@@ -67,8 +69,10 @@ bool_t
 					break;
 				}
 				case __task_state_stop:						   {
-					list_pop_at(&par->exec, &exec);
-					run->sched = 0;
+					it stop = list_push_back(&par->stop, run)  ;
+							  list_pop_at	(&par->exec, &exec);
+
+					run->sched_it = stop;
 					break;
 				}
 				case __task_state_run:						   {

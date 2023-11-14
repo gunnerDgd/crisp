@@ -74,12 +74,10 @@ void
 	__task_deinit
 		(__task* par)	    {
 			del(&par->cpu)  ;
-			if (par->sched && par->state == __task_state_run)  
-				list_pop_at(&par->sched->exec, &par->sched_it);
-			if (par->sched && par->state == __task_state_susp) 
-				list_pop_at(&par->sched->susp, &par->sched_it);
-			if (par->sched)
-				del(par->sched);
+			if (par->sched && par->state == __task_state_run)  list_pop_at(&par->sched->exec, &par->sched_it);
+			if (par->sched && par->state == __task_state_susp) list_pop_at(&par->sched->susp, &par->sched_it);
+			if (par->sched && par->state == __task_state_stop) list_pop_at(&par->sched->stop, &par->sched_it);
+			if (par->sched)									   del(par->sched);
 }
 
 u64_t
@@ -99,9 +97,8 @@ void*
 			par->sched->curr->state = __task_state_susp;
 			
 			cpu_switch(&par->sched->curr->cpu, &par->sched->cpu);
-			void*  ret = par->ret	      ;
-					     par->sched = 0   ;
-
+			void*  ret = par->ret;
+			del   (par);
 			return ret;
 }
 
