@@ -8,6 +8,8 @@ typedef struct ptr { u64_t ptr[2]; } ptr;
 
 ptr    ptr_seek(ptr, i64_t);
 void*  ptr_raw (ptr)	   ;
+void*  ptr_mem (ptr)       ;
+u64_t  ptr_size(ptr)       ;
 
 bool_t ptr_rd8 (ptr, u8_t*);
 bool_t ptr_rd16(ptr, u16_t*);

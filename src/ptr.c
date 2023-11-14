@@ -19,6 +19,18 @@ void*
 			return ((__ptr*)&par)->mem->ptr;
 }
 
+void* 
+	ptr_mem
+		(ptr par) {
+			return ((__ptr*)&par)->mem;
+}
+
+u64_t  
+	ptr_size
+		(ptr par) {
+			return ((__ptr*)&par)->mem->alloc_size - ((__ptr*)&par)->cur;
+}
+
 bool_t
 	ptr_rd8
 		(ptr par_ptr, u8_t* par_buf) {
