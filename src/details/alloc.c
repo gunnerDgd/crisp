@@ -5,6 +5,7 @@ bool_t
 		(__alloc* par, __alloc_trait* par_trait) {
 			if(!par)	   return false_t;
 			if(!par_trait) return false_t;
+
 			par->trait = par_trait;
 
 			return par->trait->init(par);

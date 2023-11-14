@@ -1,6 +1,5 @@
 #include "str.h"
 
-
 __obj_trait __str_trait				   = {
 	.init		   = &__str_init		 ,
 	.init_as_clone = &__str_init_as_clone,

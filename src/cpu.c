@@ -6,6 +6,9 @@ obj_trait* cpu_t = &__cpu_trait;
 void 
 	cpu_run
 		(cpu* par, cpu* par_cur, void(*par_fn)(cpu*, void*), void* par_arg) {
+			if (!par)						return;
+			if (!par_cur)					return;
+
 			if (trait_of(par)     != cpu_t) return;
 			if (trait_of(par_cur) != cpu_t) return;
 
@@ -14,7 +17,10 @@ void
 
 void 
 	cpu_switch
-		(cpu* par, cpu* par_cur) {
+		(cpu* par, cpu* par_cur)				  {
+			if (!par)						return;
+			if (!par_cur)					return;
+
 			if (trait_of(par)     != cpu_t) return;
 			if (trait_of(par_cur) != cpu_t) return;
 
