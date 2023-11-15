@@ -40,41 +40,17 @@ obj*
 			return __obj_init_at(par_obj, par_trait, par_count, par);
 }
 
-obj*
-    obj_init_as_clone
-		(obj* par) {
-			return __obj_init_as_clone(par);
-}
-
-obj*
-    obj_init_as_ref
-		(obj* par) {
-			return __obj_init_as_ref(par);
-}
-
-void
-    obj_deinit
-		(obj* par) {
-			__obj_deinit(par);
-}
-
-obj_trait*
-	obj_get_trait
-		(obj* par) {
-			return ((__obj*)par)->trait;
-}
+obj*	   obj_init_as_clone(obj* par) { return (par) ? __obj_init_as_clone(par) : 0; }
+obj*	   obj_init_as_ref  (obj* par) { return (par) ? __obj_init_as_ref  (par) : 0; }
+void	   obj_deinit		(obj* par) { if(par) __obj_deinit(par); }
+obj_trait* obj_get_trait    (obj* par) { return (par) ? ((__obj*)par)->trait : 0; }
+u64_t      obj_use_count	(obj* par) { return (par) ? ((__obj*)par)->ref   : 0; }
 
 str*
 	obj_name
 		(obj* par) {
-			if(((__obj*)par)->trait->name)
-				return ((__obj*)par)->trait->name(par);
-			else
-				return 0;
-}
+			if (!par)						 return 0;
+			if (!((__obj*)par)->trait->name) return 0;
 
-u64_t
-	obj_use_count
-		(obj* par) {
-			return ((__obj*)par)->ref;
+			return ((__obj*)par)->trait->name(par);
 }

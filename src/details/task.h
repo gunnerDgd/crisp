@@ -24,6 +24,7 @@ typedef struct	 __task		 {
 
 	struct __sched *sched   ;
 	it			    sched_it;
+	list		    child   ;
 }	__task;
 
 void   __task_main		   (__task*)				;

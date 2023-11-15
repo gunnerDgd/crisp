@@ -1,6 +1,8 @@
 #include "task.h"
 #include "sched.h"
 
+#include <stdio.h>
+
 obj_trait __task_trait			        = {
 	.init		   = &__task_init		  ,
 	.init_as_clone = &__task_init_as_clone,
@@ -19,12 +21,8 @@ void
 			par->ret   = par->ent(par, par->ent_arg);
 			par->state = __task_state_stop		    ;
 			
-			if (par->ret_await) {
-				it exec = list_push_back(&par->sched->exec, par->ret_await);
-						  list_pop_at   (&par->sched->susp, &par->sched_it);
-
-				par->sched_it = exec;
-			}
+			if (par->ret_await)
+				__task_resm(par->ret_await);
 
 			cpu_switch(&par->cpu, &par->sched->cpu);
 }
@@ -32,35 +30,39 @@ void
 bool_t 
 	__task_init
 		(__task* par_task, u32_t par_count, va_list par) {
-			void   *par_fn	   = va_arg(par, void*)  ;
-			void   *par_fn_arg = va_arg(par, void*)  ;
-			__task *par_curr   = (par_count >= 3) ? va_arg(par, __task*) : 0		  ;
-			alloc  *par_alloc  = (par_count == 4) ? va_arg(par, alloc*)  : get_alloc();
+			__task* curr	  = va_arg(par, __task*);
+			par_task->ent     = va_arg(par, void*); if (!par_task->ent) return 0;
+			par_task->ent_arg = va_arg(par, void*);
 
-			if (par_curr && !par_curr->sched)
+			alloc* par_alloc = (par_count == 4) ? va_arg(par, alloc*) : get_alloc();
+			if   (!par_alloc)
 				return false_t;
-			if (par_curr &&  par_curr->sched->curr != par_curr)
-				return false_t;
-			
-			if (!par_alloc)										   return false_t;
-			if (!make_at(par_task->cpu, cpu_t) from(1, par_alloc)) return false_t;
 
-			par_task->ent       = par_fn    ;
-			par_task->ent_arg   = par_fn_arg;
+			if (!make_at(par_task->cpu  , cpu_t)  from(1, par_alloc)) 
+				return false_t;
+			if (!make_at(par_task->child, list_t) from(1, par_alloc))
+				return false_t;
 
 			par_task->ret       = 0;
 			par_task->ret_await = 0;
 			par_task->state     = __task_state_run;
 
-			if (!par_curr)		   {
+			if(!curr)			   {
 				par_task->sched = 0;
 				return true_t;
 			}
 
-			par_task->sched    = ref(par_curr->sched);
-			par_task->sched_it = list_push_back(&par_curr->sched->exec, par_task);
+			if(!curr->sched || curr->sched->curr != curr) {
+				del(&par_task->cpu)  ;
+				del(&par_task->child);
 
-			cpu_run(&par_curr->cpu, &par_task->cpu, __task_main, par_task);
+				return false_t;
+			}
+
+			par_task->sched    = ref(curr->sched)							 ;
+			par_task->sched_it = list_push_back(&curr->sched->exec, par_task);
+			  
+			cpu_run(&curr->cpu, &par_task->cpu, __task_main, par_task);
 			return true_t;
 }
 
@@ -72,12 +74,24 @@ bool_t
 
 void 
 	__task_deinit
-		(__task* par)	    {
+		(__task* par)					        {
+			list_while(&par->child, child)      {
+				__task*     wait = get(child)   ;
+				__task_wait(wait);
+				list_pop_at(&par->child, &child);
+			}
+
 			del(&par->cpu)  ;
-			if (par->sched && par->state == __task_state_run)  list_pop_at(&par->sched->exec, &par->sched_it);
-			if (par->sched && par->state == __task_state_susp) list_pop_at(&par->sched->susp, &par->sched_it);
-			if (par->sched && par->state == __task_state_stop) list_pop_at(&par->sched->stop, &par->sched_it);
-			if (par->sched)									   del(par->sched);
+			del(&par->child);
+
+			if (par->sched && par->state == __task_state_run)
+				list_pop_at(&par->sched->exec, &par->sched_it);
+			if (par->sched && par->state == __task_state_susp)
+				list_pop_at(&par->sched->susp, &par->sched_it);
+			if (par->sched)									   
+				del(par->sched);
+
+			fprintf(stderr, "TASK DEINIT\n");
 }
 
 u64_t
@@ -87,28 +101,27 @@ u64_t
 
 void* 
 	__task_wait
-		(__task* par)									{
-			if (!par->sched)					return 0;
-			if (!par->sched->curr)				return 0;
-			if (par == par->sched->curr)		return 0;
-			if (par->state != __task_state_run) return 0;
+		(__task* par)										    {
+			if (!par->sched)					 return		   0;
+			if (!par->sched->curr)				 return		   0;
 
-			par->ret_await			= par->sched->curr ;
-			par->sched->curr->state = __task_state_susp;
-			
-			cpu_switch(&par->sched->curr->cpu, &par->sched->cpu);
+			if (par == par->sched->curr)		 return		   0;
+			if (par->state == __task_state_stop) return par->ret;
+
+			par->ret_await = par->sched->curr;
+			__task_susp(par->sched->curr);
+
 			void*  ret = par->ret;
-			del   (par);
 			return ret;
 }
 
 void  
 	__task_susp
-		(__task* par)									 {
-			if (par->state != __task_state_run)    return;
-			if (par->sched->curr == par)			     {
-				par->state			  = __task_state_susp;
-				cpu_switch(&par->cpu, &par->sched->cpu)  ;
+		(__task* par)								   {
+			if (par->state != __task_state_run)  return;
+			if (par->sched->curr == par)			   {
+				par->state			= __task_state_susp;
+				cpu_switch(&par->cpu, &par->sched->cpu);
 				
 				return;
 			}

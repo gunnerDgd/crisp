@@ -22,4 +22,12 @@ it     list_begin(list*);
 it     list_end  (list*);
 bool_t list_empty(list*);
 
+#define list_for(par, par_it)                                 \
+    it par_it = list_begin(par), par_it##_end = list_end(par);\
+    for( ; neq(par_it, par_it##_end) ; next(&par_it))
+
+#define list_while(par, par_it)                               \
+    it par_it = list_begin(par), par_it##_end = list_end(par);\
+    while (neq(par_it, par_it##_end))
+
 #endif

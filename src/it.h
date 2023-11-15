@@ -7,6 +7,7 @@
 typedef struct it { u64_t it[4]; } it;
 
 bool_t it_next(it*);
+it     it_npos()   ;
 
 void*  it_get (it*);
 void*  it_set (it*, void*);
@@ -15,6 +16,7 @@ bool_t it_eq  (it*, it*);
 bool_t it_lt  (it*, it*);
 bool_t it_gt  (it*, it*);
 
+#define npos()				  it_npos()
 #define next(par)		      it_next(&par)
 #define get(par)		      it_get (&par)
 #define get_as(par, par_type) ((par_type)get(par))

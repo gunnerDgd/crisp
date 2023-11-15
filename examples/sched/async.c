@@ -3,22 +3,32 @@
 
 #include <stdio.h>
 
+typedef struct test_par {
+	const char* str;
+	u64_t	    u64;
+}	test_par;
+
 void*
-	test(sched* par, const char* par_str) { 
-		printf("Task Executed !! (Str : %s)\n", par_str);
-		return 5;
+	test(task* par_task, test_par* par) {
+		printf("Task Executed !! (Str : %s)\n", par->str);
+		return par->u64;
 }
 
 void 
-	async_main(sched* par, void* par_str)       {
+	async_main(task* par, void* par_str)        {
 		printf("Async Main Executed !!\n\n")    ;
-		task* task1 = async(par, test, "Task 1");
-		task* task2 = async(par, test, "Task 2");
-		task* task3 = async(par, test, "Task 3");
+
+		test_par par1 = { .str = "Task 1", .u64 = 1 },
+				 par2 = { .str = "Task 2", .u64 = 2 },
+				 par3 = { .str = "Task 3", .u64 = 3 };
+
+		task* task1 = async(par, test, &par1);
+		task* task2 = async(par, test, &par2);
+		task* task3 = async(par, test, &par3);
 
 		printf("Await Completed (Value : %d)\n", await(task2));
-		await(task1);
-		await(task3);
+		printf("Await Completed (Value : %d)\n", await(task1));
+		printf("Await Completed (Value : %d)\n", await(task3));
 
 		del(task1);
 		del(task2);
@@ -26,6 +36,12 @@ void
 }
 
 int main() {
-	sched    *sched = make(sched_t) from(2, async_main, 0);
+	sched *sched	  = make(sched_t) from(0);
+	task  *sched_main = make(task_t)  from (3, NULL, async_main, 0);
+
+	sched_dispatch(sched, sched_main);
 	while (sched_run(sched));
+
+	del(sched_main);
+	del(sched)	   ;
 }
