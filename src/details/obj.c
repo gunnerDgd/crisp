@@ -10,11 +10,11 @@ __obj*
 				   ret->ref   =            1;
 				   ret->trait =    par_trait;
 
-		if(ret->trait->init) {
-			if(!ret->trait->init(ret, par_count, par)) {
-				__mem_deinit(ret_mem);
-				return 0;
-			}
+		if(ret->trait->init)					   {
+		if(!ret->trait->init(ret, par_count, par)) {
+			__mem_deinit(ret_mem);
+			return 0;
+		}
 		}
 
 		return ret;
@@ -55,12 +55,12 @@ __obj*
 
 __obj*
     __obj_init_as_ref
-		(__obj* par) {
-			u64_t ref;
-			do  { ref = par->ref; } while(__lock_cas64(&par->ref, ref, ref + 1) != ref);
-
+		(__obj* par)							  {
 			if (par->trait->init_as_ref)
-				par->trait->init_as_ref(par);
+				if (!par->trait->init_as_ref(par))
+					return 0;
+
+			__lock_inc64(&par->ref);
 			return par;
 }
 
@@ -71,7 +71,11 @@ void
 			do  { ref = par->ref; } while(__lock_cas64(&par->ref, ref, ref - 1) != ref);
 
 			if (par->ref == 0)					   {
+			if (par->trait->deinit)				   {
 				par->trait->deinit(par)			   ;
-				if(par->mem) __mem_deinit(par->mem);
+
+				if(par->mem) 
+					__mem_deinit(par->mem);
+			}
 			}
 }

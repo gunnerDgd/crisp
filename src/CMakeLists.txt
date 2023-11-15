@@ -100,6 +100,9 @@ add_library (build STATIC
     cpu.h
     cpu.c
 
+    box.h
+    box.c
+
     details/alloc.h
     details/alloc.c
         
@@ -134,4 +137,7 @@ add_library (build STATIC
 
     details/task.h
     details/task.c
+
+    details/box.h
+    details/box.c
 )

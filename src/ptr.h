@@ -30,4 +30,8 @@ bool_t ptr_eq  (ptr, ptr, u64_t);
 bool_t ptr_gt  (ptr, ptr, u64_t);
 bool_t ptr_lt  (ptr, ptr, u64_t);
 
+#ifndef __cplusplus
+#define ptr_as(par_ptr, par_type) ((par_type)ptr_raw(par_ptr))
+#endif
+
 #endif
