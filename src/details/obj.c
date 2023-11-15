@@ -4,8 +4,11 @@
 __obj*
     __obj_init
 		(__alloc* par_alloc, __obj_trait* par_trait, u32_t par_count, va_list par) {
-			__mem* ret_mem    = __mem_init(par_alloc, par_trait->size());
-			__obj *ret 	      = ret_mem->ptr;							 if(ret_mem->alloc_size <= sizeof(__obj)) return 0;
+			__mem* ret_mem = __mem_init(par_alloc, par_trait->size());
+			if   (!ret_mem) 
+				return false_t;
+
+			__obj *ret 	      = ret_mem->ptr;
 				   ret->mem   = ret_mem     ;
 				   ret->ref   =            1;
 				   ret->trait =    par_trait;
@@ -42,12 +45,11 @@ __obj*
 				   ret->ref   =            1;
 				   ret->trait =   par->trait;
 
-			if(ret->trait->init_as_clone) {
-				bool_t res = ret->trait->init_as_clone (ret, par);
-				if (!res)				 {
-					__mem_deinit(ret_mem);
-					return 0;
-				}
+			if (ret->trait->init_as_clone)			 {
+			if(!ret->trait->init_as_clone(ret, par)) {
+				__mem_deinit(ret_mem);
+				return 0;
+			}
 			}
 
 			return ret;
@@ -73,9 +75,7 @@ void
 			if (par->ref == 0)					   {
 			if (par->trait->deinit)				   {
 				par->trait->deinit(par)			   ;
-
-				if(par->mem) 
-					__mem_deinit(par->mem);
+				if(par->mem) __mem_deinit(par->mem);
 			}
 			}
 }
