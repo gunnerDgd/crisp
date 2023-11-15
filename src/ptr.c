@@ -23,6 +23,16 @@ ptr
 void* ptr_raw (ptr par) { return ((__ptr*)&par)->mem->ptr; }
 void* ptr_mem (ptr par) { return ((__ptr*)&par)->mem; }
 u64_t ptr_size(ptr par) { return ((__ptr*)&par)->mem->alloc_size - ((__ptr*)&par)->cur; }
+u64_t ptr_cur (ptr par) { return ((__ptr*)&par)->cur; }
+
+u64_t
+	ptr_dist
+		(ptr par, ptr par_cmp)									 {
+			u8_t* ptr = ptr_raw(par), *ptr_cmp = ptr_raw(par_cmp);
+			return (ptr < ptr_cmp) 
+				 ? (ptr_cmp - ptr) 
+				 : (ptr - ptr_cmp);
+}
 
 bool_t
 	ptr_rd8
@@ -186,42 +196,42 @@ bool_t
 
 bool_t
 	ptr_eq
-		(ptr par_ptr, ptr par_ptr_op, u64_t par_len)	   {
-			if (ptr_size(par_ptr) < par_len) return false_t;
-			if (ptr_size(par_ptr) < par_len) return false_t;
+		(ptr par, void* par_op, u64_t par_len)	       {
+			if (ptr_size(par) < par_len) return false_t;
+			if (ptr_size(par) < par_len) return false_t;
 
-			__ptr* ptr = &par_ptr, *ptr_op = &par_ptr_op;
-			return ptr->mem->trait->eq				 (
-				   ptr   ->mem->ptr + ptr   ->cur,
-				   ptr_op->mem->ptr + ptr_op->cur,
+			__ptr* ptr = &par		   ;
+			return ptr->mem->trait->eq (
+				   ptr_raw(par),
+				   par_op      ,
 				   par_len
 			);
 }
 
 bool_t
 	ptr_gt
-		(ptr par_ptr, ptr par_ptr_op, u64_t par_len)	   {
-			if (ptr_size(par_ptr) < par_len) return false_t;
-			if (ptr_size(par_ptr) < par_len) return false_t;
+		(ptr par, void* par_op, u64_t par_len)	       {
+			if (ptr_size(par) < par_len) return false_t;
+			if (ptr_size(par) < par_len) return false_t;
 
-			__ptr* ptr = &par_ptr, *ptr_op = &par_ptr_op;
-			return ptr->mem->trait->gt				 (
-				   ptr   ->mem->ptr + ptr   ->cur,
-				   ptr_op->mem->ptr + ptr_op->cur,
+			__ptr* ptr = &par		   ;
+			return ptr->mem->trait->gt (
+				   ptr_raw(par),
+				   par_op      ,
 				   par_len
 			);
 }
 
 bool_t
 	ptr_lt
-		(ptr par_ptr, ptr par_ptr_op, u64_t par_len)	   {
-			if (ptr_size(par_ptr) < par_len) return false_t;
-			if (ptr_size(par_ptr) < par_len) return false_t;
+		(ptr par, void* par_op, u64_t par_len)	       {
+			if (ptr_size(par) < par_len) return false_t;
+			if (ptr_size(par) < par_len) return false_t;
 
-			__ptr* ptr = &par_ptr, *ptr_op = &par_ptr_op;
-			return ptr->mem->trait->lt				 (
-				   ptr   ->mem->ptr + ptr   ->cur,
-				   ptr_op->mem->ptr + ptr_op->cur,
+			__ptr* ptr = &par		   ;
+			return ptr->mem->trait->lt (
+				   ptr_raw(par),
+				   par_op      ,
 				   par_len
 			);
 }

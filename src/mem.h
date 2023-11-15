@@ -10,7 +10,7 @@ mem  mem_init         (alloc*, u64_t);
 mem  mem_init_as_clone(mem)          ;
 void mem_deinit       (mem)          ;
 
-u64_t mem_size(mem);
-ptr   mem_ptr (mem);
+u64_t mem_size(mem)		  ;
+ptr   mem_ptr (mem, u64_t);
 
 #endif

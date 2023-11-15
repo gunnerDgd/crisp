@@ -8,7 +8,7 @@ int main() {
 
 	str_push_back_cstr(&str, "Hello ", 6);
 	str_push_back_cstr(&str, "World" , 5);
-	str_pop_at		  (&str, 5, 6);
+	str_pop_at		  (&str, 5, 1);
 	printf("Bool : %s\n", ptr_raw(str_ptr(&str)));
 
 	del(&str);

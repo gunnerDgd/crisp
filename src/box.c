@@ -9,8 +9,7 @@ ptr
             if (!par)                   return ptr_null();
             if (trait_of(par) != box_t) return ptr_null();
 
-            ptr ret = mem_ptr (((__box*)par)->mem);
-            return    ptr_seek(ret, par_off)      ;
+            return mem_ptr (((__box*)par)->mem, par_off);
 }
 
 u64_t 

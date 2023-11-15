@@ -28,11 +28,14 @@ void
             __mem_deinit(par);
 }
 
-u64_t mem_size(mem par) { return ((__mem*)par)->alloc_size; }
-ptr   mem_ptr (mem par) {
+u64_t mem_size(mem par)                { return ((__mem*)par)->alloc_size; }
+ptr   mem_ptr (mem par, u64_t par_cur) {
+    if (par_cur >= mem_size(par))
+        return ptr_null();
+
     ptr    ret;
-    __ptr* ret_ptr =     &ret;
-           ret_ptr->cur =   0;
-           ret_ptr->mem = par;
+    __ptr* ret_ptr =     &ret    ;
+           ret_ptr->cur = par_cur;
+           ret_ptr->mem = par    ;
     return ret;
 }

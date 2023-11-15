@@ -31,7 +31,7 @@ bool_t
 			if (!par_cpu->stack)
 				return false_t;
 			
-			u64_t stack		 = ptr_raw(mem_ptr (par_cpu->stack))	;
+			u64_t stack		 = ptr_raw(mem_ptr (par_cpu->stack, 0))	;
 			par_cpu->reg.rsp = stack + mem_size(par_cpu->stack) - 16;
 			par_cpu->reg.rbp = par_cpu->reg.rsp;
 

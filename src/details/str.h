@@ -1,21 +1,22 @@
 #ifndef __DETAILS_STR_H__
 #define __DETAILS_STR_H__
 
-#include "mem.h"
-#include "alloc.h"
-#include "obj.h"
+#include "../mem.h"
+#include "../alloc.h"
+#include "../obj.h"
 
-extern __obj_trait __str_trait;
+extern obj_trait __str_trait;
 typedef struct	   __str      {
-	__obj	 head		;
-	__alloc *alloc	    ;
-	__mem	*mem		;
-	u64_t    front, back;
+	obj	   head		  ;
+	alloc *alloc	  ;
+	mem	   mem		  ;
+	ptr    front, back;
+	u64_t  len		  ;
 }	__str;
 
 bool_t __str_init		  (__str*, u32_t, va_list);
 bool_t __str_init_as_clone(__str*, __str*)        ;
-bool_t __str_deinit		  (__str*)		          ;
+void   __str_deinit		  (__str*)		          ;
 u64_t  __str_size		  ()					  ;
 
 void   __str_rsv_back (__str*, u64_t);

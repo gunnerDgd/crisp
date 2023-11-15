@@ -1,6 +1,6 @@
 #include "str.h"
 
-__obj_trait __str_trait				   = {
+obj_trait __str_trait				   = {
 	.init		   = &__str_init		 ,
 	.init_as_clone = &__str_init_as_clone,
 	.init_as_ref   =					0,
@@ -12,46 +12,41 @@ __obj_trait __str_trait				   = {
 bool_t
 	__str_init
 		(__str* par_str, u32_t par_count, va_list par) {
-			__alloc* alloc  = (par_count == 0) ? global_alloc : va_arg(par, __alloc*);
-			if (!alloc)
+			alloc* par_alloc  = (par_count == 0) ? get_alloc() : va_arg(par, alloc*);
+			if   (!par_alloc)
 				return false_t;
 			
-			par_str->alloc = alloc;
-			par_str->mem   = __mem_init(par_str->alloc, 16); 
-			
-			if (!par_str->mem) 
+			par_str->alloc = par_alloc;
+			par_str->mem   = mem_init(par_str->alloc, 16); 
+			if (!par_str->mem)
 				return false_t;
 		
-			par_str->front = 0; par_str->back  = 0;
+			par_str->front = mem_ptr(par_str->mem, 0);
+			par_str->back  = mem_ptr(par_str->mem, 0);
+			par_str->len   = 0;
+
 			return true_t;
 }
 
 bool_t
 	__str_init_as_clone
-		(__str* par_str, __str* par_str_clone)   {
-			par_str->alloc = par_str_clone->alloc;
-			par_str->mem   = __mem_init(par_str->alloc, par_str->mem->alloc_size);
-		
-			if (!par_str->mem) return false_t;
+		(__str* par, __str* par_clone)						{
+			par->alloc = par_clone->alloc					;
+			par->mem   = mem_init_as_clone(par_clone->alloc);
+			if (!par->mem) 
+				return false_t;
 
-			par_str->front = 0;
-			par_str->back  = par_str_clone->back - par_str_clone->front;
-
-			par_str->mem->trait->copy						  (
-				par_str	     ->mem->ptr					      ,
-				par_str_clone->mem->ptr + par_str_clone->front,
-				par_str->back
-			);
+			par->front = par_clone->front;
+			par->back  = par_clone->back ;
+			par->len   = par_clone->len  ;
 
 			return true_t;
 }
 
-bool_t
+void
 	__str_deinit
-		(__str* par_str)			  {
-			__mem_deinit(par_str->mem);
-
-			par_str->alloc = 0; par_str->mem = 0;
+		(__str* par_str)			{
+			mem_deinit(par_str->mem);
 			return true_t;
 }
 
@@ -62,348 +57,195 @@ u64_t
 
 void
 	__str_rsv_back
-		(__str* par, u64_t par_rsv)		   {
-			__mem *mem = par->mem, *mem_new;
+		(__str* par, u64_t par_rsv)			   {
+			u64_t rsv_off = ptr_cur(par->front);
+			mem   rsv_mem					   ;
+			u64_t rsv = mem_size(par->mem) << 1;
+			if (rsv < par_rsv)
+				rsv = par_rsv + mem_size(par->mem);
 
-			par_rsv = (mem->alloc_size > par_rsv) 
-					? (mem->alloc_size << 1) 
-					: (mem->alloc_size + par_rsv);
-	
-			mem_new = __mem_init(par->alloc, par_rsv); if (!mem_new) return;
-			mem_new->trait->copy			  (
-				mem_new->ptr  + par->front,
-				mem    ->ptr  + par->front,
-				par->back - par->front
-			);
-		
-			__mem_deinit(mem)   ;
-			par->mem =   mem_new;
+			rsv_mem = mem_init(par->alloc, rsv + 1);
+			if(!ptr_copy(mem_ptr(rsv_mem, rsv_off), par->front, par->len)) {
+				mem_deinit(rsv_mem);
+				return;
+			}
+
+			mem_deinit(par->mem);
+			par->mem   = rsv_mem					   ;
+			par->front = mem_ptr (par->mem, rsv_off)   ;
+			par->back  = ptr_seek(par->front, par->len);
 }
 
 void
 	__str_rsv_front
-		(__str* par, u64_t par_rsv)		   {
-			__mem *mem = par->mem, *mem_new;
-		
-			par_rsv = (mem->alloc_size > par_rsv) 
-					? (mem->alloc_size << 1) 
-					: (mem->alloc_size + par_rsv);
+		(__str* par, u64_t par_rsv)						 {
+			u64_t rsv_off = par_rsv + ptr_cur(par->front);
+			u64_t rsv	  = mem_size(par->mem) << 1		 ;
+			mem   rsv_mem;
 
-			mem_new = __mem_init(par->alloc, par_rsv); if (!mem_new) return;
-			mem_new->trait->copy					    (
-				mem_new->ptr  + par->front + par_rsv,
-				mem    ->ptr  + par->front			,
-				par->back - par->front
-			);
-		
-			__mem_deinit(mem);
-			par->mem    = mem_new;
-			par->front += par_rsv;
-			par->back  += par_rsv;
+			if (rsv < par_rsv)
+				rsv = par_rsv + mem_size(par->mem);
+
+			rsv_mem = mem_init(par->alloc, rsv + 1);
+			if(!ptr_copy(mem_ptr(rsv_mem, rsv_off), par->front, par->len)) {
+				mem_deinit(rsv_mem);
+				return;
+			}
+
+			mem_deinit(par->mem);
+			par->mem   = rsv_mem					   ;
+			par->front = mem_ptr (par->mem, rsv_off)   ;
+			par->back  = ptr_seek(par->front, par->len);
 }
 
 void
 	__str_push_back
-		(__str* par, __str* par_push)       {
-			__mem  *mem	     = par	   ->mem,
-				   *mem_push = par_push->mem;
-			u64_t   len_push = par_push->back - par_push->front;
-
-			if ((mem->alloc_size - par->back) < len_push)
-				__str_rsv_back(par, len_push);
-
-			mem->trait->copy		 		        (
-				par	    ->mem->ptr + par	 ->back ,
-				par_push->mem->ptr + par_push->front,
-				len_push
-			);
-
-			par->back += len_push;
-			char* pop = par->mem->ptr;
-				  pop[par->back]  = 0;
+		(__str* par, __str* par_push) {
+			__str_push_back_cstr(par, ptr_raw(par_push->front), par_push->len);
 }
 
 void
 	__str_push_back_cstr
 		(__str* par, const char* par_push, u64_t par_len) {
-			__mem  *mem = par->mem;
-			u64_t   len	= par->back - par->front;
-
-			if ((mem->alloc_size - par->back) < par_len)
+			if((mem_size(par->mem) - ptr_cur(par->back) + 1) < par_len)
 				__str_rsv_back(par, par_len);
 
-			mem->trait->copy		(
-				mem->ptr + par->back,
-				par_push			,
-				par_len
-			);
+			ptr_write(par->back, par_push, par_len);
+			par->len += par_len;
+			par->back = ptr_seek(par->back, par_len);
 
-			par->back += par_len;
-			char* pop = par->mem->ptr;
-				  pop[par->back]  = 0;
+			ptr_wr8(par->back, 0x00);
 }
 
 void
 	__str_push_front
-		(__str* par, __str* par_push)		{
-			__mem  *mem	     = par	   ->mem,
-				   *mem_push = par_push->mem;
-
-			u64_t   len		 = par->back	  - par->front,
-					len_push = par_push->back - par_push->front;
-
-			if (par->front < len_push)
-				__str_rsv_front(par, len_push);
-
-			par->front -= len_push;
-			mem->trait->copy				   (
-				mem		->ptr + par     ->front,
-				mem_push->ptr + par_push->front,
-				len_push
-			);
-
-			char* pop = par->mem->ptr;
-				  pop[par->back]  = 0;
+		(__str* par, __str* par_push) {
+			__str_push_front_cstr(par, ptr_raw(par_push->front), par_push->len);
 }
 
 void
 	__str_push_front_cstr
 		(__str* par, const char* par_push, u64_t par_len) {
-			__mem *mem = par->mem;
-			if (par->front < par_len)
-				__str_rsv_front(par, par_len);
+			if((mem_size(par->mem) - ptr_cur(par->back) + 1) < par_len)
+				__str_rsv_back(par, par_len);
 
-			par->front -= par_len;
-			mem->trait->copy		 (
-				mem->ptr + par->front,
-				par_push			 ,
-				par_len
-			);
+			par->front = ptr_seek(par->front, (-1) * par_len); ptr_write(par->front, par_push, par_len);
+			par->len  += par_len;
 
-			char* pop = par->mem->ptr;
-				  pop[par->back]  = 0;
+			ptr_wr8(par->back, 0x00);
 }
 
 void
 	__str_push_at
 		(__str* par, u64_t par_off, __str* par_push) {
-			__mem  *mem    = par->mem,
-				   *mem_new;
-
-			u64_t   len		 = (par->back	   - par->front)	 ,
-				    len_push = (par_push->back - par_push->front);
-
-			mem_new		  = __mem_init(par->alloc, len + len_push); if (!mem_new) return;
-			mem_new->trait->copy(mem_new->ptr, mem->ptr + par->front, par_off);
-			mem_new->trait->copy(mem_new->ptr + par_off, par_push->mem->ptr + par_push->front, len_push);
-			mem_new->trait->copy(mem_new->ptr + par_off + len_push, mem->ptr + par->front + par_off , len - par_off);
-
-			__mem_deinit(mem);
-			par->mem   = mem_new	   ;
-			par->back  = len + len_push;
-			par->front = 0			   ;
-
-			char* pop = par->mem->ptr;
-				  pop[par->back]  = 0;
+			__str_push_at_cstr(par, par_off, ptr_raw(par_push->front), par_push->len);
 }
 
 void
 	__str_push_at_cstr
 		(__str* par, u64_t par_off, const char* par_push, u64_t par_len) {
-			__mem  *mem    = par->mem,
-				   *mem_new;
-			u64_t   len    = (par->back - par->front);
-			mem_new		   = __mem_init(par->alloc, len + par_len)			  ; if (!mem_new) return;
-			mem_new->trait->copy(mem_new->ptr, mem->ptr + par->front, par_off);
-			mem_new->trait->copy(mem_new->ptr + par_off, par_push, par_len);
-			mem_new->trait->copy(mem_new->ptr + par_off + par_len, mem->ptr + par->front + par_off, len - par_off);
+			mem  ret = mem_init(par->alloc, mem_size(par->mem) + par_len);
+			if (!ret)
+				return;
 
-			__mem_deinit(mem);
-			par->mem   = mem_new	  ;
-			par->back  = len + par_len;
-			par->front = 0			  ;
+			ptr off = ptr_seek(par->front, par_off),
+				cur = mem_ptr (ret, 0);
 
-			char* pop = par->mem->ptr;
-				  pop[par->back]  = 0;
+			ptr_copy (cur, par->front, par_off); cur = ptr_seek(cur, par_off);
+			ptr_write(cur, par_push, par_len)  ; cur = ptr_seek(cur, par_len);
+			ptr_copy (cur, ptr_seek(par->front, par_off), par_len - par_off) ;
+
+			mem_deinit(par->mem);
+			par->len  += par_len						  ;
+			par->mem   = ret						      ;
+			par->front = mem_ptr(ret, 0)				  ;
+			par->back  = mem_ptr(ret, par->len + par->len);
 }
 
 void 
 	__str_pop_front
 		(__str* par, u64_t par_len) {
-			if((par->back - par->front) < par_len) {
+			if ((ptr_dist(par->back, par->front) + 1) < par_len) {
 				par->back = par->front;
 				return;
 			}
 
-			par->front += par_len;
+			par->front = ptr_seek(par->front, par_len);
 }
 
 void 
 	__str_pop_back
 		(__str* par, u64_t par_len) {
-			if((par->back - par->front) < par_len) {
+			if ((ptr_dist(par->back, par->front) + 1) < par_len) {
 				par->back = par->front;
 				return;
 			}
 
-			par->back -= par_len;
-			char* pop = par->mem->ptr;
-				  pop[par->back] = 0;
+			par->back = ptr_seek(par->back, (-1) * par_len);
+			ptr_wr8(par->back, 0x00);
 }
 
 void 
 	__str_pop_at
 		(__str* par, u64_t par_off, u64_t par_len) {
-			if (par_off < par->front || par_off > par->back)  return;
-			if ((par_off + par_len + par->front) > par->back) 
-				return __str_pop_back(par, (par->back - par->front) - par_off);
-
-			par->mem->trait->copy							  (
-				par->mem->ptr + par->front + par_off		  ,
-				par->mem->ptr + par->front + par_off + par_len,
-				(par->back - par->front) - par_off
-			);
-
-			par->back -= par_len;
-			char* pop = par->mem->ptr;
-				  pop[par->back]  = 0;
+			ptr begin = ptr_seek(par->front, par_off), end = ptr_seek(begin, par_len);
+			ptr_copy(begin, end, (par->len - par_off - par_len));
+			
+			par->back = ptr_seek(par->back, (-1) * par_len);
+			ptr_wr8(par->back, 0x00);
 }
 
 u64_t
 	__str_find
 		(__str* par, u64_t par_off, __str* par_find) {
-			u64_t len	   = (par->back		 - par->front)	   ,
-				  len_find = (par_find->back - par_find->front);
-
-			if (len < len_find) return -1;
-		
-			char* ptr_str = par->mem->ptr + par->front;
-			for(u64_t it = 0 ; it < (len - len_find) ; ++it)
-				if (par->mem->trait->eq(ptr_str, par_find->mem->ptr, len_find))
-					return it;
-
-			return -1;
+			return __str_find_from_cstr(par, par_off, ptr_raw(par_find->front), par_find->len);
 }
 
 u64_t
 	__str_find_from_cstr
 		(__str* par, u64_t par_off, const char* par_find, u64_t par_len) {
-			u64_t len = (par->back - par->front);
-			if   (len < par_len) return -1;
-		
-			char* ptr_str = par->mem->ptr + par->front;
-			for(u64_t it = 0 ; it < (len - par_len) ; ++it)
-				if (par->mem->trait->eq(ptr_str, par_find, par_len))
-					return it;
+			for (u64_t i = 0 ; i < (par->len - par_len) ; ++i)
+				if (ptr_eq(ptr_seek(par->front, i), par_find, par_len))
+					return i;
 
 			return -1;
 }
 
-bool_t
-	__str_eq
-		(__str *par, __str* par_cmp) {
-			u64_t lhs = (par	->back - par	->front),
-				  rhs = (par_cmp->back - par_cmp->front);
-			return (lhs != rhs) ? false_t : par->mem->trait->eq(par->mem->ptr, par_cmp->mem->ptr, lhs);
-}
+bool_t __str_eq			 (__str *par, __str* par_cmp)					  { return __str_eq_from_cstr(par, ptr_raw(par_cmp->front), par_cmp->len); }
+bool_t __str_eq_from_cstr(__str *par, const char* par_cmp, u64_t par_len) { return ptr_eq(par->front, par_cmp, par_len); }
 
-bool_t
-	__str_eq_from_cstr
-		(__str *par, const char* par_cmp, u64_t par_len) {
-			u64_t   lhs = (par->back - par->front);
-			return (lhs != par_len) ? false_t : par->mem->trait->eq(par->mem->ptr, par_cmp, lhs);
-}
+bool_t __str_gt			 (__str * par, __str* par_cmp)					  { return __str_gt_from_cstr(par, ptr_raw(par_cmp->front), par_cmp->len); }
+bool_t __str_gt_from_cstr(__str *par, const char* par_cmp, u64_t par_len) { return ptr_gt(par->front, par_cmp, par_len); }
 
-bool_t
-	__str_gt
-		(__str * par, __str* par_cmp) {
-			u64_t lhs = (par	->back - par	->front),
-				  rhs = (par_cmp->back - par_cmp->front);
-			return par->mem->trait->gt(par->mem->ptr, par_cmp->mem->ptr, (lhs < rhs) ? lhs : rhs);
-}
-
-bool_t
-	__str_gt_from_cstr
-		(__str *par, const char* par_cmp, u64_t par_len) {
-			u64_t lhs = (par->back - par->front);
-			return par->mem->trait->gt(par->mem->ptr, par_cmp, (lhs < par_len) ? lhs : par_len);
-}
-
-bool_t
-	__str_lt
-		(__str * par, __str* par_cmp) {
-			u64_t lhs = (par	->back - par	->front),
-				  rhs = (par_cmp->back - par_cmp->front);
-			return par->mem->trait->lt(par->mem->ptr, par_cmp->mem->ptr, (lhs < rhs) ? lhs : rhs);
-}
-
-bool_t
-	__str_lt_from_cstr
-		(__str * par, const char* par_cmp, u64_t par_len) {
-			u64_t  lhs = (par->back - par->front);
-			return par->mem->trait->lt(par->mem->ptr, par_cmp, (lhs < par_len) ? lhs : par_len);
-}
+bool_t __str_lt			 (__str * par, __str* par_cmp)					   { return __str_lt_from_cstr(par, ptr_raw(par_cmp->front), par_cmp->len); }
+bool_t __str_lt_from_cstr(__str * par, const char* par_cmp, u64_t par_len) { return ptr_lt(par->front, par_cmp, par_len); }
 
 bool_t 
 	__str_start_with
-		(__str* par, __str* par_cmp)							   {
-			__mem_trait* ops	 = par->mem->trait				   ;
-			u64_t		 len	 = (par->back - par->front)		   ,
-						 len_cmp = (par_cmp->back - par_cmp->front);
-
-			if (len < len_cmp) return false_t;
-			return ops->eq						  (
-				par	   ->mem->ptr + par    ->front,
-				par_cmp->mem->ptr + par_cmp->front,
-				(len < len_cmp) ? len : len_cmp
-			);
+		(__str* par, __str* par_cmp) { 
+			return __str_start_with_from_cstr(par, ptr_raw(par_cmp->front), par_cmp->len);
 }
 
 
 bool_t 
 	__str_start_with_from_cstr
 		(__str* par, const char* par_cmp, u64_t par_len) {
-			__mem_trait* ops = par->mem->trait;
-			u64_t		 len = (par->back - par->front);
-
-			if (len < par_len) return false_t;
-			return ops->eq				       (
-				par->mem->ptr + par->front     ,
-				par_cmp					       ,
-				(len < par_len) ? len : par_len
-			);
+			return ptr_eq(par->front, par_cmp, par_len);
 }
 bool_t 
 	__str_end_with
-		(__str* par, __str* par_cmp)			  {
-			__mem_trait* ops	 = par->mem->trait;
-			u64_t		 len	 = par	  ->back - par	  ->front,
-						 len_cmp = par_cmp->back - par_cmp->front;
-
-			if (len_cmp > len) return false_t;
-			return ops->eq						   (
-				par->mem->ptr + par->back - len_cmp,
-				par_cmp->mem->ptr				   ,
-				len_cmp
-			);
-			
+		(__str* par, __str* par_cmp) {
+			return __str_end_with_from_cstr(par, ptr_raw(par_cmp->front), par_cmp->len);
 }
 bool_t 
 	__str_end_with_from_cstr
 		(__str* par, const char* par_cmp, u64_t par_len) {
-			__mem_trait* ops = par->mem->trait		 ;
-			u64_t		 len = par->back - par->front;
-
-			if (par_len > len) return false_t;
-			return ops->eq						   (
-				par->mem->ptr + par->back - par_len,
-				par_cmp							   ,
-				par_len
-			);
+			ptr cmp = ptr_seek(par->back, (-1) * par_len);
+			return ptr_eq(cmp, par_cmp, par_len);
 }
 
 bool_t 
 	__str_empty
-		(__str* par_str) {
-			return par_str->front == par_str->back;
+		(__str* par) {
+			return ptr_cur(par->front) == ptr_cur(par->back);
 }

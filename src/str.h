@@ -5,7 +5,7 @@
 #include "ptr.h"
 
 extern struct obj_trait* str_t;
-typedef struct			 str  { u64_t handle[10]; } str;
+typedef struct			 str  { u64_t handle[16]; } str;
 
 void str_rsv_back (str*, u64_t);
 void str_rsv_front(str*, u64_t);
