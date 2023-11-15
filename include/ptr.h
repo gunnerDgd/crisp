@@ -27,11 +27,12 @@ bool_t ptr_wr32 (ptr, u32_t);
 bool_t ptr_wr64 (ptr, u64_t);
 bool_t ptr_write(ptr, void*, u64_t);
 
-bool_t ptr_copy(ptr, ptr  , u64_t);
-bool_t ptr_move(ptr, ptr  , u64_t);
-bool_t ptr_eq  (ptr, void*, u64_t);
-bool_t ptr_gt  (ptr, void*, u64_t);
-bool_t ptr_lt  (ptr, void*, u64_t);
+u64_t  ptr_set_as(ptr, u8_t , u64_t);
+u64_t  ptr_copy  (ptr, ptr  , u64_t);
+u64_t  ptr_move  (ptr, ptr  , u64_t);
+bool_t ptr_eq    (ptr, void*, u64_t);
+bool_t ptr_gt    (ptr, void*, u64_t);
+bool_t ptr_lt    (ptr, void*, u64_t);
 
 #ifndef __cplusplus
 #define ptr_as(par_ptr, par_type) ((par_type)ptr_raw(par_ptr))

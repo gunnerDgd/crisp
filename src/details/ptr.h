@@ -21,6 +21,7 @@ bool_t __ptr_wr16(__ptr*, u16_t);
 bool_t __ptr_wr32(__ptr*, u32_t);
 bool_t __ptr_wr64(__ptr*, u64_t);
 
+bool_t __ptr_set_as		  (__ptr*, u8_t  , u64_t);
 bool_t __ptr_copy		  (__ptr*, __ptr*, u64_t);
 bool_t __ptr_copy_from_raw(__ptr*, __ptr*, u64_t);
 bool_t __ptr_move		  (__ptr*, __ptr*, u64_t);

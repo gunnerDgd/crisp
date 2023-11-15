@@ -1,8 +1,6 @@
 #include "task.h"
 #include "sched.h"
 
-#include <stdio.h>
-
 obj_trait __task_trait			        = {
 	.init		   = &__task_init		  ,
 	.init_as_clone = &__task_init_as_clone,
@@ -90,8 +88,6 @@ void
 				list_pop_at(&par->sched->susp, &par->sched_it);
 			if (par->sched)									   
 				del(par->sched);
-
-			fprintf(stderr, "TASK DEINIT\n");
 }
 
 u64_t

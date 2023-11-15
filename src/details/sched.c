@@ -44,13 +44,13 @@ u64_t
 
 bool_t 
 	__sched_run
-		(__sched* par)								  {
-			if (list_empty(&par->exec)) return false_t;
+		(__sched* par)											 {
+			if (list_empty(&par->exec) && list_empty(&par->susp))
+				return false_t;
 			
-			it exec = list_begin(&par->exec), exec_end = list_end(&par->exec);
-			while(neq(exec, exec_end)) {
+			list_while(&par->exec, exec) {
 				__task* run = get(exec);
-				if(!run)						  {
+				if (!run)					      {
 					list_pop_at(&par->exec, &exec);
 					continue;
 				}

@@ -166,31 +166,42 @@ bool_t
 			);
 }
 
-bool_t
-	ptr_copy
-		(ptr par_ptr, ptr par_ptr_op, u64_t par_len)	   {
-			if (ptr_size(par_ptr) < par_len) return false_t;
-			if (ptr_size(par_ptr) < par_len) return false_t;
+u64_t
+	ptr_set_as
+		(ptr par_ptr, u8_t par_op, u64_t par_len) {
+			if(ptr_size(par_ptr) < par_len)
+				return 0;
 
-			__ptr* ptr = &par_ptr, *ptr_op = &par_ptr_op;
-			return ptr->mem->trait->copy			 (
-				   ptr   ->mem->ptr + ptr   ->cur,
-				   ptr_op->mem->ptr + ptr_op->cur,
-				   par_len
+			return ((__ptr*)&par_ptr)->mem->trait->set_as (
+				ptr_raw(par_ptr),
+				par_op			,
+				par_len
 			);
 }
 
-bool_t
-	ptr_move
-		(ptr par_ptr, ptr par_ptr_op, u64_t par_len)	   {
-			if (ptr_size(par_ptr) < par_len) return false_t;
-			if (ptr_size(par_ptr) < par_len) return false_t;
+u64_t
+	ptr_copy
+		(ptr par_ptr, ptr par_ptr_op, u64_t par_len) {
+			if (ptr_size(par_ptr) < par_len) return 0;
+			if (ptr_size(par_ptr) < par_len) return 0;
 
-			__ptr* ptr = &par_ptr, *ptr_op = &par_ptr_op;
-			return ptr->mem->trait->move			 (
-				   ptr   ->mem->ptr + ptr   ->cur,
-				   ptr_op->mem->ptr + ptr_op->cur,
-				   par_len
+			return ((__ptr*)&par_ptr)->mem->trait->copy (
+				ptr_raw(par_ptr)   ,
+				ptr_raw(par_ptr_op),
+				par_len
+			);
+}
+
+u64_t
+	ptr_move
+		(ptr par_ptr, ptr par_ptr_op, u64_t par_len) {
+			if (ptr_size(par_ptr) < par_len) return 0;
+			if (ptr_size(par_ptr) < par_len) return 0;
+
+			return ((__ptr*)&par_ptr)->mem->trait->move (
+				ptr_raw(par_ptr)   ,
+				ptr_raw(par_ptr_op),
+				par_len
 			);
 }
 

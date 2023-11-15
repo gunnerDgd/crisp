@@ -18,11 +18,12 @@ bool_t cstd_mem_wr16(void*, u16_t);
 bool_t cstd_mem_wr32(void*, u32_t);
 bool_t cstd_mem_wr64(void*, u64_t);
 
-u64_t  cstd_mem_copy(void*, void*, u64_t);
-u64_t  cstd_mem_move(void*, void*, u64_t);
-bool_t cstd_mem_eq  (void*, void*, u64_t);
-bool_t cstd_mem_gt  (void*, void*, u64_t);
-bool_t cstd_mem_lt  (void*, void*, u64_t);
+u64_t  cstd_mem_set_as(void*, u8_t , u64_t);
+u64_t  cstd_mem_copy  (void*, void*, u64_t);
+u64_t  cstd_mem_move  (void*, void*, u64_t);
+bool_t cstd_mem_eq    (void*, void*, u64_t);
+bool_t cstd_mem_gt    (void*, void*, u64_t);
+bool_t cstd_mem_lt    (void*, void*, u64_t);
 
 extern __mem_trait cstd_mem_trait;
 #endif
