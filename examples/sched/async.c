@@ -15,16 +15,16 @@ void*
 }
 
 void 
-	async_main(task* par, void* par_str)        {
-		printf("Async Main Executed !!\n\n")    ;
+	async_main(task* par, void* par_str)    {
+		printf("Async Main Executed !!\n\n");
 
-		test_par par1 = { .str = "Task 1", .u64 = 1 },
-				 par2 = { .str = "Task 2", .u64 = 2 },
-				 par3 = { .str = "Task 3", .u64 = 3 };
+		test_par par1  = { .str = "Task 1", .u64 = 1 },
+				 par2  = { .str = "Task 2", .u64 = 2 },
+				 par3  = { .str = "Task 3", .u64 = 3 };
 
-		task* task1 = async(par, test, &par1);
-		task* task2 = async(par, test, &par2);
-		task* task3 = async(par, test, &par3);
+		task*    task1 = async(par, test, &par1);
+		task*    task2 = async(par, test, &par2);
+		task*    task3 = async(par, test, &par3);
 
 		printf("Await Completed (Value : %d)\n", await(task2));
 		printf("Await Completed (Value : %d)\n", await(task1));
