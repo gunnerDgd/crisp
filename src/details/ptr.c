@@ -137,6 +137,12 @@ bool_t
 			);
 }
 
+__ptr
+	__ptr_find
+		(__ptr* par, void* par_cmp, u64_t par_len) {
+			
+}
+
 bool_t
 	__ptr_eq
 		(__ptr* par, __ptr* par_copy, u64_t par_len) {

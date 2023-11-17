@@ -21,8 +21,8 @@ void str_pop_front(str* par, u64_t par_len)				   { __str_pop_front(par, par_len
 void str_pop_back (str* par, u64_t par_len)				   { __str_pop_back (par, par_len)		   ; }
 void str_pop_at   (str* par, u64_t par_off, u64_t par_len) { __str_pop_at   (par, par_off, par_len); }
 
-u64_t str_find			(str* par, u64_t par_off, str* par_find)					   { return __str_find(par, par_off, par_find); }
-u64_t str_find_from_cstr(str* par, u64_t par_off, const char* par_find, u64_t par_len) { return __str_find_from_cstr(par, par_off, par_find, par_len); }
+ptr str_find		  (str* par, u64_t par_off, str* par_find)					     { return __str_find(par, par_off, par_find); }
+ptr str_find_from_cstr(str* par, u64_t par_off, const char* par_find, u64_t par_len) { return __str_find_from_cstr(par, par_off, par_find, par_len); }
 
 bool_t str_eq		   (str* par, str* par_cmp)						  { return __str_eq			 (par, par_cmp)			; }
 bool_t str_eq_from_cstr(str* par, const char* par_cmp, u64_t par_len) { return __str_eq_from_cstr(par, par_cmp, par_len); }

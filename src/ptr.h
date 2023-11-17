@@ -7,6 +7,7 @@
 typedef struct ptr { u64_t ptr[2]; } ptr;
 
 ptr    ptr_null()		   ;
+bool_t ptr_same(ptr, ptr)  ;
 ptr    ptr_seek(ptr, i64_t);
 u64_t  ptr_dist(ptr, ptr)  ;
 u64_t  ptr_cur (ptr)	   ;
@@ -30,6 +31,7 @@ bool_t ptr_write(ptr, void*, u64_t);
 u64_t  ptr_set_as(ptr, u8_t , u64_t);
 u64_t  ptr_copy  (ptr, ptr  , u64_t);
 u64_t  ptr_move  (ptr, ptr  , u64_t);
+ptr    ptr_find  (ptr, void*, u64_t);
 bool_t ptr_eq    (ptr, void*, u64_t);
 bool_t ptr_gt    (ptr, void*, u64_t);
 bool_t ptr_lt    (ptr, void*, u64_t);

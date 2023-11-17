@@ -15,6 +15,7 @@ __mem_trait cstd_mem_trait  = {
 
     .copy   = &cstd_mem_copy  ,
     .move   = &cstd_mem_move  ,
+	.find   = &cstd_mem_find  ,
 	.set_as = &cstd_mem_set_as,
 
     .eq     = &cstd_mem_eq    ,
@@ -68,4 +69,3 @@ u64_t  cstd_mem_move  (void* par, void* par_mv , u64_t par_mv_len) { memmove(par
 bool_t cstd_mem_eq    (void* par, void* par_cmp, u64_t par_len)    { return strncmp(par, par_cmp, par_len) == 0; }
 bool_t cstd_mem_gt    (void* par, void* par_cmp, u64_t par_len)    { return strncmp(par, par_cmp, par_len) >  0; }
 bool_t cstd_mem_lt    (void* par, void* par_cmp, u64_t par_len)    { return strncmp(par, par_cmp, par_len) <  0; }
-

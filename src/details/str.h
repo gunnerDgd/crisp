@@ -33,8 +33,8 @@ void __str_pop_front	  (__str*, u64_t);
 void __str_pop_back		  (__str*, u64_t);
 void __str_pop_at		  (__str*, u64_t, u64_t);
 
-u64_t __str_find		  (__str*, u64_t, __str*);
-u64_t __str_find_from_cstr(__str*, u64_t, const char*, u64_t);
+ptr __str_find		    (__str*, u64_t, __str*)			   ;
+ptr __str_find_from_cstr(__str*, u64_t, const char*, u64_t);
 
 bool_t __str_eq			 (__str*, __str*)			 ;
 bool_t __str_eq_from_cstr(__str*, const char*, u64_t);

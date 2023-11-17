@@ -195,20 +195,20 @@ void
 			ptr_wr8(par->back, 0x00);
 }
 
-u64_t
+ptr
 	__str_find
 		(__str* par, u64_t par_off, __str* par_find) {
 			return __str_find_from_cstr(par, par_off, ptr_raw(par_find->front), par_find->len);
 }
 
-u64_t
+ptr
 	__str_find_from_cstr
 		(__str* par, u64_t par_off, const char* par_find, u64_t par_len) {
 			for (u64_t i = 0 ; i < (par->len - par_len) ; ++i)
 				if (ptr_eq(ptr_seek(par->front, i), par_find, par_len))
-					return i;
+					return ptr_seek(par->front, i);
 
-			return -1;
+			return ptr_null();
 }
 
 bool_t __str_eq			 (__str *par, __str* par_cmp)					  { return __str_eq_from_cstr(par, ptr_raw(par_cmp->front), par_cmp->len); }

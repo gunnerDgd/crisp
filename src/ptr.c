@@ -8,6 +8,12 @@ ptr
 		return ret;
 }
 
+bool_t
+	ptr_same
+		(ptr par, ptr par_cmp) {
+			return par.ptr[0] == par_cmp.ptr[0] && par.ptr[1] == par_cmp.ptr[1];
+}
+
 ptr
 	ptr_seek
 		(ptr par_ptr, i64_t par_off)					  {
@@ -203,6 +209,21 @@ u64_t
 				ptr_raw(par_ptr_op),
 				par_len
 			);
+}
+
+ptr
+	ptr_find
+		(ptr par, void* par_cmp, u64_t par_len)			 {
+			if(!par_cmp)				return ptr_null();
+			if(ptr_size(par) < par_len) return ptr_null();
+
+			for (u64_t off = 0 ; off < ptr_size(par) - par_len ; ++off) {
+				ptr off_ptr = ptr_seek(par, off);
+				if (ptr_eq(off_ptr, par_cmp, par_len))
+					return off_ptr;
+			}
+
+			return ptr_null();
 }
 
 bool_t

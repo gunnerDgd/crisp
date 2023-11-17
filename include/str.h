@@ -21,8 +21,8 @@ void str_pop_front(str*, u64_t)		  ;
 void str_pop_back (str*, u64_t)		  ;
 void str_pop_at   (str*, u64_t, u64_t);
 
-u64_t str_find			(str*, u64_t, str*)				 ;
-u64_t str_find_from_cstr(str*, u64_t, const char*, u64_t);
+ptr str_find		  (str*, u64_t, str*)			   ;
+ptr str_find_from_cstr(str*, u64_t, const char*, u64_t);
 
 bool_t str_eq		   (str*, str*)				 ;
 bool_t str_eq_from_cstr(str*, const char*, u64_t);
