@@ -103,6 +103,9 @@ add_library (build STATIC
     box.h
     box.c
 
+    endian.h
+    endian.c
+
     details/alloc.h
     details/alloc.c
         

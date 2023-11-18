@@ -15,7 +15,6 @@ __mem_trait cstd_mem_trait  = {
 
     .copy   = &cstd_mem_copy  ,
     .move   = &cstd_mem_move  ,
-	.find   = &cstd_mem_find  ,
 	.set_as = &cstd_mem_set_as,
 
     .eq     = &cstd_mem_eq    ,

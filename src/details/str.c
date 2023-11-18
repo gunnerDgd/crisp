@@ -205,8 +205,8 @@ ptr
 	__str_find_from_cstr
 		(__str* par, u64_t par_off, const char* par_find, u64_t par_len) {
 			for (u64_t i = 0 ; i < (par->len - par_len) ; ++i)
-				if (ptr_eq(ptr_seek(par->front, i), par_find, par_len))
-					return ptr_seek(par->front, i);
+				if (ptr_eq(ptr_seek(par->front, par_off + i), par_find, par_len))
+					return ptr_seek(par->front, par_off + i);
 
 			return ptr_null();
 }

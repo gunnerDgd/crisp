@@ -16,24 +16,23 @@ bool_t
 
 ptr
 	ptr_seek
-		(ptr par_ptr, i64_t par_off)					  {
-			if(!((__ptr*)&par_ptr)->mem) return ptr_null();
-			if(!__ptr_seek(&par_ptr, par_off))		      {
-				((__ptr*)&par_ptr)->mem  = 0;
-				((__ptr*)&par_ptr)->cur = 0;
-			}
-
+		(ptr par_ptr, i64_t par_off)							 {
+			if (!((__ptr*)&par_ptr)->mem)		return ptr_null();
+			if (!__ptr_seek(&par_ptr, par_off)) return ptr_null();
 			return par_ptr;
 }
 
-void* ptr_raw (ptr par) { return ((__ptr*)&par)->mem->ptr; }
+void* ptr_raw (ptr par) { return ((__ptr*)&par)->mem->ptr + ((__ptr*)&par)->cur; }
 void* ptr_mem (ptr par) { return ((__ptr*)&par)->mem; }
 u64_t ptr_size(ptr par) { return ((__ptr*)&par)->mem->alloc_size - ((__ptr*)&par)->cur; }
 u64_t ptr_cur (ptr par) { return ((__ptr*)&par)->cur; }
 
 u64_t
 	ptr_dist
-		(ptr par, ptr par_cmp)									 {
+		(ptr par, ptr par_cmp)						   {
+			if (ptr_same(par, ptr_null()))	   return 0;
+			if (ptr_same(par_cmp, ptr_null())) return 0;
+
 			u8_t* ptr = ptr_raw(par), *ptr_cmp = ptr_raw(par_cmp);
 			return (ptr < ptr_cmp) 
 				 ? (ptr_cmp - ptr) 
@@ -43,6 +42,7 @@ u64_t
 bool_t
 	ptr_rd8
 		(ptr par_ptr, u8_t* par_buf)				   {
+			if (ptr_same(par_ptr, ptr_null())) return 0;
 			__ptr* ptr = &par_ptr					   ;
 			if   (!ptr->mem)			 return false_t;
 			if   (ptr_size(par_ptr) < 1) return false_t;
@@ -56,6 +56,7 @@ bool_t
 bool_t
 	ptr_rd16
 		(ptr par_ptr, u16_t* par_buf)				   {
+			if (ptr_same(par_ptr, ptr_null())) return 0;
 			__ptr* ptr = &par_ptr					   ;
 			if   (!ptr->mem)			 return false_t;
 			if   (ptr_size(par_ptr) < 2) return false_t;
@@ -69,6 +70,7 @@ bool_t
 bool_t
 	ptr_rd32
 		(ptr par_ptr, u32_t* par_buf)				   {
+			if (ptr_same(par_ptr, ptr_null())) return 0;
 			__ptr* ptr = &par_ptr					   ;
 			if   (!ptr->mem)			 return false_t;
 			if   (ptr_size(par_ptr) < 4) return false_t;
@@ -82,6 +84,7 @@ bool_t
 bool_t
 	ptr_rd64
 		(ptr par_ptr, u64_t* par_buf)				   {
+			if (ptr_same(par_ptr, ptr_null())) return 0;
 			__ptr* ptr = &par_ptr					   ;
 			if   (!ptr->mem)			 return false_t;
 			if   (ptr_size(par_ptr) < 8) return false_t;
@@ -95,6 +98,7 @@ bool_t
 bool_t 
 	ptr_read
 		(ptr par_ptr, void* par_buf, u64_t par_len)			 {
+			if (ptr_same(par_ptr, ptr_null()))		 return 0;
 			__ptr* ptr = &par_ptr							 ;
 			if   (!ptr->mem)				   return false_t;
 			if   (ptr_size(par_ptr) < par_len) return false_t;
@@ -109,6 +113,7 @@ bool_t
 bool_t
 	ptr_wr8
 		(ptr par_ptr, u8_t par_buf)					   {
+			if (ptr_same(par_ptr, ptr_null())) return 0;
 			__ptr* ptr = &par_ptr					   ;
 			if   (!ptr->mem)			 return false_t;
 			if   (ptr_size(par_ptr) < 1) return false_t;
@@ -122,6 +127,7 @@ bool_t
 bool_t
 	ptr_wr16
 		(ptr par_ptr, u16_t par_buf)				   {
+			if (ptr_same(par_ptr, ptr_null())) return 0;
 			__ptr* ptr = &par_ptr					   ;
 			if   (!ptr->mem)			 return false_t;
 			if   (ptr_size(par_ptr) < 2) return false_t;
@@ -135,6 +141,7 @@ bool_t
 bool_t
 	ptr_wr32
 		(ptr par_ptr, u32_t par_buf)				   {
+			if (ptr_same(par_ptr, ptr_null())) return 0;
 			__ptr* ptr = &par_ptr					   ;
 			if   (!ptr->mem)			 return false_t;
 			if   (ptr_size(par_ptr) < 4) return false_t;
@@ -148,6 +155,7 @@ bool_t
 bool_t
 	ptr_wr64
 		(ptr par_ptr, u64_t par_buf)				   {
+			if (ptr_same(par_ptr, ptr_null())) return 0;
 			__ptr* ptr = &par_ptr					   ;
 			if   (!ptr->mem)			 return false_t;
 			if   (ptr_size(par_ptr) < 8) return false_t;
@@ -161,6 +169,7 @@ bool_t
 bool_t 
 	ptr_write
 		(ptr par_ptr, void* par_buf, u64_t par_len)			 {
+			if (ptr_same(par_ptr, ptr_null())) return false_t;
 			__ptr* ptr = &par_ptr					         ;
 			if   (!ptr->mem)				   return false_t;
 			if   (ptr_size(par_ptr) < par_len) return false_t;
@@ -174,9 +183,9 @@ bool_t
 
 u64_t
 	ptr_set_as
-		(ptr par_ptr, u8_t par_op, u64_t par_len) {
-			if(ptr_size(par_ptr) < par_len)
-				return 0;
+		(ptr par_ptr, u8_t par_op, u64_t par_len)     {
+			if(ptr_same(par_ptr, ptr_null())) return 0;
+			if(ptr_size(par_ptr) < par_len)   return 0;
 
 			return ((__ptr*)&par_ptr)->mem->trait->set_as (
 				ptr_raw(par_ptr),
@@ -187,9 +196,11 @@ u64_t
 
 u64_t
 	ptr_copy
-		(ptr par_ptr, ptr par_ptr_op, u64_t par_len) {
-			if (ptr_size(par_ptr) < par_len) return 0;
-			if (ptr_size(par_ptr) < par_len) return 0;
+		(ptr par_ptr, ptr par_ptr_op, u64_t par_len)	  {
+			if (ptr_same(par_ptr   , ptr_null())) return 0;
+			if (ptr_same(par_ptr_op, ptr_null())) return 0;
+			if (ptr_size(par_ptr) < par_len)	  return 0;
+			if (ptr_size(par_ptr) < par_len)	  return 0;
 
 			return ((__ptr*)&par_ptr)->mem->trait->copy (
 				ptr_raw(par_ptr)   ,
@@ -200,9 +211,11 @@ u64_t
 
 u64_t
 	ptr_move
-		(ptr par_ptr, ptr par_ptr_op, u64_t par_len) {
-			if (ptr_size(par_ptr) < par_len) return 0;
-			if (ptr_size(par_ptr) < par_len) return 0;
+		(ptr par_ptr, ptr par_ptr_op, u64_t par_len)	  {
+			if (ptr_same(par_ptr   , ptr_null())) return 0;
+			if (ptr_same(par_ptr_op, ptr_null())) return 0;
+			if (ptr_size(par_ptr) < par_len)	  return 0;
+			if (ptr_size(par_ptr) < par_len)	  return 0;
 
 			return ((__ptr*)&par_ptr)->mem->trait->move (
 				ptr_raw(par_ptr)   ,
@@ -213,9 +226,10 @@ u64_t
 
 ptr
 	ptr_find
-		(ptr par, void* par_cmp, u64_t par_len)			 {
-			if(!par_cmp)				return ptr_null();
-			if(ptr_size(par) < par_len) return ptr_null();
+		(ptr par, void* par_cmp, u64_t par_len)			    {
+			if(ptr_same(par, ptr_null()))  return ptr_null();
+			if(!par_cmp)				   return ptr_null();
+			if(ptr_size(par) < par_len)    return ptr_null();
 
 			for (u64_t off = 0 ; off < ptr_size(par) - par_len ; ++off) {
 				ptr off_ptr = ptr_seek(par, off);
@@ -228,9 +242,10 @@ ptr
 
 bool_t
 	ptr_eq
-		(ptr par, void* par_op, u64_t par_len)	       {
-			if (ptr_size(par) < par_len) return false_t;
-			if (ptr_size(par) < par_len) return false_t;
+		(ptr par, void* par_op, u64_t par_len)	         {
+			if (ptr_same(par, ptr_null())) return false_t;
+			if (ptr_size(par) < par_len)   return false_t;
+			if (ptr_size(par) < par_len)   return false_t;
 
 			__ptr* ptr = &par		   ;
 			return ptr->mem->trait->eq (

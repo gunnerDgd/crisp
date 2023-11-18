@@ -38,4 +38,4 @@ bool_t str_end_with_from_cstr  (str* par, const char* par_cmp, u64_t par_len) { 
 
 bool_t str_empty(str* par) { return __str_empty(par); }
 u64_t  str_len	(str* par) { return ptr_dist(((__str*)par)->front, ((__str*)par)->back); }
-ptr	   str_ptr	(str* par) { return mem_ptr(((__str*)par)->mem, 0); }
+ptr	   str_ptr	(str* par) { return ((__str*)par)->front; }
