@@ -17,6 +17,7 @@ bool_t
 ptr
 	ptr_seek
 		(ptr par_ptr, i64_t par_off)							 {
+			if (ptr_same(par_ptr, ptr_null()))	return ptr_null();
 			if (!((__ptr*)&par_ptr)->mem)		return ptr_null();
 			if (!__ptr_seek(&par_ptr, par_off)) return ptr_null();
 			return par_ptr;

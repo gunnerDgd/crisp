@@ -38,6 +38,7 @@ bool_t ptr_lt    (ptr, void*, u64_t);
 
 #ifndef __cplusplus
 #define ptr_as(par_ptr, par_type) ((par_type)ptr_raw(par_ptr))
+#define null(par_ptr) ptr_same(par_ptr, ptr_null())
 #endif
 
 #endif

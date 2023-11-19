@@ -7,15 +7,25 @@ u16_t
 }
 
 u32_t 
-    be32(u32_t par)     {
-        u8_t *ret = &par;
-        return ret[3] | ret[2] | ret[1] | ret[0];
+    be32(u32_t par)      {
+        u8_t   *ret = &par;
+        return (ret[3] << 24) | 
+               (ret[2] << 16) | 
+               (ret[1] << 8)  | 
+                ret[0];
 }
 
 u64_t 
-    be64(u64_t par)     {
-        u8_t *ret = &par;
-        return ret[7] | ret[6] | ret[5] | ret[4] | ret[3] | ret[2] | ret[1] | ret[0];
+    be64(u64_t par)       {
+        u8_t   *ret = &par;
+        return (ret[7] << 56) | 
+               (ret[6] << 48) | 
+               (ret[5] << 40) | 
+               (ret[4] << 32) | 
+               (ret[3] << 24) | 
+               (ret[2] << 16) | 
+               (ret[1] << 8)  | 
+                ret[0];
 }
 
 u16_t le16(u16_t par) { return par; }
