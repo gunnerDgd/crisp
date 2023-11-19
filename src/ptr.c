@@ -16,17 +16,43 @@ bool_t
 
 ptr
 	ptr_seek
-		(ptr par_ptr, i64_t par_off)							 {
-			if (ptr_same(par_ptr, ptr_null()))	return ptr_null();
-			if (!((__ptr*)&par_ptr)->mem)		return ptr_null();
-			if (!__ptr_seek(&par_ptr, par_off)) return ptr_null();
-			return par_ptr;
+		(ptr par, i64_t par_off)							 {
+			if (null(par))					return ptr_null();
+			if (!((__ptr*)&par)->mem)		return ptr_null();
+			if (!__ptr_seek(&par, par_off)) return ptr_null();
+			return par;
 }
 
-void* ptr_raw (ptr par) { return ((__ptr*)&par)->mem->ptr + ((__ptr*)&par)->cur; }
-void* ptr_mem (ptr par) { return ((__ptr*)&par)->mem; }
-u64_t ptr_size(ptr par) { return ((__ptr*)&par)->mem->alloc_size - ((__ptr*)&par)->cur; }
-u64_t ptr_cur (ptr par) { return ((__ptr*)&par)->cur; }
+void* 
+	ptr_raw 
+		(ptr par)							  { 
+			if (null(par))			  return 0;
+			if (!((__ptr*)&par)->mem) return 0;
+			return ((__ptr*)&par)->mem->ptr + ((__ptr*)&par)->cur; 
+}
+void* 
+	ptr_mem 
+		(ptr par)							  {
+			if (null(par))			  return 0;
+			if (!((__ptr*)&par)->mem) return 0;
+			return ((__ptr*)&par)->mem; 
+}
+
+u64_t 
+	ptr_size
+		(ptr par)							  { 
+			if (null(par))			  return 0;
+			if (!((__ptr*)&par)->mem) return 0;
+			return ((__ptr*)&par)->mem->alloc_size - ((__ptr*)&par)->cur; 
+}
+
+u64_t 
+	ptr_cur 
+		(ptr par)							  { 
+			if (null(par))			  return 0;
+			if (!((__ptr*)&par)->mem) return 0;
+			return ((__ptr*)&par)->cur; 
+}
 
 u64_t
 	ptr_dist
@@ -40,146 +66,151 @@ u64_t
 				 : (ptr - ptr_cmp);
 }
 
-bool_t
+ptr
 	ptr_rd8
-		(ptr par_ptr, u8_t* par_buf)				   {
-			if (ptr_same(par_ptr, ptr_null())) return 0;
-			__ptr* ptr = &par_ptr					   ;
-			if   (!ptr->mem)			 return false_t;
-			if   (ptr_size(par_ptr) < 1) return false_t;
+		(ptr par_ptr, u8_t* par_buf)						    {
+			if (ptr_same(par_ptr, ptr_null())) return ptr_null();
+			__ptr* ptr = &par_ptr					      ;
+			if   (!ptr->mem)			 return ptr_null();
+			if   (ptr_size(par_ptr) < 1) return ptr_null();
 
-			return ptr->mem->trait->rd8		   (
-				   ptr->mem->ptr + ptr->cur, 
-				   par_buf
-			);
+			if (!ptr->mem->trait->rd8(ptr->mem->ptr + ptr->cur, par_buf))
+				return ptr_null();
+
+			ptr->cur += 1 ;
+			return par_ptr;
 }
 
-bool_t
+ptr
 	ptr_rd16
-		(ptr par_ptr, u16_t* par_buf)				   {
-			if (ptr_same(par_ptr, ptr_null())) return 0;
-			__ptr* ptr = &par_ptr					   ;
-			if   (!ptr->mem)			 return false_t;
-			if   (ptr_size(par_ptr) < 2) return false_t;
+		(ptr par_ptr, u16_t* par_buf)							{
+			if (ptr_same(par_ptr, ptr_null())) return ptr_null();
+			__ptr* ptr = &par_ptr							    ;
+			if   (!ptr->mem)				   return ptr_null();
+			if   (ptr_size(par_ptr) < 2)	   return ptr_null();
 
-			return ptr->mem->trait->rd16   (
-				   ptr->mem->ptr + ptr->cur, 
-				   par_buf
-			);
+			if (!ptr->mem->trait->rd16(ptr->mem->ptr + ptr->cur, par_buf))
+				return ptr_null();
+
+			ptr->cur += 2 ;
+			return par_ptr;
 }
 
-bool_t
+ptr
 	ptr_rd32
-		(ptr par_ptr, u32_t* par_buf)				   {
-			if (ptr_same(par_ptr, ptr_null())) return 0;
-			__ptr* ptr = &par_ptr					   ;
-			if   (!ptr->mem)			 return false_t;
-			if   (ptr_size(par_ptr) < 4) return false_t;
+		(ptr par_ptr, u32_t* par_buf)						    {
+			if (ptr_same(par_ptr, ptr_null())) return ptr_null();
+			__ptr* ptr = &par_ptr								;
+			if   (!ptr->mem)				   return ptr_null();
+			if   (ptr_size(par_ptr) < 4)	   return ptr_null();
 
-			return ptr->mem->trait->rd32   (
-				   ptr->mem->ptr + ptr->cur, 
-				   par_buf
-			);
+			if (!ptr->mem->trait->rd32(ptr->mem->ptr + ptr->cur, par_buf))
+				return ptr_null();
+
+			ptr->cur += 4 ;
+			return par_ptr;
 }
 
-bool_t
+ptr
 	ptr_rd64
-		(ptr par_ptr, u64_t* par_buf)				   {
-			if (ptr_same(par_ptr, ptr_null())) return 0;
-			__ptr* ptr = &par_ptr					   ;
-			if   (!ptr->mem)			 return false_t;
-			if   (ptr_size(par_ptr) < 8) return false_t;
+		(ptr par_ptr, u64_t* par_buf)						    {
+			if (ptr_same(par_ptr, ptr_null())) return ptr_null();
+			__ptr* ptr = &par_ptr								;
+			if   (!ptr->mem)				   return ptr_null();
+			if   (ptr_size(par_ptr) < 8)	   return ptr_null();
 
-			return ptr->mem->trait->rd64   (
-				   ptr->mem->ptr + ptr->cur, 
-				   par_buf
-			);
+			if (!ptr->mem->trait->rd8(ptr->mem->ptr + ptr->cur, par_buf))
+				return ptr_null();
+
+			ptr->cur +=  8;
+			return par_ptr;
 }
 
-bool_t 
+ptr
 	ptr_read
-		(ptr par_ptr, void* par_buf, u64_t par_len)			 {
-			if (ptr_same(par_ptr, ptr_null()))		 return 0;
-			__ptr* ptr = &par_ptr							 ;
-			if   (!ptr->mem)				   return false_t;
-			if   (ptr_size(par_ptr) < par_len) return false_t;
+		(ptr par_ptr, void* par_buf, u64_t par_len)			    {
+			if (ptr_same(par_ptr, ptr_null())) return ptr_null();
+			__ptr* ptr = &par_ptr							    ;
+			if   (!ptr->mem)				   return ptr_null();
+			if   (ptr_size(par_ptr) < par_len) return ptr_null();
 
-			return ptr->mem->trait->copy (
-				par_buf					,
-				ptr->mem->ptr + ptr->cur,
-				par_len
-			);
+			u64_t ret = ptr->mem->trait->copy (par_buf, ptr->mem->ptr + ptr->cur, par_len);
+			if  (!ret) return ptr_null();
+
+			ptr->cur += ret;
+			return par_ptr ;
 }
 
-bool_t
+ptr
 	ptr_wr8
-		(ptr par_ptr, u8_t par_buf)					   {
-			if (ptr_same(par_ptr, ptr_null())) return 0;
-			__ptr* ptr = &par_ptr					   ;
-			if   (!ptr->mem)			 return false_t;
-			if   (ptr_size(par_ptr) < 1) return false_t;
+		(ptr par_ptr, u8_t par_buf)							    {
+			if (ptr_same(par_ptr, ptr_null())) return ptr_null();
+			__ptr* ptr = &par_ptr							    ;
+			if   (!ptr->mem)				   return ptr_null();
+			if   (ptr_size(par_ptr) < 1)	   return ptr_null();
 
-			return ptr->mem->trait->wr8	   (
-				   ptr->mem->ptr + ptr->cur, 
-				   par_buf
-			);
+			if (!ptr->mem->trait->wr8(ptr->mem->ptr + ptr->cur, par_buf))
+				return ptr_null();
+
+			ptr->cur  += 1;
+			return par_ptr;
 }
 
-bool_t
+ptr
 	ptr_wr16
-		(ptr par_ptr, u16_t par_buf)				   {
-			if (ptr_same(par_ptr, ptr_null())) return 0;
-			__ptr* ptr = &par_ptr					   ;
-			if   (!ptr->mem)			 return false_t;
-			if   (ptr_size(par_ptr) < 2) return false_t;
+		(ptr par_ptr, u16_t par_buf)						    {
+			if (ptr_same(par_ptr, ptr_null())) return ptr_null();
+			__ptr* ptr = &par_ptr							    ;
+			if   (!ptr->mem)				   return ptr_null();
+			if   (ptr_size(par_ptr) < 2)	   return ptr_null();
 
-			return ptr->mem->trait->wr16   (
-				   ptr->mem->ptr + ptr->cur, 
-				   par_buf
-			);
+			if (!ptr->mem->trait->wr16(ptr->mem->ptr + ptr->cur, par_buf))
+				return ptr_null();
+
+			ptr->cur  += 2;
+			return par_ptr;
 }
 
-bool_t
+ptr
 	ptr_wr32
-		(ptr par_ptr, u32_t par_buf)				   {
-			if (ptr_same(par_ptr, ptr_null())) return 0;
-			__ptr* ptr = &par_ptr					   ;
-			if   (!ptr->mem)			 return false_t;
-			if   (ptr_size(par_ptr) < 4) return false_t;
+		(ptr par_ptr, u32_t par_buf)						    {
+			if (ptr_same(par_ptr, ptr_null())) return ptr_null();
+			__ptr* ptr = &par_ptr							    ;
+			if   (!ptr->mem)				   return ptr_null();
+			if   (ptr_size(par_ptr) < 4)	   return ptr_null();
 
-			return ptr->mem->trait->wr32   (
-				   ptr->mem->ptr + ptr->cur, 
-				   par_buf
-			);
+			if (!ptr->mem->trait->wr32(ptr->mem->ptr + ptr->cur, par_buf))
+				return ptr_null();
+
+			ptr->cur  += 1;
+			return par_ptr;
 }
 
-bool_t
+ptr
 	ptr_wr64
-		(ptr par_ptr, u64_t par_buf)				   {
-			if (ptr_same(par_ptr, ptr_null())) return 0;
-			__ptr* ptr = &par_ptr					   ;
-			if   (!ptr->mem)			 return false_t;
-			if   (ptr_size(par_ptr) < 8) return false_t;
+		(ptr par_ptr, u64_t par_buf)							{
+			if (ptr_same(par_ptr, ptr_null())) return ptr_null();
+			__ptr* ptr = &par_ptr							    ;
+			if   (!ptr->mem)				   return ptr_null();
+			if   (ptr_size(par_ptr) < 8)	   return ptr_null();
 
-			return ptr->mem->trait->wr64   (
-				   ptr->mem->ptr + ptr->cur, 
-				   par_buf
-			);
+			if (!ptr->mem->trait->wr64(ptr->mem->ptr + ptr->cur, par_buf))
+				return ptr_null();
+
+			ptr->cur  += 8;
+			return par_ptr;
 }
 
-bool_t 
+ptr
 	ptr_write
-		(ptr par_ptr, void* par_buf, u64_t par_len)			 {
-			if (ptr_same(par_ptr, ptr_null())) return false_t;
-			__ptr* ptr = &par_ptr					         ;
-			if   (!ptr->mem)				   return false_t;
-			if   (ptr_size(par_ptr) < par_len) return false_t;
+		(ptr par_ptr, void* par_buf, u64_t par_len)			    {
+			if (ptr_same(par_ptr, ptr_null())) return ptr_null();
+			__ptr* ptr = &par_ptr					            ;
+			if   (!ptr->mem)				   return ptr_null();
+			if   (ptr_size(par_ptr) < par_len) return ptr_null();
 
-			return ptr->mem->trait->copy   (
-				   ptr->mem->ptr + ptr->cur, 
-				   par_buf				   ,
-				   par_len
-			);
+			u64_t ret = ptr->mem->trait->copy(ptr->mem->ptr + ptr->cur, par_buf, par_len);
+			if  (!ret) return ptr_null();
 }
 
 u64_t
