@@ -21,7 +21,7 @@ obj*
 			return ret;
 }
 
-obj* 
+bool_t
 	obj_init_at
 		(obj* par_obj, obj_trait* par_trait, u32_t par_count, ...) {
 			va_list  par;
@@ -31,7 +31,7 @@ obj*
 			return ret;
 }
 
-obj* 
+bool_t 
 	obj_init_at_from_varg
 		(obj* par_obj, obj_trait* par_trait, u32_t par_count, va_list par) {
 			if (!par_obj)   return false_t;
@@ -40,11 +40,12 @@ obj*
 			return __obj_init_at(par_obj, par_trait, par_count, par);
 }
 
-obj*	   obj_init_as_clone(obj* par) { return (par) ? __obj_init_as_clone(par) : 0; }
-obj*	   obj_init_as_ref  (obj* par) { return (par) ? __obj_init_as_ref  (par) : 0; }
-void	   obj_deinit		(obj* par) { if(par) __obj_deinit(par); }
-obj_trait* obj_get_trait    (obj* par) { return (par) ? ((__obj*)par)->trait : 0; }
-u64_t      obj_use_count	(obj* par) { return (par) ? ((__obj*)par)->ref   : 0; }
+obj*	   obj_init_as_clone   (obj* par)				  { return (par) ? __obj_init_as_clone   (par)			  : 0; }
+bool_t     obj_init_as_clone_at(obj* par, obj* par_clone) { return (par) ? __obj_init_as_clone_at(par, par_clone) : 0; }
+obj*	   obj_init_as_ref     (obj* par)				  { return (par) ? __obj_init_as_ref  (par) : 0; }
+void	   obj_deinit		   (obj* par)				  { if(par) __obj_deinit(par); }
+obj_trait* obj_get_trait       (obj* par)				  { return (par) ? ((__obj*)par)->trait : 0; }
+u64_t      obj_use_count	   (obj* par)				  { return (par) ? ((__obj*)par)->ref   : 0; }
 
 str*
 	obj_name

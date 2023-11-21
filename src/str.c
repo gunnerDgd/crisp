@@ -7,35 +7,228 @@
 
 obj_trait* str_t = &__str_trait;
 
-void str_rsv_back (str* par, u64_t par_size) { __str_rsv_back (par, par_size); }
-void str_rsv_front(str* par, u64_t par_size) { __str_rsv_front(par, par_size); }
+void 
+    str_rsv_back 
+        (str* par, u64_t par_size)            {
+            if (!par)                   return;
+            if (trait_of(par) != str_t) return;
 
-void str_push_back	    (str* par, str*  par_size)									   { __str_push_back	   (par, par_size)		  ; }
-void str_push_back_cstr (str* par, const char* par_push, u64_t par_len)				   { __str_push_back_cstr (par, par_push, par_len); }
-void str_push_front	    (str* par, str* par_push)									   { __str_push_front	  (par, par_push)		  ; }
-void str_push_front_cstr(str* par, const char* par_push, u64_t par_len)				   { __str_push_front_cstr(par, par_push, par_len); }
-void str_push_at		(str* par, u64_t par_off, str* par_push)					   { __str_push_at		  (par, par_off, par_push); }
-void str_push_at_cstr   (str* par, u64_t par_off, const char* par_push, u64_t par_len) { __str_push_at_cstr   (par, par_off, par_push, par_len); }
+            __str_rsv_back (par, par_size); 
+}
 
-void str_pop_front(str* par, u64_t par_len)				   { __str_pop_front(par, par_len)		   ; }
-void str_pop_back (str* par, u64_t par_len)				   { __str_pop_back (par, par_len)		   ; }
-void str_pop_at   (str* par, u64_t par_off, u64_t par_len) { __str_pop_at   (par, par_off, par_len); }
+void 
+    str_rsv_front
+        (str* par, u64_t par_size)            {
+            if (!par)                   return;
+            if (trait_of(par) != str_t) return;
 
-ptr str_find		  (str* par, u64_t par_off, str* par_find)					     { return __str_find(par, par_off, par_find); }
-ptr str_find_from_cstr(str* par, u64_t par_off, const char* par_find, u64_t par_len) { return __str_find_from_cstr(par, par_off, par_find, par_len); }
+            __str_rsv_front(par, par_size); 
+}
 
-bool_t str_eq		   (str* par, str* par_cmp)						  { return __str_eq			 (par, par_cmp)			; }
-bool_t str_eq_from_cstr(str* par, const char* par_cmp, u64_t par_len) { return __str_eq_from_cstr(par, par_cmp, par_len); }
-bool_t str_gt		   (str* par, str* par_cmp)						  { return __str_gt			 (par, par_cmp)			; }
-bool_t str_gt_from_cstr(str* par, const char* par_cmp, u64_t par_len) { return __str_gt_from_cstr(par, par_cmp, par_len); }
-bool_t str_lt		   (str* par, str* par_cmp)						  { return __str_lt			 (par, par_cmp)			; }
-bool_t str_lt_from_cstr(str* par, const char* par_cmp, u64_t par_len) { return __str_lt_from_cstr(par, par_cmp, par_len); }
+void 
+    str_push_back	    
+        (str* par, str*  par_size)            {
+            if (!par)                   return;
+            if (trait_of(par) != str_t) return;
+            __str_push_back	   (par, par_size); 
+}
 
-bool_t str_start_with		   (str* par, str* par_cmp)						  { return __str_start_with			 (par, par_cmp)			; }
-bool_t str_start_with_from_cstr(str* par, const char* par_cmp, u64_t par_len) { return __str_start_with_from_cstr(par, par_cmp, par_len); }
-bool_t str_end_with			   (str* par, str* par_cmp)						  { return __str_end_with			 (par, par_cmp); }
-bool_t str_end_with_from_cstr  (str* par, const char* par_cmp, u64_t par_len) { return __str_end_with_from_cstr  (par, par_cmp, par_len); }
+void 
+    str_push_back_cstr 
+        (str* par, const char* par_push, u64_t par_len) {
+            if (!par)                   return;
+            if (trait_of(par) != str_t) return;
+            __str_push_back_cstr (par, par_push, par_len); 
+}
 
-bool_t str_empty(str* par) { return __str_empty(par); }
-u64_t  str_len	(str* par) { return ptr_dist(((__str*)par)->front, ((__str*)par)->back); }
-ptr	   str_ptr	(str* par) { return ((__str*)par)->front; }
+void 
+    str_push_front	    
+        (str* par, str* par_push)             { 
+            if (!par)                   return;
+            if (trait_of(par) != str_t) return;
+
+            __str_push_front(par, par_push); 
+}
+
+void 
+    str_push_front_cstr
+        (str* par, const char* par_push, u64_t par_len) { 
+            if (!par)                   return;
+            if (trait_of(par) != str_t) return;
+
+            __str_push_front_cstr(par, par_push, par_len); 
+}
+
+void 
+    str_push_at		
+        (str* par, u64_t par_off, str* par_push)      {
+            if (!par)                   return;
+            if (trait_of(par) != str_t) return;
+
+            __str_push_at		  (par, par_off, par_push); 
+}
+
+void 
+    str_push_at_cstr   
+        (str* par, u64_t par_off, const char* par_push, u64_t par_len) { 
+            if (!par)                   return;
+            if (trait_of(par) != str_t) return;
+            __str_push_at_cstr   (par, par_off, par_push, par_len); 
+}
+
+void 
+    str_pop_front
+        (str* par, u64_t par_len)             { 
+            if (!par)                   return;
+            if (trait_of(par) != str_t) return;
+            
+            __str_pop_front(par, par_len); 
+}
+
+void 
+    str_pop_back 
+        (str* par, u64_t par_len)             {
+            if (!par)                   return;
+            if (trait_of(par) != str_t) return;
+
+            __str_pop_back (par, par_len);
+}
+
+void 
+    str_pop_at   
+        (str* par, u64_t par_off, u64_t par_len)      { 
+            if (!par)                   return;
+            if (trait_of(par) != str_t) return;
+            __str_pop_at   (par, par_off, par_len); 
+}
+
+ptr 
+    str_find		  
+        (str* par, u64_t par_off, str* par_find)         {
+            if (!par)                   return ptr_null();
+            if (trait_of(par) != str_t) return ptr_null();
+
+            return __str_find(par, par_off, par_find); 
+}
+
+ptr 
+    str_find_from_cstr
+        (str* par, u64_t par_off, const char* par_find, u64_t par_len) { 
+            if (!par)                   return ptr_null();
+            if (trait_of(par) != str_t) return ptr_null();
+
+            return __str_find_from_cstr(par, par_off, par_find, par_len); 
+}
+
+bool_t 
+    str_eq
+        (str* par, str* par_cmp)                      { 
+            if (!par)                   return false_t;
+            if (trait_of(par) != str_t) return false_t;
+
+            return __str_eq(par, par_cmp);
+}
+
+bool_t 
+    str_eq_from_cstr
+        (str* par, const char* par_cmp, u64_t par_len) {
+            if (!par)                   return false_t;
+            if (trait_of(par) != str_t) return false_t;
+
+            return __str_eq_from_cstr(par, par_cmp, par_len); 
+}
+
+bool_t 
+    str_gt
+        (str* par, str* par_cmp)                      {
+            if (!par)                   return false_t;
+            if (trait_of(par) != str_t) return false_t;
+
+            return __str_gt(par, par_cmp);
+}
+
+bool_t 
+    str_gt_from_cstr
+        (str* par, const char* par_cmp, u64_t par_len) { 
+            if (!par)                   return false_t;
+            if (trait_of(par) != str_t) return false_t;
+
+            return __str_gt_from_cstr(par, par_cmp, par_len); 
+}
+
+bool_t 
+    str_lt
+        (str* par, str* par_cmp)                      {
+            if (!par)                   return false_t;
+            if (trait_of(par) != str_t) return false_t;
+
+            return __str_lt(par, par_cmp);
+}
+
+bool_t 
+    str_lt_from_cstr
+        (str* par, const char* par_cmp, u64_t par_len) { 
+            if (!par)                   return false_t;
+            if (trait_of(par) != str_t) return false_t;
+
+            return __str_lt_from_cstr(par, par_cmp, par_len); 
+}
+
+bool_t 
+    str_start_with
+        (str* par, str* par_cmp)                      {
+            if (!par)                   return false_t;
+            if (trait_of(par) != str_t) return false_t;
+
+            return __str_start_with(par, par_cmp);
+}
+
+bool_t 
+    str_start_with_from_cstr
+        (str* par, const char* par_cmp, u64_t par_len) { 
+            if (!par)                   return false_t;
+            if (trait_of(par) != str_t) return false_t;
+
+            return __str_start_with_from_cstr(par, par_cmp, par_len); 
+}
+
+bool_t 
+    str_end_with
+        (str* par, str* par_cmp)                      { 
+            if (!par)                   return false_t;
+            if (trait_of(par) != str_t) return false_t;
+
+            return __str_end_with(par, par_cmp); 
+}
+
+bool_t 
+    str_end_with_from_cstr  
+        (str* par, const char* par_cmp, u64_t par_len) {
+            if (!par)                   return false_t;
+            if (trait_of(par) != str_t) return false_t;
+
+            return __str_end_with_from_cstr  (par, par_cmp, par_len); 
+}
+
+bool_t 
+    str_empty(str* par)                          {
+        if (!par)                   return true_t;
+        if (trait_of(par) != str_t) return true_t;
+        return __str_empty(par); 
+}
+
+u64_t  
+    str_len	
+        (str* par)                              { 
+            if (!par)                   return 0;
+            if (trait_of(par) != str_t) return 0;
+            return ptr_dist(((__str*)par)->front, ((__str*)par)->back); 
+}
+
+ptr
+    str_ptr	
+        (str* par)                                       { 
+            if (!par)                   return ptr_null();
+            if (trait_of(par) != str_t) return ptr_null();
+            return ((__str*)par)->front; 
+}

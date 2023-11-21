@@ -55,6 +55,18 @@ __obj*
 			return ret;
 }
 
+bool_t
+	__obj_init_as_clone_at
+		(__obj* par, __obj* par_clone)   {
+			par->ref   =				1;
+			par->trait = par_clone->trait;
+
+			if (par->trait->init_as_clone)
+				return par->trait->init_as_clone(par, par_clone);
+
+			return true_t;
+}
+
 __obj*
     __obj_init_as_ref
 		(__obj* par)							  {

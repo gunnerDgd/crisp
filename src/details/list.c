@@ -103,7 +103,7 @@ __list_elem*
             if(!par_at)              return 0;
             if (par_at->list != par) return 0;
 
-            mem ret_mem = __mem_init(par->alloc, sizeof(__list_elem)); 
+            mem ret_mem = mem_init(par->alloc, sizeof(__list_elem)); 
             if(!ret_mem) return 0;
 
             __list_elem *ret       = ptr_as(mem_ptr(ret_mem, 0), __list_elem*);
