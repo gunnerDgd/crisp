@@ -22,7 +22,7 @@ bool_t
 			}
 
 			alloc *par_alloc      = (par_count >= 1) ? va_arg(par, alloc*) : get_alloc();
-			u64_t  par_alloc_size = (par_count == 2) ? va_arg(par, u64_t)  : 4096 * 8;
+			u64_t  par_alloc_size = (par_count == 2) ? va_arg(par, u64_t)  : 1024 * 1024;
 			
 			if (!par_alloc)
 				return false_t;

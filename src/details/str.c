@@ -65,7 +65,7 @@ void
 				rsv = par_rsv + mem_size(par->mem);
 
 			rsv_mem = mem_init(par->alloc, rsv + 1);
-			if(!ptr_copy(mem_ptr(rsv_mem, rsv_off), par->front, par->len)) {
+			if(!ptr_copy(mem_ptr(rsv_mem, rsv_off), par->front, par->len) && par->len) {
 				mem_deinit(rsv_mem);
 				return;
 			}
@@ -87,7 +87,7 @@ void
 				rsv = par_rsv + mem_size(par->mem);
 
 			rsv_mem = mem_init(par->alloc, rsv + 1);
-			if(!ptr_copy(mem_ptr(rsv_mem, rsv_off), par->front, par->len)) {
+			if(!ptr_copy(mem_ptr(rsv_mem, rsv_off), par->front, par->len) && par->len) {
 				mem_deinit(rsv_mem);
 				return;
 			}
