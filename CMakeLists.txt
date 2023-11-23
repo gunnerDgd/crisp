@@ -1,5 +1,9 @@
 cmake_minimum_required(VERSION 3.10)
-add_subdirectory      (src)
+if    (WIN32)
+    add_subdirectory(preset/win32)
+elseif(UNIX AND NOT APPLE)
+elseif(APPLE)
+endif ()
 
 if(PRESET_BUILD_EXAMPLES)
     include_directories(src)
