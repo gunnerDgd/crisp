@@ -1,30 +1,30 @@
 #include "alloc.h"
 
 bool_t
-	__alloc_init
+	__alloc_new
 		(__alloc* par, __alloc_trait* par_trait) {
 			if(!par)	   return false_t;
 			if(!par_trait) return false_t;
 
 			par->trait = par_trait;
 
-			return par->trait->init(par);
+			return par->trait->on_new(par);
 }
 
 bool_t
-	__alloc_init_as_clone
+	__alloc_clone
 		(__alloc* par, __alloc* par_clone)		{
 			if(!par_clone)		  return false_t;
 			if(!par_clone->trait) return false_t;
 			
 			par->trait = par_clone->trait;
 
-			return par->trait->init_as_clone(par, par_clone);
+			return par->trait->on_clone(par, par_clone);
 }
 
 void
-	__alloc_deinit
-		(__alloc* par) {
-			par->trait->deinit(par);
+	__alloc_del
+		(__alloc* par)			   {
+			par->trait->on_del(par);
 			par->trait			= 0;
 }

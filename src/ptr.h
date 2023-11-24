@@ -16,10 +16,10 @@ void*  ptr_raw (ptr)	   ;
 void*  ptr_mem (ptr)       ;
 u64_t  ptr_size(ptr)       ;
 
-ptr ptr_rd8 (ptr, u8_t*)		  ;
-ptr ptr_rd16(ptr, u16_t*)	  ;
-ptr ptr_rd32(ptr, u32_t*)	  ;
-ptr ptr_rd64(ptr, u64_t*)	  ;
+ptr ptr_rd8 (ptr, u8_t*)	   ;
+ptr ptr_rd16(ptr, u16_t*)	   ;
+ptr ptr_rd32(ptr, u32_t*)	   ;
+ptr ptr_rd64(ptr, u64_t*)	   ;
 ptr ptr_read(ptr, void*, u64_t);
 
 ptr ptr_wr8  (ptr, u8_t);

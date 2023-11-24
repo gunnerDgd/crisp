@@ -1,12 +1,12 @@
 #ifndef PRESET_CSTD_MEM_H
 #define PRESET_CSTD_MEM_H
 
-#ifdef PRESET_ENV_CSTD
-#include "../../details/mem.h"
+#ifdef PRESET_LIB_CSTD
+#include "../../../details/mem.h"
 
-__mem* cstd_mem_init		 (__alloc*, u64_t) ;
-__mem* cstd_mem_init_as_clone(__alloc*, __mem*);
-void   cstd_mem_deinit		 (__alloc*, __mem*);
+__mem* cstd_mem_new	 (__alloc*, u64_t) ;
+__mem* cstd_mem_clone(__alloc*, __mem*);
+void   cstd_mem_del	 (__alloc*, __mem*);
 
 bool_t cstd_mem_rd8 (void*, u8_t *);
 bool_t cstd_mem_rd16(void*, u16_t*);

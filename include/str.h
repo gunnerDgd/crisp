@@ -37,7 +37,7 @@ bool_t str_end_with			   (str*, str*);
 bool_t str_end_with_from_cstr  (str*, const char*, u64_t);
 
 bool_t str_empty(str*);
-u64_t str_len   (str*);
-ptr   str_ptr   (str*);
+u64_t  str_len  (str*);
+ptr    str_ptr  (str*);
 
 #endif

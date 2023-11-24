@@ -6,11 +6,12 @@
 
 typedef void* mem;
 
-mem  mem_init         (alloc*, u64_t);
-mem  mem_init_as_clone(mem)          ;
-void mem_deinit       (mem)          ;
+mem   mem_new    (alloc*, u64_t);
+mem   mem_clone  (mem)          ;
+void  mem_del    (mem)	 	    ;
 
-u64_t mem_size(mem)		  ;
-ptr   mem_ptr (mem, u64_t);
+u64_t mem_size   (mem)		    ;
+ptr   mem_ptr    (mem, u64_t)   ;
+void* mem_ptr_raw(mem)			;
 
 #endif

@@ -5,10 +5,11 @@ elseif(PRESET_LIB_BAREMETAL)
     add_compile_definitions(PRESET_LIB_BAREMETAL)
 endif ()
 
-if   (PRESET_X86_64)
-    enable_language      (ASM_NASM)
-    set                  (CMAKE_ASM_NASM_COMPILE_OBJECT "<CMAKE_ASM_NASM_COMPILER> <INCLUDES> <FLAGS> -o <OBJECT> <SOURCE>")
-    add_compile_options  ("$<$<COMPILE_LANGUAGE:ASM_NASM>:-f $<IF:$<BOOL:$<TARGET_PROPERTY:NASM_OBJ_FORMAT>>, \ $<TARGET_PROPERTY:NASM_OBJ_FORMAT>, ${CMAKE_ASM_NASM_OBJECT_FORMAT}>>")
+if (PRESET_X86_64)
+    add_compile_definitions(PRESET_X86_64)
+    enable_language        (ASM_NASM)
+    set                    (CMAKE_ASM_NASM_COMPILE_OBJECT "<CMAKE_ASM_NASM_COMPILER> <INCLUDES> <FLAGS> -o <OBJECT> <SOURCE>")
+    add_compile_options    ("$<$<COMPILE_LANGUAGE:ASM_NASM>:-f $<IF:$<BOOL:$<TARGET_PROPERTY:NASM_OBJ_FORMAT>>, \ $<TARGET_PROPERTY:NASM_OBJ_FORMAT>, ${CMAKE_ASM_NASM_OBJECT_FORMAT}>>")
 
     add_library                                     (
         build-arch-asm STATIC
@@ -61,17 +62,8 @@ add_library (build STATIC
     ../../../src/obj.h
     ../../../src/obj.c
 
-    ../../../src/it.h
-    ../../../src/it.c
-
-    ../../../src/coro.h
-    ../../../src/coro.c
-
-    ../../../src/sched.h
-    ../../../src/sched.c
-
-    ../../../src/task.h
-    ../../../src/task.c
+    ../../../src/iter.h
+    ../../../src/iter.c
 
     ../../../src/cpu.h
     ../../../src/cpu.c
@@ -99,24 +91,34 @@ add_library (build STATIC
     ../../../src/details/list.h
     ../../../src/details/list.c
 
-    ../../../src/details/list_it.h
-    ../../../src/details/list_it.c
-
     ../../../src/details/obj.h
     ../../../src/details/obj.c
 
-    ../../../src/details/it.h
-    ../../../src/details/it.c
-
-    ../../../src/details/coro.h
-    ../../../src/details/coro.c
-
-    ../../../src/details/sched.h
-    ../../../src/details/sched.c
-
-    ../../../src/details/task.h
-    ../../../src/details/task.c
+    ../../../src/details/iter.h
+    ../../../src/details/iter.c
 
     ../../../src/details/box.h
     ../../../src/details/box.c
 )
+
+if(PRESET_BUILD_EXAMPLES)
+    add_executable            (examples-mem-mem ../../../examples/mem/mem.c)
+    target_link_libraries     (examples-mem-mem build build-arch build-arch-asm build-preset-lib)
+    target_include_directories(examples-mem-mem PRIVATE ../../../include)
+
+    add_executable            (examples-obj-obj ../../../examples/obj/obj.c)
+    target_link_libraries     (examples-obj-obj build build-arch build-arch-asm build-preset-lib)
+    target_include_directories(examples-obj-obj PRIVATE ../../../include)
+
+    add_executable            (examples-list-list ../../../examples/list/list.c)
+    target_link_libraries     (examples-list-list build build-arch build-arch-asm build-preset-lib)
+    target_include_directories(examples-list-list PRIVATE ../../../include)
+
+    add_executable            (examples-str-str ../../../examples/str/str.c)
+    target_link_libraries     (examples-str-str build build-arch build-arch-asm build-preset-lib)
+    target_include_directories(examples-str-str PRIVATE ../../../include)
+
+    add_executable            (examples-cpu-cpu ../../../examples/cpu/cpu.c)
+    target_link_libraries     (examples-cpu-cpu build build-arch build-arch-asm build-preset-lib)
+    target_include_directories(examples-cpu-cpu PRIVATE ../../../include)
+endif()

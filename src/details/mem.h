@@ -23,15 +23,15 @@ typedef struct __mem_trait               {
     bool_t (*gt)    (void*, void*, u64_t);
 }   __mem_trait;
 
-typedef struct __mem          {
-	struct __alloc *alloc	  ;
-	u64_t			alloc_size;
-    u8_t*           ptr       ;
-    __mem_trait    *trait     ;
+typedef struct __mem  {
+	__alloc     *alloc;
+	u64_t	     size ;
+    u8_t*        ptr  ;
+    __mem_trait *trait;
 }	__mem;
 
-__mem* __mem_init         (struct __alloc*, u64_t);
-__mem* __mem_init_as_clone(__mem*);
-void   __mem_deinit       (__mem*);
+__mem* __mem_new  (struct __alloc*, u64_t);
+__mem* __mem_clone(__mem*);
+void   __mem_del  (__mem*);
 
 #endif

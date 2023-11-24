@@ -1,62 +1,58 @@
 #include "list.h"
 
 #include "details/list.h"
-#include "details/list_it.h"
+#include "details/iter.h"
 
 obj_trait* list_t = &__list_trait;
 
-it
+iter
     list_push_back
         (list* par, obj* par_object) {
-            it    ret;
-            __it *ret_it = &ret;
+            iter    ret            ;
+            __iter *ret_iter = &ret;
 
-            if (!par)                    return npos();
-            if (trait_of(par) != list_t) return npos();
+            if (!par)                    return iter_npos();
+            if (trait_of(par) != list_t) return iter_npos();
 
-            ret_it->it        = __list_push_back(par, par_object);
-            ret_it->it_parent = par;
-            ret_it->trait     = &__list_it_trait;
+            ret_iter->iter  = __list_push_back(par, par_object);
+            ret_iter->trait = &__list_iter_trait;
 
             return ret;
 }
 
-it
+iter
     list_push_front
         (list* par, obj* par_object) {
-            it    ret;
-            __it *ret_it = &ret;
+            iter    ret            ;
+            __iter* ret_iter = &ret;
 
-            if (!par)                    return npos();
-            if (trait_of(par) != list_t) return npos();
+            if (!par)                    return iter_npos();
+            if (trait_of(par) != list_t) return iter_npos();
 
-            ret_it->it        = __list_push_front(par, par_object);
-            ret_it->it_parent = par;
-            ret_it->trait     = &__list_it_trait;
+            ret_iter->iter  = __list_push_front(par, par_object);
+            ret_iter->trait = &__list_iter_trait;
 
             return ret;
 }
 
-it
+iter
     list_push_at
-        (list* par, obj* par_push, it* par_at) {
-            it    ret;
-            __it *ret_it = &ret;
+        (list* par, obj* par_push, iter par_at) {
+            iter    ret          ;
+            __iter *ret_it = &ret;
 
-            if (!par)                              return npos();
-            if (trait_of(par) != list_t)           return npos();
-            if (!ret_it->it_parent || !ret_it->it) return npos();
+            if (!par)                    return iter_npos();
+            if (trait_of(par) != list_t) return iter_npos();
 
-            ret_it->it        = __list_push_at(par, par_push, ((__it*)par_at)->it);
-            ret_it->it_parent = par;
-            ret_it->trait     = &__list_it_trait;
+            ret_it->iter  = __list_push_at(par, par_push, ((__iter*)&par_at)->iter);
+            ret_it->trait = &__list_iter_trait;
 
             return ret;
 }
 
 void
     list_pop_front
-        (list* par) {
+        (list* par)                            {
             if (!par)                    return;
             if (trait_of(par) != list_t) return;
 
@@ -65,46 +61,32 @@ void
 
 void
     list_pop_back
-        (list* par) {
+        (list* par)                            {
             if (!par)                    return;
             if (trait_of(par) != list_t) return;
 
-            __list_pop_back(par);
+            __list_pop_back(par)  ;
 }
 
 void
     list_pop_at
-        (list* par, it* par_at)                                {
-            __it        *it      = par_at                      ;
-            __list_elem *it_next = ((__list_elem*)it->it)->next;
+        (list* par, iter par_at)                                 {
+            __iter      *it      = &par_at                       ;
+            __list_elem *it_next = ((__list_elem*)it->iter)->next;
 
-            if (!par)                      return;
-            if (trait_of(par) != list_t)   return;
-            if (!it->it_parent || !it->it) return;
+            if (!par)                    return;
+            if (trait_of(par) != list_t) return;
 
-            __list_pop_at(par, it->it);
-            it->it = it_next;
+            __list_pop_at(par, it->iter);
 }
 
-it
-	list_begin
-        (list* par)                                   {
-            if (!par)                    return npos();
-            if (trait_of(par) != list_t) return npos();
+iter
+	list_iter
+        (list* par)                                        {
+            if (!par)                    return iter_npos();
+            if (trait_of(par) != list_t) return iter_npos();
             
-            it     ret; __list_it_begin(par, &ret);
-            return ret;
-}
-
-it
-	list_end
-        (list* par) {
-            it ret;
-
-            if (!par)                    return npos();
-            if (trait_of(par) != list_t) return npos();
-
-            __list_it_end(par, &ret);
+            iter   ret; __list_iter(par, &ret);
             return ret;
 }
 

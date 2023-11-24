@@ -1,7 +1,7 @@
 #ifndef __TYPE_H__
 #define __TYPE_H__
 
-#ifdef PRESET_LINUX
+#ifdef PRESET_ENV_LINUX
 #include <stdint.h>
 #include <stddef.h>
 #include <stdbool.h>
@@ -9,7 +9,7 @@
 #include <stdarg.h>
 #endif
 
-#ifdef PRESET_WIN32
+#ifdef PRESET_ENV_WIN32
 #include <stdint.h>
 #include <stddef.h>
 #include <stdbool.h>
@@ -29,5 +29,11 @@ typedef bool     bool_t;
 
 #define false_t  0
 #define true_t   1
+
+typedef u64_t u128_t[2];
+typedef i64_t i128_t[2];
+
+typedef u64_t u256_t[4];
+typedef i64_t i256_t[4];
 
 #endif

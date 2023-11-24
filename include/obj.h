@@ -6,41 +6,37 @@
 #include "str.h"
 
 typedef struct obj 		 { u64_t obj[4]; } obj;
-typedef struct obj_trait {
-    bool_t (*init)		   (obj*, u32_t, va_list);
-    bool_t (*init_as_clone)(obj*, obj*);
-    bool_t (*init_as_ref)  (obj*);
-    void   (*deinit)       (obj*);
-
-	u64_t  (*size)		   ()	 ;
-	str*   (*name)		   (obj*);
+typedef struct obj_trait                    {
+    bool_t (*on_new)  (obj*, u32_t, va_list);
+    bool_t (*on_clone)(obj*, obj*)          ;
+    bool_t (*on_ref)  (obj*)                ;
+    void   (*on_del)  (obj*)                ;
+    u64_t    size;
 }   obj_trait;
 
-obj*       obj_init             (alloc*, obj_trait*, u32_t, ...)    ;
-obj*       obj_init_from_varg   (alloc*, obj_trait*, u32_t, va_list);
-bool_t     obj_init_at          (obj*  , obj_trait*, u32_t, ...)    ;
-bool_t     obj_init_at_from_varg(obj*  , obj_trait*, u32_t, va_list);
-obj*       obj_init_as_clone    (obj*)                              ;
-bool_t     obj_init_as_clone_at (obj*, obj*)                        ;
-obj*       obj_init_as_ref      (obj*)                              ;
-void       obj_deinit		    (obj*)                              ;
+obj*   obj_new           (alloc*, obj_trait*, u32_t, ...)    ;
+obj*   obj_new_from_va   (alloc*, obj_trait*, u32_t, va_list);
+bool_t obj_new_at        (obj*  , obj_trait*, u32_t, ...)    ;
+bool_t obj_new_at_from_va(obj*  , obj_trait*, u32_t, va_list);
+obj*   obj_clone         (obj*)      ;
+bool_t obj_clone_at      (obj*, obj*);
+obj*   obj_ref           (obj*)      ;
+void   obj_del		     (obj*)      ;
 
-obj_trait* obj_get_trait        (obj*);
-str*	   obj_name             (obj*);
-u64_t      obj_use_count        (obj*);
+obj_trait* obj_get_trait(obj*);
+u64_t      obj_use_count(obj*);
 
 #ifndef __cplusplus
-#define make(par_type)          obj_init             (0   , par_type,
-#define make_at(par, par_type)  obj_init_at          (&par, par_type,
-#define vmake(par_type)         obj_init_from_varg   (0   , par_type,
-#define vmake_at(par, par_type) obj_init_at_from_varg(&par, par_type,
+#define make(par_type)          obj_new           (0   , par_type,
+#define make_at(par, par_type)  obj_new_at        (&par, par_type,
+#define vmake(par_type)         obj_new_from_va   (0   , par_type,
+#define vmake_at(par, par_type) obj_new_at_from_va(&par, par_type,
 #define from(...)               __VA_ARGS__)
 
-#define clone(par)               obj_init_as_clone   (par)
-#define clone_at(par, par_clone) obj_init_as_clone_at(par, par_clone)
-#define ref(par)                 obj_init_as_ref     (par)
-#define del(par)                 obj_deinit          (par)
-#define name_of(par)             obj_name            (par)
+#define clone(par)               obj_clone   (par)
+#define clone_at(par, par_clone) obj_clone_at(par, par_clone)
+#define ref(par)                 obj_ref     (par)
+#define del(par)                 obj_del          (par)
 #define use_count(par)           obj_use_count       (par)
 #define trait_of(par)            obj_get_trait       (par)
 

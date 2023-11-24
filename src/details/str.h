@@ -14,10 +14,9 @@ typedef struct	   __str      {
 	u64_t  len		  ;
 }	__str;
 
-bool_t __str_init		  (__str*, u32_t, va_list);
-bool_t __str_init_as_clone(__str*, __str*)        ;
-void   __str_deinit		  (__str*)		          ;
-u64_t  __str_size		  ()					  ;
+bool_t __str_new  (__str*, u32_t, va_list);
+bool_t __str_clone(__str*, __str*)        ;
+void   __str_del  (__str*)		          ;
 
 void   __str_rsv_back (__str*, u64_t);
 void   __str_rsv_front(__str*, u64_t);

@@ -1,23 +1,22 @@
 #include "str.h"
 
-obj_trait __str_trait				   = {
-	.init		   = &__str_init		 ,
-	.init_as_clone = &__str_init_as_clone,
-	.init_as_ref   =					0,
-	.deinit		   = &__str_deinit		 ,
-	.name		   =					0,
-	.size		   = &__str_size
+obj_trait __str_trait     = {
+	.on_new	  = &__str_new	,
+	.on_clone = &__str_clone,
+	.on_ref   =			   0,
+	.on_del   = &__str_del  ,
+	.size	  = sizeof(__str)
 };
 
 bool_t
-	__str_init
+	__str_new
 		(__str* par_str, u32_t par_count, va_list par) {
 			alloc* par_alloc  = (par_count == 0) ? get_alloc() : va_arg(par, alloc*);
 			if   (!par_alloc)
 				return false_t;
 			
 			par_str->alloc = par_alloc;
-			par_str->mem   = mem_init(par_str->alloc, 16); 
+			par_str->mem   = mem_new(par_str->alloc, 16); 
 			if (!par_str->mem)
 				return false_t;
 		
@@ -29,10 +28,10 @@ bool_t
 }
 
 bool_t
-	__str_init_as_clone
-		(__str* par, __str* par_clone)						{
-			par->alloc = par_clone->alloc					;
-			par->mem   = mem_init_as_clone(par_clone->alloc);
+	__str_clone
+		(__str* par, __str* par_clone)				{
+			par->alloc = par_clone->alloc			;
+			par->mem   = mem_clone(par_clone->alloc);
 			if (!par->mem) 
 				return false_t;
 
@@ -44,9 +43,9 @@ bool_t
 }
 
 void
-	__str_deinit
-		(__str* par_str)			{
-			mem_deinit(par_str->mem);
+	__str_del
+		(__str* par_str)		 {
+			mem_del(par_str->mem);
 			return true_t;
 }
 
@@ -59,20 +58,21 @@ void
 	__str_rsv_back
 		(__str* par, u64_t par_rsv)			   {
 			u64_t rsv_off = ptr_cur(par->front);
+			u64_t rsv     = mem_size(par->mem) << 1;
 			mem   rsv_mem					   ;
-			u64_t rsv = mem_size(par->mem) << 1;
+			
 			if (rsv < par_rsv)
 				rsv = par_rsv + mem_size(par->mem);
 
-			rsv_mem = mem_init(par->alloc, rsv + 1);
+			rsv_mem = mem_new(par->alloc, rsv + 1);
 			if(!ptr_copy(mem_ptr(rsv_mem, rsv_off), par->front, par->len) && par->len) {
-				mem_deinit(rsv_mem);
+				mem_del(rsv_mem);
 				return;
 			}
 
-			mem_deinit(par->mem);
+			mem_del(par->mem);
 			par->mem   = rsv_mem					   ;
-			par->front = mem_ptr (par->mem, rsv_off)   ;
+			par->front = mem_ptr (par->mem  , rsv_off) ;
 			par->back  = ptr_seek(par->front, par->len);
 }
 
@@ -86,13 +86,13 @@ void
 			if (rsv < par_rsv)
 				rsv = par_rsv + mem_size(par->mem);
 
-			rsv_mem = mem_init(par->alloc, rsv + 1);
+			rsv_mem = mem_new(par->alloc, rsv + 1);
 			if(!ptr_copy(mem_ptr(rsv_mem, rsv_off), par->front, par->len) && par->len) {
-				mem_deinit(rsv_mem);
+				mem_del(rsv_mem);
 				return;
 			}
 
-			mem_deinit(par->mem);
+			mem_del(par->mem);
 			par->mem   = rsv_mem					   ;
 			par->front = mem_ptr (par->mem, rsv_off)   ;
 			par->back  = ptr_seek(par->front, par->len);
@@ -144,7 +144,7 @@ void
 void
 	__str_push_at_cstr
 		(__str* par, u64_t par_off, const char* par_push, u64_t par_len) {
-			mem  ret = mem_init(par->alloc, mem_size(par->mem) + par_len);
+			mem  ret = mem_new(par->alloc, mem_size(par->mem) + par_len);
 			if (!ret)
 				return;
 
@@ -155,7 +155,7 @@ void
 			ptr_write(cur, par_push, par_len)  ; cur = ptr_seek(cur, par_len);
 			ptr_copy (cur, ptr_seek(par->front, par_off), par_len - par_off) ;
 
-			mem_deinit(par->mem);
+			mem_del(par->mem);
 			par->len  += par_len						  ;
 			par->mem   = ret						      ;
 			par->front = mem_ptr(ret, 0)				  ;

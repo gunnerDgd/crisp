@@ -1,5 +1,6 @@
 #include <list.h>
 #include <obj.h>
+#include <iter.h>
 
 #include <stdio.h>
 
@@ -8,35 +9,34 @@ typedef struct ob {
 	u64_t value;
 }	ob;
 
-bool_t 
+bool_t
 	ob_init
 		(ob* par_obj, u32_t par_count, va_list par) { 
 			par_obj->value = va_arg(par, u64_t); 
 			return true_t; 
 }
 
-u64_t 
-	ob_size()			 {
-		return sizeof(ob); 
-}
-
-obj_trait ob_type		   = {
-	.init		   = &ob_init,
-	.init_as_clone = 0		 ,
-	.init_as_ref   = 0		 ,
-	.deinit		   = 0		 ,
-	.size		   = &ob_size
+obj_trait ob_type	   = {
+	.on_new	  = &ob_init ,
+	.on_clone = 0		 ,
+	.on_ref   = 0		 ,
+	.on_del	  = 0		 ,
+	.size	  = sizeof(ob)
 };
 
 int main() {
 	list* list = make(list_t) from (0);
 
-	for(u64_t i = 0 ; i < 10 ; ++i)			 {
+	for(u64_t i = 0 ; i < 3 ; ++i)			 {
 		obj* push = make(&ob_type) from(1, i);
 		list_push_front(list, push);
 		del (push);
 	}
 
-	list_for(list, ob_it)
-		printf("List Element : %d\n", get_as(ob_it, ob*)->value);
+	for (iter it = list_iter(list) ; !npos(it) ; it = next(it)) {
+		printf("Value : %d\n", get_as(it, ob*)->value);
+	}
+
+
+	del(list);
 }

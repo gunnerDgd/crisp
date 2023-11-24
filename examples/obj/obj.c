@@ -7,15 +7,13 @@ bool_t TestObjInit		 (obj* par_obj, u32_t par_count, va_list par) { printf("Obje
 bool_t TestObjInitAsClone(obj* par    , obj* par_clone)				  { printf("Object Created As Clone\n")							  ; return true_t; }
 bool_t TestObjInitAsRef  (obj* par)									  { printf("Object Referenced (Use Count : %d)\n", use_count(par)); return true_t; }
 void   TestObjDeInit     (obj* par)									  { printf("Object Destroyed\n"); }
-u64_t  TestObjSize()												  { return sizeof(obj) + 4; }
 
-obj_trait TestObjTrait				  = {
-	.init		   = &TestObjInit		,
-	.init_as_clone = &TestObjInitAsClone,
-	.init_as_ref   = &TestObjInitAsRef  ,
-	.deinit		   = &TestObjDeInit		,
-	.name		   =				   0,
-	.size		   = &TestObjSize
+obj_trait TestObjTrait		     = {
+	.on_new	  = &TestObjInit	   ,
+	.on_clone = &TestObjInitAsClone,
+	.on_ref   = &TestObjInitAsRef  ,
+	.on_del	  = &TestObjDeInit	   ,
+	.size	  = sizeof(obj) + 8
 };
 
 int main() {	

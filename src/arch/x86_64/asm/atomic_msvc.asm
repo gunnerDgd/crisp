@@ -33,9 +33,9 @@ global __cas16
 global __cas32
 global __cas64
 
-global __xchg64
-global __xchg64
-global __xchg64
+global __xchg8
+global __xchg16
+global __xchg32
 global __xchg64
 
 section .text

@@ -14,7 +14,7 @@ ptr
 
 u64_t 
     box_size
-        (box* par) {
+        (box* par)                              {
             if (!par)                   return 0;
             if (trait_of(par) != box_t) return 0;
 

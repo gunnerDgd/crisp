@@ -23,32 +23,32 @@ __mem_trait cstd_mem_trait  = {
 };
 
 __mem* 
-	cstd_mem_init
+	cstd_mem_new
 		(__alloc* par, u64_t par_size) {
 			__mem* ret = malloc(par_size + sizeof(__mem));
 			if   (!ret) return 0;
 
-			ret->ptr		= (u8_t*)ret + sizeof(__mem);
-			ret->alloc		= par		     ;
-			ret->alloc_size = par_size		 ;
-			ret->trait		= &cstd_mem_trait;
+			ret->ptr   = (u8_t*)ret + sizeof(__mem);
+			ret->alloc = par		    ;
+			ret->size  = par_size		;
+			ret->trait = &cstd_mem_trait;
 
 			return ret;
 }
 
 __mem* 
-	cstd_mem_init_as_clone
-		(__alloc* par, __mem* par_mem) {
-			__mem* ret = cstd_mem_init(par, par_mem->alloc_size);
+	cstd_mem_clone
+		(__alloc* par, __mem* par_mem)					 {
+			__mem* ret = cstd_mem_new(par, par_mem->size);
 			if   (!ret) return 0;
 			
-			cstd_mem_copy(ret->ptr, par_mem->ptr, par_mem->alloc_size);
+			cstd_mem_copy(ret->ptr, par_mem->ptr, par_mem->size);
 			return ret;
 }
 
 void
-	cstd_mem_deinit
-		(__alloc* par, __mem* par_mem) {
+	cstd_mem_del
+		(__alloc* par, __mem* par_mem)			   {
 			if(par_mem->alloc == par) free(par_mem);
 }
 

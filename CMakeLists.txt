@@ -4,8 +4,3 @@ if    (WIN32)
 elseif(UNIX AND NOT APPLE)
 elseif(APPLE)
 endif ()
-
-if(PRESET_BUILD_EXAMPLES)
-    include_directories(src)
-    add_subdirectory   (examples)
-endif()

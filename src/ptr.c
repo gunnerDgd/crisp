@@ -43,7 +43,7 @@ u64_t
 		(ptr par)							  { 
 			if (null(par))			  return 0;
 			if (!((__ptr*)&par)->mem) return 0;
-			return ((__ptr*)&par)->mem->alloc_size - ((__ptr*)&par)->cur; 
+			return ((__ptr*)&par)->mem->size - ((__ptr*)&par)->cur; 
 }
 
 u64_t 
@@ -119,7 +119,7 @@ ptr
 			if   (!ptr->mem)				   return ptr_null();
 			if   (ptr_size(par_ptr) < 8)	   return ptr_null();
 
-			if (!ptr->mem->trait->rd8(ptr->mem->ptr + ptr->cur, par_buf))
+			if (!ptr->mem->trait->rd64(ptr->mem->ptr + ptr->cur, par_buf))
 				return ptr_null();
 
 			ptr->cur +=  8;
@@ -211,6 +211,9 @@ ptr
 
 			u64_t ret = ptr->mem->trait->copy(ptr->mem->ptr + ptr->cur, par_buf, par_len);
 			if  (!ret) return ptr_null();
+
+			ptr->cur += ret;
+			return  par_ptr;
 }
 
 u64_t
