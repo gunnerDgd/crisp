@@ -2,7 +2,6 @@
 #define __DETAILS_ITER_H__
 
 #include "../type.h"
-#include "../type_atomic.h"
 
 typedef struct __iter_trait		  {
 	void* (*on_next)(void*)		  ;

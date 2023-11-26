@@ -18,9 +18,9 @@ void
 void
 	cpu_reg_read
 		(cpu* par, u16_t par_reg, u64_t* par_read) {
-			if (!par)					return 0;
-			if (trait_of(par) != cpu_t) return 0;
-			if (par_reg > cpu_r15)		return 0;
+			if (!par)					return;
+			if (trait_of(par) != cpu_t) return;
+			if (par_reg > cpu_r15)		return;
 			
 			*par_read = ((__cpu*)par)->reg.reg[par_reg];
 }
@@ -28,9 +28,9 @@ void
 void  
 	cpu_reg_write
 		(cpu* par, u16_t par_reg, u64_t par_write) {
-			if (!par)					return 0;
-			if (trait_of(par) != cpu_t) return 0;
-			if (par_reg > cpu_r15)		return 0;
+			if (!par)					return;
+			if (trait_of(par) != cpu_t) return;
+			if (par_reg > cpu_r15)		return;
 			
 			((__cpu*)par)->reg.reg[par_reg] = par_write;
 }

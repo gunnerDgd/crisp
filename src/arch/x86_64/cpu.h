@@ -1,9 +1,7 @@
 #ifndef __DETAILS_ARCH_X86_64_CPU_H__
 #define __DETAILS_ARCH_X86_64_CPU_H__
 
-#ifdef PRESET_X86_64
-#include "../../mem.h"
-#include "../../alloc.h"
+#ifdef PRESET_ARCH_X86_64
 #include "../../obj.h"
 
 typedef struct __cpu_reg		 {

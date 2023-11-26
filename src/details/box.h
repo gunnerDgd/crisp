@@ -6,9 +6,11 @@
 
 extern obj_trait __box_trait;
 typedef struct   __box      {
-    obj head;
-    mem mem ;
-}   __box   ;
+    obj      head   ;
+    mem_res* mem_res;
+    void*    mem    ;
+    u64_t    size   ;
+}   __box;
 
 bool_t __box_new  (__box*, u32_t, va_list);
 bool_t __box_clone(__box*, __box*)        ;

@@ -3,12 +3,10 @@
 
 #include "../obj.h"
 #include "../mem.h"
-#include "../alloc.h"
 
 #include "iter.h"
 
 typedef struct __list_elem         {
-    mem                 mem        ;
     struct __list_elem *prev, *next;
     struct __list      *list       ;
     obj                *elem       ;
@@ -18,7 +16,7 @@ extern __iter_trait __list_iter_trait;
 extern obj_trait    __list_trait     ;
 typedef struct      __list           {
     obj         head      ;
-    alloc      *alloc     ;
+    mem_res    *res       ;
     __list_elem begin, end;
 }   __list;
 

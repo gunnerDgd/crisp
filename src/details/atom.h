@@ -1,7 +1,7 @@
-#ifndef __DETAILS_ATOMIC_H__
-#define __DETAILS_ATOMIC_H__
+#ifndef __DETAILS_ATOM_H__
+#define __DETAILS_ATOM_H__
 
-#include "../type_atomic.h"
+#include "../type_atom.h"
 
 atom_u8_t  __lock_add8 (atom_u8_t *, atom_u8_t);
 atom_u16_t __lock_add16(atom_u16_t*, atom_u16_t);

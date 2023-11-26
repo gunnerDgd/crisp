@@ -1,7 +1,6 @@
 #ifndef __LIST_H__
 #define __LIST_H__
 
-#include "alloc.h"
 #include "obj.h"
 #include "iter.h"
 

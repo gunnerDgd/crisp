@@ -1,5 +1,4 @@
 #include "cpu.h"
-#include "../../alloc.h"
 
 obj_trait __cpu_trait	  = {
 	.on_new	  = &__cpu_new  ,

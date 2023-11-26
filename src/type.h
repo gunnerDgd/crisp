@@ -1,31 +1,17 @@
 #ifndef __TYPE_H__
 #define __TYPE_H__
 
-#ifdef PRESET_ENV_LINUX
-#include <stdint.h>
-#include <stddef.h>
-#include <stdbool.h>
-
 #include <stdarg.h>
-#endif
 
-#ifdef PRESET_ENV_WIN32
-#include <stdint.h>
-#include <stddef.h>
-#include <stdbool.h>
-
-#include <stdarg.h>
-#endif
-
-typedef uint8_t  u8_t ;
-typedef uint16_t u16_t;
-typedef uint32_t u32_t;
-typedef uint64_t u64_t;
-typedef int8_t   i8_t ;
-typedef int16_t  i16_t;
-typedef int32_t  i32_t;
-typedef int64_t  i64_t;
-typedef bool     bool_t;
+typedef unsigned char      u8_t  ;
+typedef unsigned short     u16_t ;
+typedef unsigned int       u32_t ;
+typedef unsigned long long u64_t ;
+typedef char               i8_t  ;
+typedef short              i16_t ;
+typedef int                i32_t ;
+typedef long long          i64_t ;
+typedef char               bool_t;
 
 #define false_t  0
 #define true_t   1

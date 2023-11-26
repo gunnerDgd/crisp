@@ -1,27 +1,30 @@
 #include "mem.h"
-#include "alloc.h"
 
-__mem* 
-    __mem_new
-        (__alloc* par, u64_t par_size)                  {
-            return par->trait->on_mem_new(par, par_size); 
+bool_t 
+    __mem_res_new
+        (__mem_res* par_res, __mem_res_trait* par_trait, u32_t par_count, va_list par) {
+                   par_res->trait = par_trait;
+            return par_res->trait->on_new    (
+                   par_res   ,
+                   par_count, 
+                   par
+            );
 }
 
-__mem*
-    __mem_clone
-        (__mem* par)                       {
-            __alloc *ret_alloc = par->alloc;
-            
-            if (!ret_alloc)        return 0;
-            if (!ret_alloc->trait) return 0;
+void  
+    __mem_res_del
+        (__mem_res* par)                          { 
+            if(par->trait) par->trait->on_del(par); 
+}
 
-            __mem   *ret = ret_alloc->trait->on_mem_clone(ret_alloc, par);
-            return   ret;
+void*
+    __mem_new
+        (__mem_res* par, u64_t par_size) { 
+            return (par->trait) ? par->trait->on_mem_new(par, par_size) : 0; 
 }
 
 void
     __mem_del
-        (__mem *par)                 {
-            __alloc *ret = par->alloc;
-                     ret->trait->on_mem_del(ret, par);
+        (__mem_res* par, void* par_del)  { 
+            if (par->trait) par->trait->on_mem_del(par, par_del); 
 }

@@ -2,7 +2,7 @@
 #define __ITER_H__
 
 #include "type.h"
-#include "type_atomic.h"
+#include "type_atom.h"
 
 typedef struct iter { u64_t it[2]; } iter;
 

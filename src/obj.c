@@ -3,21 +3,20 @@
 
 obj*
     obj_new
-		(alloc* par_alloc, obj_trait* par_trait, u32_t par_count, ...) {
+		(mem_res* par_res, obj_trait* par_trait, u32_t par_count, ...) {
     		va_list  par;
-			va_start(par, par_count); obj* ret = obj_new_from_va(par_alloc, par_trait, par_count, par);
+			va_start(par, par_count); obj* ret = obj_new_from_va(par_res, par_trait, par_count, par);
 			va_end  (par);
 			return   ret ;
 }
 
 obj*
     obj_new_from_va
-		(alloc* par_alloc, obj_trait* par_trait, u32_t par_count, va_list par) {
-			if (!par_alloc) par_alloc = get_alloc();
-			if (!par_alloc) return 0;
-			if (!par_trait) return 0;
+		(mem_res* par_res, obj_trait* par_trait, u32_t par_count, va_list par) {
+			if (!par_res) par_res = get_mem_res();
+			if (!par_res) return 0;
 
-			obj*   ret = __obj_new(par_alloc, par_trait, par_count, par);
+			obj*   ret = __obj_new(par_res, par_trait, par_count, par);
 			return ret;
 }
 

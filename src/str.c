@@ -1,9 +1,5 @@
 #include "str.h"
-
-#include "details/alloc.h"
 #include "details/str.h"
-
-#include "obj.h"
 
 obj_trait* str_t = &__str_trait;
 
@@ -102,22 +98,27 @@ void
             __str_pop_at   (par, par_off, par_len); 
 }
 
-ptr 
-    str_find		  
-        (str* par, u64_t par_off, str* par_find)         {
-            if (!par)                   return ptr_null();
-            if (trait_of(par) != str_t) return ptr_null();
+u64_t
+    str_find
+        (str* par, u64_t par_off, str* par_find) {
+            if (!par)                   return -1;
+            if (trait_of(par) != str_t) return -1;
 
             return __str_find(par, par_off, par_find); 
 }
 
-ptr 
-    str_find_from_cstr
+u64_t
+    str_find_cstr
         (str* par, u64_t par_off, const char* par_find, u64_t par_len) { 
-            if (!par)                   return ptr_null();
-            if (trait_of(par) != str_t) return ptr_null();
+            if (!par)                   return -1;
+            if (trait_of(par) != str_t) return -1;
 
-            return __str_find_from_cstr(par, par_off, par_find, par_len); 
+            return __str_find_cstr (
+                par     ,
+                par_off , 
+                par_find, 
+                par_len
+            ); 
 }
 
 bool_t 
@@ -130,12 +131,12 @@ bool_t
 }
 
 bool_t 
-    str_eq_from_cstr
+    str_eq_cstr
         (str* par, const char* par_cmp, u64_t par_len) {
             if (!par)                   return false_t;
             if (trait_of(par) != str_t) return false_t;
 
-            return __str_eq_from_cstr(par, par_cmp, par_len); 
+            return __str_eq_cstr(par, par_cmp, par_len); 
 }
 
 bool_t 
@@ -148,12 +149,12 @@ bool_t
 }
 
 bool_t 
-    str_gt_from_cstr
+    str_gt_cstr
         (str* par, const char* par_cmp, u64_t par_len) { 
             if (!par)                   return false_t;
             if (trait_of(par) != str_t) return false_t;
 
-            return __str_gt_from_cstr(par, par_cmp, par_len); 
+            return __str_gt_cstr(par, par_cmp, par_len); 
 }
 
 bool_t 
@@ -171,43 +172,43 @@ bool_t
             if (!par)                   return false_t;
             if (trait_of(par) != str_t) return false_t;
 
-            return __str_lt_from_cstr(par, par_cmp, par_len); 
+            return __str_lt_cstr(par, par_cmp, par_len); 
 }
 
 bool_t 
-    str_start_with
+    str_starts
         (str* par, str* par_cmp)                      {
             if (!par)                   return false_t;
             if (trait_of(par) != str_t) return false_t;
 
-            return __str_start_with(par, par_cmp);
+            return __str_starts(par, par_cmp);
 }
 
 bool_t 
-    str_start_with_from_cstr
+    str_starts_cstr
         (str* par, const char* par_cmp, u64_t par_len) { 
             if (!par)                   return false_t;
             if (trait_of(par) != str_t) return false_t;
 
-            return __str_start_with_from_cstr(par, par_cmp, par_len); 
+            return __str_starts_cstr(par, par_cmp, par_len); 
 }
 
 bool_t 
-    str_end_with
+    str_ends
         (str* par, str* par_cmp)                      { 
             if (!par)                   return false_t;
             if (trait_of(par) != str_t) return false_t;
 
-            return __str_end_with(par, par_cmp); 
+            return __str_ends(par, par_cmp); 
 }
 
 bool_t 
-    str_end_with_from_cstr  
+    str_ends_cstr
         (str* par, const char* par_cmp, u64_t par_len) {
             if (!par)                   return false_t;
             if (trait_of(par) != str_t) return false_t;
 
-            return __str_end_with_from_cstr  (par, par_cmp, par_len); 
+            return __str_ends_cstr(par, par_cmp, par_len);
 }
 
 bool_t 
@@ -222,13 +223,13 @@ u64_t
         (str* par)                              { 
             if (!par)                   return 0;
             if (trait_of(par) != str_t) return 0;
-            return ptr_dist(((__str*)par)->front, ((__str*)par)->back); 
+            return __str_len(par);
 }
 
-ptr
+const char*
     str_ptr	
-        (str* par)                                       { 
-            if (!par)                   return ptr_null();
-            if (trait_of(par) != str_t) return ptr_null();
-            return ((__str*)par)->front; 
+        (str* par)                              { 
+            if (!par)                   return 0;
+            if (trait_of(par) != str_t) return 0;
+            return ((__str*)par)->mem + ((__str*)par)->front; 
 }

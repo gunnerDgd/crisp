@@ -1,5 +1,5 @@
-#include "atomic.h"
-#include "details/atomic.h"
+#include "atom.h"
+#include "details/atom.h"
 
 atom_u8_t  lock_add8 (atom_u8_t * par, atom_u8_t  par_add) { return __lock_add8 (par, par_add); }
 atom_u16_t lock_add16(atom_u16_t* par, atom_u16_t par_add) { return __lock_add16(par, par_add); }

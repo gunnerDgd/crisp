@@ -3,7 +3,7 @@
 
 #include "obj.h"
 
-#ifdef PRESET_X86_64
+#ifdef PRESET_ARCH_X86_64
 #define cpu_rax 0
 #define cpu_rbx 1
 #define cpu_rcx 2

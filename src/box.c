@@ -3,13 +3,13 @@
 
 obj_trait* box_t = &__box_trait;
 
-ptr   
+void*   
     box_ptr
-        (box* par, u64_t par_off)                        {
-            if (!par)                   return ptr_null();
-            if (trait_of(par) != box_t) return ptr_null();
+        (box* par)                              {
+            if (!par)                   return 0;
+            if (trait_of(par) != box_t) return 0;
 
-            return mem_ptr (((__box*)par)->mem, par_off);
+            return ((__box*)par)->mem;
 }
 
 u64_t 
@@ -18,5 +18,5 @@ u64_t
             if (!par)                   return 0;
             if (trait_of(par) != box_t) return 0;
 
-            return mem_size(((__box*)par)->mem);
+            return ((__box*)par)->size;
 }

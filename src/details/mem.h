@@ -1,37 +1,23 @@
 #ifndef __DETAILS_MEM_H__
 #define __DETAILS_MEM_H__
 
-#include "alloc.h"
+#include "../type.h"
+#include "../type_atom.h"
 
-typedef struct __mem_trait               {
-    bool_t (*rd8)   (void*, u8_t *)      ;
-    bool_t (*rd16)  (void*, u16_t*)      ;
-    bool_t (*rd32)  (void*, u32_t*)      ;
-    bool_t (*rd64)  (void*, u64_t*)      ;
+typedef struct __mem_res_trait                           {
+    bool_t (*on_new)    (struct mem_res*, u32_t, va_list);
+    void   (*on_del)    (struct mem_res*)                ;
+    void*  (*on_mem_new)(struct mem_res*, u64_t)         ;
+    void*  (*on_mem_del)(struct mem_res*, void*)         ;
+}   __mem_res_trait;
 
-    bool_t (*wr8)   (void*, u8_t)        ;
-    bool_t (*wr16)  (void*, u16_t)       ;
-    bool_t (*wr32)  (void*, u32_t)       ;
-    bool_t (*wr64)  (void*, u64_t)       ;
+typedef struct __mem_res  {
+    __mem_res_trait* trait;
+}   __mem_res;
 
-    u64_t  (*copy)  (void*, void*, u64_t);
-    u64_t  (*move)  (void*, void*, u64_t);
-    u64_t  (*set_as)(void*, u8_t , u64_t);
-
-    bool_t (*eq)    (void*, void*, u64_t);
-    bool_t (*lt)    (void*, void*, u64_t);
-    bool_t (*gt)    (void*, void*, u64_t);
-}   __mem_trait;
-
-typedef struct __mem  {
-	__alloc     *alloc;
-	u64_t	     size ;
-    u8_t*        ptr  ;
-    __mem_trait *trait;
-}	__mem;
-
-__mem* __mem_new  (struct __alloc*, u64_t);
-__mem* __mem_clone(__mem*);
-void   __mem_del  (__mem*);
+bool_t __mem_res_new (__mem_res*, __mem_res_trait*, u32_t, va_list);
+void   __mem_res_del (__mem_res*)                                  ;
+void*  __mem_new     (__mem_res*, u64_t)                           ;
+void   __mem_del     (__mem_res*, void*)                           ;
 
 #endif
