@@ -17,7 +17,7 @@ bool_t
             if (!par_box->mem_res)
                 return false_t;
 
-            par_box->mem = mem_new(par_box->mem_res, par_box->size);
+                   par_box->mem  = mem_new(par_box->mem_res, par_box->size);
             return par_box->mem != 0;
 }
 
@@ -45,9 +45,9 @@ bool_t
 
 void   
     __box_del
-        (__box* par)                           {
-            if(par->mem)                       {
-                mem_del(par->mem_res, par->mem);
-                par->mem = 0;
-            }
+        (__box* par)                {
+            if(!par->mem_res) return;
+            if(!par->mem)     return;
+
+            mem_del(par->mem_res, par->mem);
 }

@@ -14,10 +14,11 @@ typedef struct mem_res_trait                      {
 mem_res* get_mem_res()        ;
 mem_res* set_mem_res(mem_res*);
 
-bool_t mem_res_new (mem_res*, mem_res_trait*, u32_t, ...);
-void   mem_res_del (mem_res*)                            ;
-void*  mem_new     (mem_res*, u64_t)                     ;
-void   mem_del     (mem_res*, void*)                     ;
+bool_t mem_res_new   (mem_res*, mem_res_trait*, u32_t, ...)    ;
+bool_t mem_res_new_va(mem_res*, mem_res_trait*, u32_t, va_list);
+void   mem_res_del   (mem_res*)                                ;
+void*  mem_new       (mem_res*, u64_t)                         ;
+void   mem_del       (mem_res*, void*)                         ;
 
 void   mem_set (void*, u8_t , u64_t)       ;
 void   mem_copy(void*, void*, u64_t)       ;

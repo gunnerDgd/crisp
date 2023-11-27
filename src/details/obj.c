@@ -49,7 +49,7 @@ __obj*
 			if (!ret)						return 0;
 			if (!ret->trait->on_clone)				{
 				mem_copy(ret, par, par->trait->size);
-				par->trait = par->trait;
+				ret->trait = par->trait;
 				ret->res   = par->res  ;
 				ret->ref   = 1		   ;
 
@@ -61,6 +61,9 @@ __obj*
 				return 0;
 			}
 
+			ret->trait = par->trait;
+			ret->res   = par->res  ;
+			ret->ref   = 1		   ;
 			return ret;
 }
 
@@ -104,8 +107,13 @@ void
 			u64_t ref;
 			do  { ref = par->ref; } while(lock_cas64(&par->ref, ref, ref - 1) != ref);
 
-			if (par->ref == 0) {
-				if(par->trait->on_del) par->trait->on_del(par);
-				if(par->res)		   mem_del(par->res, par) ;
+			if (par->ref == 0)								   {
+				if (par->trait->on_del) par->trait->on_del(par);
+				if (!par->res)						    {
+					mem_set(par, 0x00, par->trait->size);
+					return;
+				}
+
+				mem_del(par->res, par) ;
 			}
 }

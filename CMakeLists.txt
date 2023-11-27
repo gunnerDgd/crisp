@@ -43,9 +43,6 @@ add_library (build STATIC
     src/obj.h
     src/obj.c
 
-    src/iter.h
-    src/iter.c
-
     src/cpu.h
     src/cpu.c
 
@@ -68,9 +65,6 @@ add_library (build STATIC
 
     src/details/obj.h
     src/details/obj.c
-
-    src/details/iter.h
-    src/details/iter.c
 
     src/details/box.h
     src/details/box.c

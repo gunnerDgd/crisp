@@ -18,6 +18,15 @@ mem_res*
 bool_t 
     mem_res_new
         (mem_res* par_res, mem_res_trait* par_trait, u32_t par_count, ...) {
+            va_list  par;
+            va_start(par, par_count); bool_t ret = mem_res_new_va(par_res, par_trait, par_count, par);
+            va_end  (par);
+            return   ret;
+}
+
+bool_t 
+    mem_res_new_va
+        (mem_res* par_res, mem_res_trait* par_trait, u32_t par_count, va_list par) {
             if (!par_res)               return false_t;
             if (!par_trait)             return false_t;
 
@@ -26,10 +35,13 @@ bool_t
             if (!par_trait->on_mem_new) return false_t;
             if (!par_trait->on_mem_del) return false_t;
 
-            va_list  par;
-            va_start(par, par_count); bool_t ret = __mem_res_new(par_res, par_trait, par_count, par);
-            va_end  (par);
-            return   ret;
+            return __mem_res_new (
+                par_res  , 
+                par_trait, 
+                par_count, 
+                par
+            );
+
 }
 
 void  
