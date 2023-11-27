@@ -26,10 +26,10 @@ obj_trait* obj_get_trait(obj*);
 u64_t      obj_use_count(obj*);
 
 #ifndef __cplusplus
-#define make(par_type)          obj_new      (0   , par_type,
-#define make_at(par, par_type)  obj_new_at   (&par, par_type,
-#define vmake(par_type)         obj_new_va   (0   , par_type,
-#define vmake_at(par, par_type) obj_new_at_va(&par, par_type,
+#define make(par_type)          obj_new      (0  , par_type,
+#define make_at(par, par_type)  obj_new_at   (par, par_type,
+#define vmake(par_type)         obj_new_va   (0  , par_type,
+#define vmake_at(par, par_type) obj_new_at_va(par, par_type,
 #define from(...)               __VA_ARGS__)
 
 #define clone(par)               obj_clone    (par)
