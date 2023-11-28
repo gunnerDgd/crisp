@@ -23,9 +23,11 @@ bool_t
 
             par_list->begin.next = &par_list->end;
             par_list->begin.prev =              0;
+            par_list->begin.elem =              0;
 
             par_list->end.prev   = &par_list->begin;
             par_list->end.next   = 0               ;
+            par_list->end.elem   = 0               ;
 
             return true_t;
 }

@@ -8,7 +8,7 @@ typedef struct __mem_res_trait                           {
     bool_t (*on_new)    (struct mem_res*, u32_t, va_list);
     void   (*on_del)    (struct mem_res*)                ;
     void*  (*on_mem_new)(struct mem_res*, u64_t)         ;
-    void*  (*on_mem_del)(struct mem_res*, void*)         ;
+    void   (*on_mem_del)(struct mem_res*, void*)         ;
 }   __mem_res_trait;
 
 typedef struct __mem_res  {

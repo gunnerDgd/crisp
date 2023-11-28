@@ -26,14 +26,14 @@ void*
             if (!par->trait)             return 0;
             if (!par->trait->on_mem_new) return 0;
             
-            par->trait->on_mem_new(par, par_size); 
+            return par->trait->on_mem_new(par, par_size);
 }
 
 void
     __mem_del
-        (__mem_res* par, void* par_del)  { 
-            if (!par->trait)             return 0;
-            if (!par->trait->on_mem_del) return 0;
+        (__mem_res* par, void* par_del)        {
+            if (!par->trait)             return;
+            if (!par->trait->on_mem_del) return;
             
             par->trait->on_mem_del(par, par_del);
 }

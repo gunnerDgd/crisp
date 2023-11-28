@@ -108,8 +108,8 @@ void
         (list_elem par, void* par_set) {
             __list_elem* ret = par;
 
-            if (!ret)       return 0;
-            if (!ret->list) return 0;
+            if (!ret)       return;
+            if (!ret->list) return;
 
             mem_copy(ret->elem, par_set, ret->list->size);
 }

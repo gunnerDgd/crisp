@@ -40,6 +40,9 @@ add_library (build STATIC
     src/list.h
     src/list.c
 
+    src/obj_list.h
+    src/obj_list.c
+
     src/obj.h
     src/obj.c
 
@@ -62,6 +65,9 @@ add_library (build STATIC
 
     src/details/list.h
     src/details/list.c
+
+    src/details/obj_list.h
+    src/details/obj_list.c
 
     src/details/obj.h
     src/details/obj.c
