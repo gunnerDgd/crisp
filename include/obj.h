@@ -20,7 +20,7 @@ bool_t obj_new_at_va(obj*    , obj_trait*, u32_t, va_list);
 obj*   obj_clone    (obj*)      ;
 bool_t obj_clone_at (obj*, obj*);
 obj*   obj_ref      (obj*)      ;
-void   obj_del		(obj*)      ;
+u64_t  obj_del		(obj*)      ;
 
 obj_trait* obj_get_trait(obj*);
 u64_t      obj_use_count(obj*);

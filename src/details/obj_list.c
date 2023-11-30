@@ -120,9 +120,8 @@ obj*
             pop->prev->next = pop->next;
             pop->next->prev = pop->prev;
 
-            del    (pop->elem)    ; obj* ret = pop->elem;
-            mem_del(par->res, pop);
-            return  ret;
+            obj*   ret = (del(pop->elem)) ? pop->elem : 0; mem_del(par->res, pop);
+            return ret;
 
 }
 
@@ -136,9 +135,8 @@ obj*
             pop->prev->next = pop->next;
             pop->next->prev = pop->prev;
 
-            del    (pop->elem)    ; obj* ret = pop->elem;
-            mem_del(par->res, pop);
-            return  ret;
+            obj*   ret = (del(pop->elem)) ? pop->elem : 0; mem_del(par->res, pop);
+            return ret;
 }
 
 obj*
@@ -151,9 +149,8 @@ obj*
             par_at->prev->next = par_at->next;
             par_at->next->prev = par_at->prev;
 
-            obj*   ret = par_at->elem;  mem_del(par->res, par_at);
-            del   (ret);
-            return ret ;
+            obj*   ret = (del(par_at->elem)) ? par_at->elem : 0; mem_del(par->res, par_at);
+            return ret;
 }
 
 bool_t

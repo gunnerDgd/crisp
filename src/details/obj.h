@@ -24,6 +24,6 @@ bool_t __obj_new_at  (__obj*, __obj_trait*, u32_t, va_list);
 __obj* __obj_clone   (__obj*)        ;
 bool_t __obj_clone_at(__obj*, __obj*);
 __obj* __obj_ref     (__obj*);
-void   __obj_del     (__obj*);
+u64_t  __obj_del     (__obj*);
 
 #endif

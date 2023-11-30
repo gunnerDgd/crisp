@@ -42,7 +42,7 @@ bool_t
 obj*	   obj_clone   (obj* par)				  { return (par) ? __obj_clone   (par)			  : 0; }
 bool_t     obj_clone_at(obj* par, obj* par_clone) { return (par) ? __obj_clone_at(par, par_clone) : 0; }
 obj*	   obj_ref     (obj* par)				  { return (par) ? __obj_ref     (par)			  : 0; }
-void	   obj_del	   (obj* par)				  { if(par) __obj_del(par); }
+u64_t	   obj_del	   (obj* par)				  { return (par) ? __obj_del	 (par)			  : 0; }
 
 obj_trait* obj_get_trait(obj* par) { return (par) ? ((__obj*)par)->trait : 0; }
 u64_t      obj_use_count(obj* par) { return (par) ? ((__obj*)par)->ref   : 0; }

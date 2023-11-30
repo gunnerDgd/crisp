@@ -28,4 +28,8 @@ bool_t mem_eq  (void*, void*, u64_t)       ;
 bool_t mem_gt  (void*, void*, u64_t)       ;
 bool_t mem_lt  (void*, void*, u64_t)       ;
 
+#define kb *((u64_t)1 << (u64_t)10)
+#define mb *((u64_t)1 << (u64_t)20)
+#define gb *((u64_t)1 << (u64_t)30)
+
 #endif

@@ -68,16 +68,23 @@ bool_t
             return __obj_list_empty(par);
 }
 
-obj_list_elem obj_list_begin(obj_list* par) { return (par) ?  ((__obj_list*)par)->begin.next : 0; }
-obj_list_elem obj_list_end  (obj_list* par) { return (par) ? &((__obj_list*)par)->end        : 0; }
+obj_list_elem 
+    obj_list_begin(obj_list* par)                         { 
+        return (par) ?  ((__obj_list*)par)->begin.next : 0; 
+}
+
+obj_list_elem 
+    obj_list_end(obj_list* par)                    { 
+        return (par) ? &((__obj_list*)par)->end : 0; 
+}
 
 obj_list_elem
     obj_list_next(obj_list_elem par)  {
         __obj_list_elem* ret = par;
 
-        if(!ret)                    return 0;
-        if(!ret->list)              return 0;
-        if (ret == &ret->list->end) return 0;
+        if(!ret)                    return               0;
+        if(!ret->list)              return               0;
+        if (ret == &ret->list->end) return &ret->list->end;
 
         return ret->next;
 }
