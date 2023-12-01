@@ -6,17 +6,22 @@
 
 #include <intrin.h>
 
-bool_t TestObjInit		 (obj* par_obj, u32_t par_count, va_list par) { printf("Object Created\n")									  ; return true_t; }
-bool_t TestObjInitAsClone(obj* par    , obj* par_clone)				  { printf("Object Created As Clone\n")							  ; return true_t; }
-bool_t TestObjInitAsRef  (obj* par)									  { printf("Object Referenced (Use Count : %d)\n", use_count(par)); return true_t; }
-void   TestObjDeInit     (obj* par)									  { printf("Object Destroyed\n"); }
+typedef struct test {
+	obj   head ;
+	u64_t value;
+}	test;
 
-obj_trait TestObjTrait		     = {
-	.on_new	  = &TestObjInit	   ,
-	.on_clone = &TestObjInitAsClone,
-	.on_ref   = &TestObjInitAsRef  ,
-	.on_del	  = &TestObjDeInit	   ,
-	.size	  = sizeof(obj) + 8
+bool_t test_new	 (obj* par_obj, u32_t par_count, va_list par) { printf("Object Created\n")		   ; return true_t; }
+bool_t test_clone(obj* par    , obj* par_clone)				  { printf("Object Created As Clone\n"); return true_t; }
+bool_t test_ref  (obj* par)									  { printf("Object Referenced\n")	   ; return true_t; }
+void   test_del  (obj* par)									  { printf("Object Destroyed\n")	   ; }
+
+obj_trait test_t		 = {
+	.on_new	  = &test_new  ,
+	.on_clone = &test_clone,
+	.on_ref   = &test_ref  ,
+	.on_del	  = &test_del  ,
+	.size	  = sizeof(test)
 };
 
 bool_t cstd_mem_res_new() { return true_t; }
@@ -39,8 +44,8 @@ int main() {
 	mem_res_new(&cstd_mem_res, &cstd_mem_res_trait, 0);
 	set_mem_res(&cstd_mem_res);
 
-	obj* TestObj = make(&TestObjTrait) from (0);
-	ref (TestObj);
+	obj* TestObj = make(&test_t) from (0);
+	ref (TestObj); printf("Object Referenced (Use Count : %d)\n", use_count(TestObj));
 
 	del (TestObj); printf("Object Dereferenced (Use Count : %d)\n", use_count(TestObj));
 	del (TestObj);

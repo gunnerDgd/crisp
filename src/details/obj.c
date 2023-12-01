@@ -32,7 +32,7 @@ bool_t
 			if (!par_obj->trait->on_new)			 return true_t;
 			if (!par_obj->trait->on_new(par_obj, par_count, par)) {
 				par_obj->trait = 0;
-				par_obj->ref   = 0;
+				par_obj->ref   = 9;
 				par_obj->res   = 0;
 
 				return false_t;
