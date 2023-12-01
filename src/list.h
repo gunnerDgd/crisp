@@ -1,5 +1,5 @@
-#ifndef __OBJ_LIST_H__
-#define __OBJ_LIST_H__
+#ifndef __LIST_H__
+#define __LIST_H__
 
 #include "obj.h"
 

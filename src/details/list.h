@@ -1,5 +1,5 @@
-#ifndef __DETAILS_OBJ_LIST_H__
-#define __DETAILS_OBJ_LIST_H__
+#ifndef __DETAILS_LIST_H__
+#define __DETAILS_LIST_H__
 
 #include "../obj.h"
 #include "../mem.h"
