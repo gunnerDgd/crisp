@@ -164,7 +164,7 @@ void
 void 
 	__str_pop_front
 		(__str* par, u64_t par_len)							 {
-			par->front = ((par->front + par_len) > par->back)
+			par->front = ((par->front + par_len) < par->back)
 					   ?  (par->front + par_len)
 					   :   par->back;
 
@@ -174,7 +174,7 @@ void
 void 
 	__str_pop_back
 		(__str* par, u64_t par_len) {
-			par->back = ((par_len > par->len))
+			par->back = ((par_len < par->len))
 					  ?  (par->back - par_len)
 					  :   par->front;
 
@@ -222,12 +222,15 @@ u64_t
 u64_t
 	__str_find_cstr
 		(__str* par, u64_t par_off, const char* par_find, u64_t par_len) {
-			return mem_find					   (
+			u64_t ret = mem_find			   (
 				par->mem + par->front + par_off,
 				par_find					   ,
 				par->len - par_off			   ,
 				par_len
 			);
+
+			if (ret == -1) return -1;
+			return par_off + ret;
 }
 
 bool_t 
