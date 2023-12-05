@@ -49,7 +49,7 @@ __obj*
 
 			__obj *ret = mem_new(par->res, par->trait->size); 
 			if (!ret)						return 0;
-			if (!ret->trait->on_clone)				{
+			if (!par->trait->on_clone)				{
 				mem_copy(ret, par, par->trait->size);
 				ret->trait = par->trait;
 				ret->res   = par->res  ;
@@ -58,7 +58,7 @@ __obj*
 				return ret;
 			}
 
-			if(!ret->trait->on_clone(ret, par)) {
+			if(!par->trait->on_clone(ret, par)) {
 				mem_del(ret->res, ret);
 				return 0;
 			}
@@ -72,10 +72,8 @@ __obj*
 bool_t
 	__obj_clone_at
 		(__obj* par, __obj* par_clone)     {
-			if (!par_clone->res)   return 0;
 			if (!par_clone->trait) return 0;
-
-			if(!par->trait->on_clone)						    {
+			if (!par_clone->trait->on_clone)					{
 				mem_copy(par, par_clone, par_clone->trait->size);
 				par->trait = par_clone->trait;
 				par->res   = 0;
@@ -122,7 +120,7 @@ u64_t
 				if (par->trait->on_del) par->trait->on_del(par);
 				if (!par->res)						    {
 					mem_set(par, 0x00, par->trait->size);
-					return ref;
+					return 0;
 				}
 
 				mem_del(par->res, par);
