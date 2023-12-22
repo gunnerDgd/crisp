@@ -18,11 +18,9 @@ mem_res cstd_mem_res             = {
 	.on_mem_del = &cstd_mem_del
 };
 
-void test(cpu* par, cpu* par_main) {
-    printf("Hello\n");
-    cpu_switch(par, par_main);
-    printf("World\n");
-    cpu_switch(par, par_main);
+void test(cpu* par, cpu* par_main)              {
+    printf("Hello\n"); cpu_switch(par, par_main);
+    printf("World\n"); cpu_switch(par, par_main);
 }
 
 int main() {
@@ -35,11 +33,11 @@ int main() {
     cpu *cpu_main = make(cpu_t) from(0)       ,
         *cpu      = make(cpu_t) from(1, stack);
 
-    cpu_reg_write(cpu, cpu_rcx, cpu)      ;
-    cpu_reg_write(cpu, cpu_rdx, cpu_main) ;
-    cpu_reg_write(cpu, cpu_rip, &test)    ;
-    cpu_reg_write(cpu, cpu_rsp, stack_ptr);
-    cpu_reg_write(cpu, cpu_rbp, stack_ptr);
+    cpu_set_reg64(cpu, cpu_rcx, cpu)      ;
+    cpu_set_reg64(cpu, cpu_rdx, cpu_main) ;
+    cpu_set_reg64(cpu, cpu_rip, &test)    ;
+    cpu_set_reg64(cpu, cpu_rsp, stack_ptr);
+    cpu_set_reg64(cpu, cpu_rbp, stack_ptr);
     cpu_switch   (cpu_main, cpu);
     cpu_switch   (cpu_main, cpu);
 }

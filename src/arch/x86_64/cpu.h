@@ -4,29 +4,92 @@
 #ifdef PRESET_ARCH_X86_64
 #include "../../obj.h"
 
-typedef struct __cpu_reg		 {
-		union					 {
-		struct					 {
-		i64_t rax, rbx , rcx, rdx,
-			  rsi, rdi ,
-			  rsp, rbp ,
-			  rip,
-			  r8 , r9  , r10, r11,
-			  r12, r13 , r14, r15;
-		}; i64_t  reg[17];
-		}; u128_t xmm[8] ;
-}	__cpu_reg;
+#define cpu_rax 0
+#define cpu_rbx 1
+#define cpu_rcx 2
+#define cpu_rdx 3
 
-extern obj_trait __cpu_trait;
-typedef struct   __cpu	    {
-	obj		  head;
-	__cpu_reg reg ;
-}	__cpu;
+#define cpu_rsi 4
+#define cpu_rdi 5
+#define cpu_rsp 6
+#define cpu_rbp 7
+#define cpu_rip 8
 
-bool_t __cpu_new   (__cpu*, u32_t, va_list);
-bool_t __cpu_clone (__cpu*, __cpu*)		   ;
-void   __cpu_del   (__cpu*)				   ;
-void   __cpu_switch(__cpu_reg*, __cpu_reg*);
+#define cpu_r8  9
+#define cpu_r9  10
+#define cpu_r10 11
+#define cpu_r11 12
+
+#define cpu_r12 13
+#define cpu_r13 14
+#define cpu_r14 15
+#define cpu_r15 16
+
+#define cpu_xmm0 0
+#define cpu_xmm1 1
+#define cpu_xmm2 2
+#define cpu_xmm3 3
+#define cpu_xmm4 4
+#define cpu_xmm5 5
+#define cpu_xmm6 6
+#define cpu_xmm7 7
+
+typedef union reg {
+	u64_t r64   ;
+	u32_t r32[2];
+	u16_t r16[4];
+	u8_t  r8 [8];
+}	reg;
+
+typedef union vreg {
+	u128_t v128   ;
+	u64_t  v64[2] ;
+	u32_t  v32[4] ;
+	u16_t  v16[8] ;
+	u8_t   v8 [16];
+}	vreg;
+
+typedef struct cpu_reg	   {
+	union				   {
+	struct				   {
+	reg rax, rbx , rcx, rdx,
+		rsi, rdi ,
+		rsp, rbp ,
+		rip		 ,
+		r8 , r9  , r10, r11,
+		r12, r13 , r14, r15;
+	}; reg  reg[17];
+	}; vreg xmm[8] ;
+}	cpu_reg;
+
+extern obj_trait* cpu_t;
+typedef struct    cpu  {
+	obj	    head;
+	cpu_reg reg ;
+}	cpu;
+
+
+bool_t cpu_new     (cpu*, u32_t, va_list);
+bool_t cpu_clone   (cpu*, cpu*)		     ;
+void   cpu_del     (cpu*)				 ;
+
+void __cpu_switch  (cpu_reg*, cpu_reg*)  ;
+void   cpu_switch  (cpu*, cpu*)		     ;
+
+bool_t cpu_get_reg  (cpu*, u16_t, reg*)  ;
+bool_t cpu_get_reg8 (cpu*, u16_t, u8_t *);
+bool_t cpu_get_reg16(cpu*, u16_t, u16_t*);
+bool_t cpu_get_reg32(cpu*, u16_t, u32_t*);
+bool_t cpu_get_reg64(cpu*, u16_t, u64_t*);
+
+bool_t cpu_set_reg  (cpu*, u16_t, reg)   ;
+bool_t cpu_set_reg8 (cpu*, u16_t, u8_t)  ;
+bool_t cpu_set_reg16(cpu*, u16_t, u16_t) ;
+bool_t cpu_set_reg32(cpu*, u16_t, u32_t) ;
+bool_t cpu_set_reg64(cpu*, u16_t, u64_t) ;
+
+bool_t cpu_get_vreg(cpu*, u16_t, vreg*)  ;
+bool_t cpu_set_vreg(cpu*, u16_t, vreg*)  ;
 
 #endif
 #endif

@@ -20,7 +20,6 @@ if (PRESET_ARCH_X86_64)
         build-arch STATIC
         src/arch/x86_64/cpu.h
         src/arch/x86_64/cpu.c
-        src/arch/cpu.h
     )
 endif()
 
@@ -28,6 +27,7 @@ add_library (build STATIC
     src/type.h
     src/type_atom.h
     src/atom.h
+    src/cpu.h
         
     src/mem.h
     src/mem.c
@@ -40,9 +40,6 @@ add_library (build STATIC
 
     src/obj.h
     src/obj.c
-
-    src/cpu.h
-    src/cpu.c
 
     src/box.h
     src/box.c
