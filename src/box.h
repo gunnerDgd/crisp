@@ -5,9 +5,19 @@
 #include "mem.h"
 
 extern obj_trait* box_t;
-typedef struct    box { u8_t box[64]; } box;
+typedef struct    box  {
+    obj      head   ;
+    mem_res* mem_res;
+    void*    mem    ;
+    u64_t    size   ;
+}   box;
 
-void* box_ptr (box*);
-u64_t box_size(box*);
+bool_t box_new  (box*, u32_t, va_list);
+bool_t box_clone(box*, box*)          ;
+bool_t box_ref  (box*)                ;
+void   box_del  (box*)                ;
+
+void*  box_ptr  (box*);
+u64_t  box_size (box*);
 
 #endif

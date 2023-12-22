@@ -1,8 +1,7 @@
-#ifndef __OBJECT_H__
-#define __OBJECT_H__
+#ifndef __OBJ_H__
+#define __OBJ_H__
 
 #include "mem.h"
-#include "str.h"
 
 typedef struct obj { u64_t obj[4]; } obj;
 typedef struct obj_trait                    {
@@ -15,10 +14,13 @@ typedef struct obj_trait                    {
 
 obj*   obj_new      (mem_res*, obj_trait*, u32_t, ...)    ;
 obj*   obj_new_va   (mem_res*, obj_trait*, u32_t, va_list);
+
 bool_t obj_new_at   (obj*    , obj_trait*, u32_t, ...)    ;
 bool_t obj_new_at_va(obj*    , obj_trait*, u32_t, va_list);
+
 obj*   obj_clone    (obj*)      ;
 bool_t obj_clone_at (obj*, obj*);
+
 obj*   obj_ref      (obj*)      ;
 u64_t  obj_del		(obj*)      ;
 

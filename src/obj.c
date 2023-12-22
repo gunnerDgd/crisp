@@ -1,5 +1,5 @@
 #include "obj.h"
-#include "details/obj.h"
+#include "atom.h"
 
 obj*
     obj_new
@@ -13,10 +13,24 @@ obj*
 obj*
     obj_new_va
 		(mem_res* par_res, obj_trait* par_trait, u32_t par_count, va_list par) {
-			if (!par_res) par_res = get_mem_res();
-			if (!par_res) return 0;
+			if (!par_res)						par_res = get_mem_res();
+			if (!par_res)						return 0;
+			if (par_trait->size <= sizeof(obj)) return 0;
 
-			obj*   ret = __obj_new(par_res, par_trait, par_count, par);
+			obj *ret = mem_new(par_res, par_trait->size);
+			if (!ret) return 0;
+
+			mem_set(ret, 0x00, par_trait->size);
+			ret->trait = par_trait;
+			ret->res   = par_res  ;
+			ret->ref   = 1		  ;
+
+			if (!ret->trait->on_new)			return ret;
+			if (!ret->trait->on_new(ret, par_count, par)) {
+				mem_del(par_res, ret);
+				return 0;
+			}
+
 			return ret;
 }
 
@@ -33,16 +47,126 @@ bool_t
 bool_t 
 	obj_new_at_va
 		(obj* par_obj, obj_trait* par_trait, u32_t par_count, va_list par) {
-			if (!par_obj)   return false_t;
-			if (!par_trait) return false_t;
+			if (!par_obj)						return false_t;
+			if (!par_trait)						return false_t;
+			if (par_trait->size <= sizeof(obj)) return false_t;
 
-			return __obj_new_at(par_obj, par_trait, par_count, par);
+			mem_set(par_obj, 0x00, par_trait->size);
+			par_obj->trait = par_trait;
+			par_obj->res   = 0		  ;
+			par_obj->ref   = 1		  ;
+
+			if (!par_obj->trait->on_new)			 return true_t;
+			if (!par_obj->trait->on_new(par_obj, par_count, par)) {
+				mem_set(par_obj, 0x00, par_trait->size);
+				return false_t;
+			}
+
+			return true_t;
 }
 
-obj*	   obj_clone   (obj* par)				  { return (par) ? __obj_clone   (par)			  : 0; }
-bool_t     obj_clone_at(obj* par, obj* par_clone) { return (par) ? __obj_clone_at(par, par_clone) : 0; }
-obj*	   obj_ref     (obj* par)				  { return (par) ? __obj_ref     (par)			  : 0; }
-u64_t	   obj_del	   (obj* par)				  { return (par) ? __obj_del	 (par)			  : 0; }
+obj*	   
+	obj_clone   
+		(obj* par)										 {
+			if (!par)							 return 0;
+			if (!par->res)						 return 0;
+			if (!par->trait)					 return 0;
+			if (par->trait->size <= sizeof(obj)) return 0;
 
-obj_trait* obj_get_trait(obj* par) { return (par) ? ((__obj*)par)->trait : 0; }
-u64_t      obj_use_count(obj* par) { return (par) ? ((__obj*)par)->ref   : 0; }
+			obj *ret = mem_new(par->res, par->trait->size); 
+			if (!ret)						return 0;
+			if (!par->trait->on_clone)				{
+				mem_copy(ret, par, par->trait->size);
+				ret->trait = par->trait;
+				ret->res   = par->res  ;
+				ret->ref   = 1		   ;
+
+				return ret;
+			}
+
+			if(!par->trait->on_clone(ret, par)) {
+				mem_del(ret->res, ret);
+				return 0;
+			}
+
+			ret->trait = par->trait;
+			ret->res   = par->res  ;
+			ret->ref   = 1		   ;
+			return ret;
+}
+
+bool_t     
+	obj_clone_at
+		(obj* par, obj* par_clone)							   {
+			if (!par)								   return 0;
+			if (!par_clone)							   return 0;
+			if (!par_clone->trait)					   return 0;
+			if (par_clone->trait->size <= sizeof(obj)) return 0;
+			if (!par_clone->res && !par_clone->ref)    return 0;
+
+			if (!par_clone->trait->on_clone)					{
+				mem_copy(par, par_clone, par_clone->trait->size);
+				par->trait = par_clone->trait;
+				par->res   = 0;
+				par->ref   = 1;
+
+				return true_t;
+			}
+
+			par->trait = par_clone->trait;
+			par->res   = 0;
+			par->ref   = 1;
+
+			if(!par->trait->on_clone(par, par_clone))     {
+				mem_set(par, 0x00, par_clone->trait->size);
+				return false_t;
+			}
+
+			return true_t;
+}
+
+obj*
+	obj_ref
+		(obj* par)					 { 
+			if (!par)		 return 0;
+			if (!par->trait) return 0;
+			if (!par->ref)	 return 0;
+
+			if (!par->trait->on_ref) { 
+				lock_inc64(&par->ref);
+				return par;
+			}
+			
+			if   (!par->trait->on_ref(par)) return 0; lock_inc64(&par->ref);
+			return par;
+}
+
+u64_t	   
+	obj_del
+		(obj* par)			           {
+			if(!par)		   return 0;
+			if(!par->trait)    return 0;
+			if (par->ref == 0) return 0;
+
+			u64_t ref, ref_dec;
+			do					  {
+				ref		= par->ref;
+				ref_dec = ref - 1 ;
+			}   while(lock_cas64(&par->ref, ref, ref_dec) != ref);
+
+			if (ref_dec == 0)								   {
+				if (par->trait->on_del) par->trait->on_del(par);
+				if (!par->res)						    {
+					mem_set(par, 0x00, par->trait->size);
+					return 0;
+				}
+
+				mem_del(par->res, par);
+				return 0;
+			}
+
+			return ref_dec;
+}
+
+obj_trait* obj_get_trait(obj* par) { return (par) ? par->trait : 0; }
+u64_t      obj_use_count(obj* par) { return (par) ? par->ref   : 0; }

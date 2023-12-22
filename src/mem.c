@@ -1,5 +1,4 @@
 #include "mem.h"
-#include "details/mem.h"
 
 mem_res* global_mem_res;
 
@@ -17,55 +16,53 @@ mem_res*
 
 bool_t 
     mem_res_new
-        (mem_res* par_res, mem_res_trait* par_trait, u32_t par_count, ...) {
+        (mem_res* par_res, u32_t par_count, ...) {
             va_list  par;
-            va_start(par, par_count); bool_t ret = mem_res_new_va(par_res, par_trait, par_count, par);
+            va_start(par, par_count); bool_t ret = mem_res_new_va(par_res, par_count, par);
             va_end  (par);
             return   ret;
 }
 
 bool_t 
     mem_res_new_va
-        (mem_res* par_res, mem_res_trait* par_trait, u32_t par_count, va_list par) {
-            if (!par_res)               return false_t;
-            if (!par_trait)             return false_t;
+        (mem_res* par_res, u32_t par_count, va_list par) {
+            if (!par_res)             return false_t;
+            if (!par_res->on_new)     return false_t;
+            if (!par_res->on_del)     return false_t;
+            if (!par_res->on_mem_new) return false_t;
+            if (!par_res->on_mem_del) return false_t;
 
-            if (!par_trait->on_new)     return false_t;
-            if (!par_trait->on_del)     return false_t;
-            if (!par_trait->on_mem_new) return false_t;
-            if (!par_trait->on_mem_del) return false_t;
-
-            return __mem_res_new (
-                par_res  , 
-                par_trait, 
-                par_count, 
+            return par_res->on_new (
+                par_res  ,
+                par_count,
                 par
             );
-
 }
 
 void  
     mem_res_del
-        (mem_res* par)        {
-            __mem_res_del(par); 
+        (mem_res* par)      {
+            par->on_del(par);
 }
 
 void* 
     mem_new    
-        (mem_res* par, u64_t par_size)    {
-            if (!par) par = global_mem_res;
-            if (!par) return 0;
+        (mem_res* par, u64_t par_size)            {
+            if (!par)         par = global_mem_res;
+            if (!par)         return 0;
+            if (!par->on_new) return 0;
 
-            return __mem_new(par, par_size); 
+            return par->on_mem_new(par, par_size);
 }
 
 void  
     mem_del
-        (mem_res* par, void* par_del)  {
-            if (!par) par = global_mem_res;
-            if (!par) return;
+        (mem_res* par, void* par_del)                 {
+            if (!par)             par = global_mem_res;
+            if (!par)             return;
+            if (!par->on_mem_del) return;
 
-            __mem_del(par, par_del);
+            par->on_mem_del(par, par_del);
 }
 
 void

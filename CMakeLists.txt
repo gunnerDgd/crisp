@@ -27,12 +27,10 @@ endif()
 add_library (build STATIC
     src/type.h
     src/type_atom.h
+    src/atom.h
         
     src/mem.h
     src/mem.c
-
-    src/atom.h
-    src/atom.c
 
     src/str.h
     src/str.c
@@ -51,24 +49,23 @@ add_library (build STATIC
 
     src/endian.h
     src/endian.c
-        
-    src/details/mem.h
-    src/details/mem.c
-
-    src/details/atom.h
-
-    src/details/str.h
-    src/details/str.c
-
-    src/details/list.h
-    src/details/list.c
-
-    src/details/obj.h
-    src/details/obj.c
-
-    src/details/box.h
-    src/details/box.c
 )
+
+add_library (build-include STATIC
+    include/atom.h
+    include/box.h
+    include/cpu.h
+    include/endian.h
+    include/list.h
+    include/mem.h
+    include/obj.h
+    include/str.h
+
+    include/type_atom.h
+    include/type.h
+)
+
+set_target_properties(build-include PROPERTIES LINKER_LANGUAGE C)
 
 if(PRESET_BUILD_EXAMPLES)
     add_executable            (examples-mem-mem examples/mem/mem.c)
