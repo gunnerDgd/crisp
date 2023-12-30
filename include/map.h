@@ -6,7 +6,7 @@
 extern obj_trait* map_t   ;
 typedef void     *map_elem;
 typedef struct    map                    { u8_t map[256]; } map;
-typedef struct    map_ops                {
+typedef struct    map_key                {
     bool_t (*eq)   (obj*, obj*)          ;
     bool_t (*eq_va)(obj*, u32_t, va_list);
 
@@ -15,7 +15,7 @@ typedef struct    map_ops                {
     
     bool_t (*gt)   (obj*, obj*)          ;
     bool_t (*gt_va)(obj*, u32_t, va_list);
-}   map_ops;
+}   map_key;
 
 map_elem map_push   (map*, obj*)          ;
 void     map_pop    (map*, map_elem)      ;
