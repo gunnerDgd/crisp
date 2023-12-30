@@ -33,14 +33,14 @@ obj_trait test_t		 = {
 	.size	  = sizeof(test)
 };
 
-bool_t map_eq   (test* par, test* par_cmp)					  { return par->value == par_cmp->value			 ; }
-bool_t map_eq_va(test* par, u32_t par_count, va_list par_cmp) { return par->value == va_arg(par_count, u64_t); }
+bool_t map_eq   (test* par, test* par_cmp)					  { return par->value == par_cmp->value		   ; }
+bool_t map_eq_va(test* par, u32_t par_count, va_list par_cmp) { return par->value == va_arg(par_cmp, u64_t); }
 
-bool_t map_lt   (test* par, test* par_cmp)					  { return par->value < par_cmp->value			; }
-bool_t map_lt_va(test* par, u32_t par_count, va_list par_cmp) { return par->value < va_arg(par_count, u64_t); }
+bool_t map_lt   (test* par, test* par_cmp)					  { return par->value < par_cmp->value		  ; }
+bool_t map_lt_va(test* par, u32_t par_count, va_list par_cmp) { return par->value < va_arg(par_cmp, u64_t); }
 
-bool_t map_gt   (test* par, test* par_cmp)					  { return par->value > par_cmp->value			; }
-bool_t map_gt_va(test* par, u32_t par_count, va_list par_cmp) { return par->value > va_arg(par_count, u64_t); }
+bool_t map_gt   (test* par, test* par_cmp)					  { return par->value > par_cmp->value		  ; }
+bool_t map_gt_va(test* par, u32_t par_count, va_list par_cmp) { return par->value > va_arg(par_cmp, u64_t); }
 
 map_ops ops =			{
 	.eq     = &map_eq   ,
@@ -60,4 +60,5 @@ int main()						 {
 	map* map   = make(map_t)   from (1, &ops);
 	obj* push1 = make(&test_t) from (1, 0)   ; map_elem elem1 = map_push(map, push1);
 	obj* push2 = make(&test_t) from (1, 1)   ; map_elem elem2 = map_push(map, push2);
+	map_elem find = map_find(map, 1, 0);
 }
