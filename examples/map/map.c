@@ -42,7 +42,7 @@ bool_t map_lt_va(test* par, u32_t par_count, va_list par_cmp) { return par->valu
 bool_t map_gt   (test* par, test* par_cmp)					  { return par->value > par_cmp->value		  ; }
 bool_t map_gt_va(test* par, u32_t par_count, va_list par_cmp) { return par->value > va_arg(par_cmp, u64_t); }
 
-map_ops ops =			{
+map_key ops =			{
 	.eq     = &map_eq   ,
 	.eq_va  = &map_eq_va,
 

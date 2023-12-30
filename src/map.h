@@ -32,7 +32,7 @@ void      map_pop    (map*, map_elem*)     ;
 
 map_elem* map_find   (map*, u32_t, ...)    ;
 map_elem* map_find_va(map*, u32_t, va_list);
-obj*      map_get    (map_elem*)           ;
+obj*      map_get    (map*, map_elem*)     ;
 
 bool_t    map_empty  (map*)                ;
 map_elem* map_begin  (map*)                ;

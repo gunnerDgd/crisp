@@ -33,11 +33,12 @@ int main() {
     cpu *cpu_main = make(cpu_t) from(0)       ,
         *cpu      = make(cpu_t) from(1, stack);
 
-    cpu_set_reg64(cpu, cpu_rcx, cpu)      ;
-    cpu_set_reg64(cpu, cpu_rdx, cpu_main) ;
+    cpu_set_reg64(cpu, cpu_rdi, cpu)      ;
+    cpu_set_reg64(cpu, cpu_rsi, cpu_main) ;
     cpu_set_reg64(cpu, cpu_rip, &test)    ;
     cpu_set_reg64(cpu, cpu_rsp, stack_ptr);
     cpu_set_reg64(cpu, cpu_rbp, stack_ptr);
     cpu_switch   (cpu_main, cpu);
     cpu_switch   (cpu_main, cpu);
+    printf("Finished !!\n");
 }

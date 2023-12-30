@@ -9,18 +9,15 @@ if (PRESET_ARCH_X86_64)
     set                    (CMAKE_ASM_NASM_COMPILE_OBJECT "<CMAKE_ASM_NASM_COMPILER> <INCLUDES> <FLAGS> -o <OBJECT> <SOURCE>")
     add_compile_options    ("$<$<COMPILE_LANGUAGE:ASM_NASM>:-f $<IF:$<BOOL:$<TARGET_PROPERTY:NASM_OBJ_FORMAT>>, \ $<TARGET_PROPERTY:NASM_OBJ_FORMAT>, ${CMAKE_ASM_NASM_OBJECT_FORMAT}>>")
 
-    add_library                           (
-        build-arch-asm STATIC
-        src/arch/x86_64/asm/atomic_msvc.asm 
-        src/arch/x86_64/asm/cpu_msvc.asm
-    )
-    set_target_properties(build-arch-asm PROPERTIES NASM_OBJ_FORMAT win64)
-
-    add_library                       (
-        build-arch STATIC
-        src/arch/x86_64/cpu.h
-        src/arch/x86_64/cpu.c
-    )
+    if (WIN32)
+        add_library          (build-arch-asm STATIC     src/arch/x86_64/asm/atomic_msvc.asm src/arch/x86_64/asm/cpu_msvc.asm)
+        set_target_properties(build-arch-asm PROPERTIES NASM_OBJ_FORMAT win64)
+        add_library          (build-arch     STATIC     src/arch/x86_64/cpu.h src/arch/x86_64/cpu.c)
+    elseif (UNIX AND NOT APPLE)
+        add_library          (build-arch-asm STATIC     src/arch/x86_64/asm/atomic_gcc.asm src/arch/x86_64/asm/cpu_gcc.asm)
+        set_target_properties(build-arch-asm PROPERTIES NASM_OBJ_FORMAT win64)
+        add_library          (build-arch     STATIC     src/arch/x86_64/cpu.h src/arch/x86_64/cpu.c)
+    endif()
 endif()
 
 add_library (build STATIC
