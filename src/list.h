@@ -36,12 +36,12 @@ list_elem* list_prev      (list_elem*)             ;
 obj*       list_get       (list_elem*)             ;
 obj*       list_set       (list_elem*, obj*)       ;
 
-#define list_for(par, par_it)                                         \
-    list_elem* par_it = list_begin(par), par_it##_end = list_end(par);\
+#define list_for(par, par_it)                                          \
+    list_elem* par_it = list_begin(par), *par_it##_end = list_end(par);\
     for( ; par_it != par_it##_end ; par_it = list_next(par_it))
 
-#define list_while(par, par_it)                                       \
-    list_elem* par_it = list_begin(par), par_it##_end = list_end(par);\
+#define list_while(par, par_it)                                        \
+    list_elem* par_it = list_begin(par), *par_it##_end = list_end(par);\
     while(par_it != par_it##_end)
 
 #endif

@@ -44,6 +44,9 @@ add_library (build STATIC
     src/box.h
     src/box.c
 
+    src/map.h
+    src/map.c
+
     src/endian.h
     src/endian.c
 )
@@ -57,6 +60,7 @@ add_library (build-include STATIC
     include/mem.h
     include/obj.h
     include/str.h
+    include/map.h
 
     include/type_atom.h
     include/type.h
@@ -80,6 +84,10 @@ if(PRESET_BUILD_EXAMPLES)
     add_executable            (examples-str-str examples/str/str.c)
     target_link_libraries     (examples-str-str build build-arch build-arch-asm)
     target_include_directories(examples-str-str PRIVATE include)
+
+    add_executable            (examples-map-map examples/map/map.c)
+    target_link_libraries     (examples-map-map build build-arch build-arch-asm)
+    target_include_directories(examples-map-map PRIVATE include)
 
     add_executable            (examples-cpu-cpu examples/cpu/cpu.c)
     target_link_libraries     (examples-cpu-cpu build build-arch build-arch-asm)
