@@ -34,6 +34,7 @@ map_elem* map_find   (map*, u32_t, ...)    ;
 map_elem* map_find_va(map*, u32_t, va_list);
 obj*      map_get    (map_elem*)           ;
 
+bool_t    map_empty  (map*)                ;
 map_elem* map_begin  (map*)                ;
 map_elem* map_end    (map*)                ;
 map_elem* map_next   (map_elem*)           ;

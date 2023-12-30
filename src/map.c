@@ -111,6 +111,15 @@ obj*
             return par_elem->elem;
 }
 
+bool_t    
+    map_empty
+        (map* par)                                    {
+            if (!par)                   return false_t;
+            if (trait_of(par) != map_t) return false_t;
+
+            return list_empty(&par->map);
+}
+
 map_elem* 
     map_begin
         (map* par)                              {
