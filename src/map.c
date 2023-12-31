@@ -15,19 +15,12 @@ bool_t
         (map* par_map, u32_t par_count, va_list par) {
             par_map->key = va_arg(par, map_key*);
             mem_res* res = (par_count == 1) ? get_mem_res() : va_arg(par, mem_res*);
-            if (!res)                 return false_t;
-            if (!par_map)             return false_t;
+            if (!res)              return false_t;
+            if (!par_map->key->eq) return false_t;
+            if (!par_map->key->lt) return false_t;
+            if (!par_map->key->gt) return false_t;
 
-            if (!par_map->key->eq)    return false_t;
-            if (!par_map->key->eq_va) return false_t;
-
-            if (!par_map->key->lt)    return false_t;
-            if (!par_map->key->lt_va) return false_t;
-            
-            if (!par_map->key->gt)    return false_t;
-            if (!par_map->key->gt_va) return false_t;
-
-            return make_at(&par_map->map, list_t) from (res);
+            return make_at(&par_map->map, list_t) from (1, res);
 }
 
 bool_t    
@@ -55,9 +48,9 @@ map_elem*
 
             list_for (&par->map, push_it)    {
                 obj *push = list_get(push_it);
-                if (!push) continue;
+                if (!push)                        continue                                          ;
                 if (par->key->lt(push, par_push)) list_push(&par->map, par_push, list_prev(push_it));
-                if (par->key->eq(push, par_push)) return 0;
+                if (par->key->eq(push, par_push)) return 0                                          ;
             }
 
             return list_push_back(&par->map, par_push);
@@ -74,41 +67,19 @@ void
 
 map_elem*
     map_find
-        (map* par_map, u32_t par_count, ...)        {
-            if (!par_map)                   return 0;
-            if (trait_of(par_map) != map_t) return 0;
+        (map* par, obj* par_key)                {
+            if (!par)                   return 0;
+            if (trait_of(par) != map_t) return 0;
 
-            va_list  par;
-            va_start(par, par_count); map_elem* ret = map_find_va(par_map, par_count, par);
-            va_end  (par)           ;
-            return   ret;
-}
+            list_for (&par->map, find_it)                 {
+                obj *find = list_get(find_it)             ;
+                if (!find)                        continue;
+                if (!par->key->eq(find, par_key)) continue;
 
-map_elem*
-    map_find_va
-        (map* par_map, u32_t par_count, va_list par) {
-            if (!par_map)                   return 0;
-            if (trait_of(par_map) != map_t) return 0;
-
-            list_for (&par_map->map, find_it) {
-                obj *find = list_get(find_it);
-                if (!find)                                     continue      ;
-                if (par_map->key->eq_va(find, par_count, par)) return find_it;
+                return find_it;
             }
 
-            return 0;
-}
-
-obj*
-    map_get
-        (map* par, map_elem* par_elem)               {
-            if (!par)                        return 0;
-            if (!par_elem)                   return 0;
-
-            if (trait_of(par) != map_t)      return 0;
-            if (par_elem->list != &par->map) return 0;
-
-            return par_elem->elem;
+            return map_end(par);
 }
 
 bool_t    
@@ -153,4 +124,10 @@ map_elem*
             if (trait_of(par) != map_t) return 0;
 
             return list_prev(par);
+}
+
+obj*
+    map_get
+        (map_elem* par)         {
+            return list_get(par);
 }
