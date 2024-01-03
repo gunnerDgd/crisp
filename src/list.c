@@ -28,6 +28,8 @@ bool_t
             par_list->end.next   = 0               ;
             par_list->end.elem   = 0               ;
 
+            mem_set(&par_list->begin.head, 0x00, sizeof(obj));
+            mem_set(&par_list->end  .head, 0x00, sizeof(obj));
             return true_t;
 }
 
@@ -48,6 +50,8 @@ bool_t
             list_elem *push = par_clone->begin.next;
             while     (push != &par_clone->end) list_push_back(par, push->elem);
 
+            mem_set(&par->begin.head, 0x00, sizeof(obj));
+            mem_set(&par->end  .head, 0x00, sizeof(obj));
             return true_t;
 }
 
@@ -69,6 +73,7 @@ list_elem*
             if (!par->res) return 0; list_elem* ret = mem_new(par->res, sizeof(list_elem));
             if (!ret)      return 0;
 
+            mem_set(&ret->head, 0x00, sizeof(obj));
             ret->elem = ref(par_push);
             ret->list = par          ;
 
@@ -92,6 +97,7 @@ list_elem*
             if (!par->res) return 0; list_elem *ret = mem_new(par->res, sizeof(list_elem));
             if (!ret)      return 0;
 
+            mem_set(&ret->head, 0x00, sizeof(obj));
             ret->elem = ref(par_push);
             ret->list = par;
 
@@ -121,6 +127,7 @@ list_elem*
             list_elem* ret = mem_new(par->res, sizeof(list_elem));
             if (!ret) return 0;
 
+            mem_set(&ret->head, 0x00, sizeof(obj));
             ret->prev = par_at      ;
             ret->next = par_at->next;
 

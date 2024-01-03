@@ -4,6 +4,7 @@
 #include "obj.h"
 
 typedef struct list_elem         {
+    obj               head       ;
     struct list_elem *prev, *next;
     struct list      *list       ;
     obj              *elem       ;
