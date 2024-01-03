@@ -48,9 +48,9 @@ map_elem*
 
             list_for (&par->map, push_it)    {
                 obj *push = list_get(push_it);
-                if (!push)                        continue                                          ;
-                if (par->key->lt(push, par_push)) list_push(&par->map, par_push, list_prev(push_it));
-                if (par->key->eq(push, par_push)) return 0                                          ;
+                if (!push)                        continue                                                 ;
+                if (par->key->lt(push, par_push)) return list_push(&par->map, par_push, list_prev(push_it));
+                if (par->key->eq(push, par_push)) return 0                                                 ;
             }
 
             return list_push_back(&par->map, par_push);
