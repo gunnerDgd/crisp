@@ -13,7 +13,7 @@ typedef struct list_elem         {
 extern obj_trait* list_t;
 typedef struct    list  {
     obj       head      ;
-    mem_res  *res       ;
+    mem      *res       ;
     list_elem begin, end;
 }   list;
 

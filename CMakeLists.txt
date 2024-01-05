@@ -10,7 +10,13 @@ if (PRESET_ARCH_X86_64)
     add_compile_options    ("$<$<COMPILE_LANGUAGE:ASM_NASM>:-f $<IF:$<BOOL:$<TARGET_PROPERTY:NASM_OBJ_FORMAT>>, \ $<TARGET_PROPERTY:NASM_OBJ_FORMAT>, ${CMAKE_ASM_NASM_OBJECT_FORMAT}>>")
 
     if (WIN32)
-        add_library          (build-arch-asm STATIC     src/arch/x86_64/asm/atomic_msvc.asm src/arch/x86_64/asm/cpu_msvc.asm)
+        add_library                           (
+            build-arch-asm STATIC 
+            src/arch/x86_64/asm/atomic_msvc.asm
+            src/arch/x86_64/asm/cpu_msvc.asm
+            src/arch/x86_64/asm/bit_msvc.asm
+        )
+
         set_target_properties(build-arch-asm PROPERTIES NASM_OBJ_FORMAT win64)
         add_library          (build-arch     STATIC     src/arch/x86_64/cpu.h src/arch/x86_64/cpu.c)
     elseif (UNIX AND NOT APPLE)
@@ -25,6 +31,7 @@ add_library (build STATIC
     src/type_atom.h
     src/atom.h
     src/cpu.h
+    src/bit.h
         
     src/mem.h
     src/mem.c

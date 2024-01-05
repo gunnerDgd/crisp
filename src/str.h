@@ -5,11 +5,11 @@
 
 extern struct obj_trait* str_t;
 typedef struct	         str  {
-	obj	     head		;
-	mem_res* res		;
-	u8_t*    mem		;
-	u64_t	 front, back;
-	u64_t    size , len ;
+	obj	  head		 ;
+	mem*  res		 ;
+	u8_t* mem		 ;
+	u64_t front, back;
+	u64_t size , len ;
 }	str;
 
 bool_t      str_new			   (str*, u32_t, va_list);

@@ -12,14 +12,19 @@ obj_trait* list_t = &list_trait;
 
 bool_t
     list_new
-        (list* par_list, u32_t par_count, va_list par)                              {
-            par_list->res = (par_count == 1) ? va_arg(par, mem_res*) : get_mem_res();
-            if (!par_list->res)             return false_t;
-            if (!par_list->res->on_new)     return 0      ;
-            if (!par_list->res->on_del)     return 0      ;
-            if (!par_list->res->on_mem_new) return 0      ;
-            if (!par_list->res->on_mem_del) return 0      ;
+        (list* par_list, u32_t par_count, va_list par) {
+            mem* res = 0;
+            switch (par_count)                         {
+                case 0 : res = get_mem()        ; break;
+                case 1 : res = va_arg(par, mem*); break;
+                default: return false_t         ;
+            }
 
+            if (!res)         return false_t;
+            if (!res->on_new) return false_t;
+            if (!res->on_del) return false_t;
+
+            par_list->res        = res           ;
             par_list->begin.next = &par_list->end;
             par_list->begin.prev =              0;
             par_list->begin.elem =              0;
@@ -57,8 +62,8 @@ bool_t
 
 void
     list_del
-        (list* par)                            {
-            while(par->begin.next != &par->end)
+        (list* par)                             {
+            while (par->begin.next != &par->end)
                 list_pop_front(par);
 }
 
@@ -66,9 +71,10 @@ list_elem*
     list_push_back
         (list* par, obj* par_push)               {
             if (!par)                    return 0;
-            if (trait_of(par) != list_t) return 0;
             if (!par_push)               return 0;
             if (!trait_of(par_push))     return 0;
+            if (trait_of(par) != list_t) return 0;
+            
 
             if (!par->res) return 0; list_elem* ret = mem_new(par->res, sizeof(list_elem));
             if (!ret)      return 0;
@@ -90,10 +96,10 @@ list_elem*
     list_push_front
         (list* par, obj* par_push)               {
             if (!par)                    return 0;
-            if (trait_of(par) != list_t) return 0;
             if (!par_push)               return 0;
             if (!trait_of(par_push))     return 0;
-
+            if (trait_of(par) != list_t) return 0;
+            
             if (!par->res) return 0; list_elem *ret = mem_new(par->res, sizeof(list_elem));
             if (!ret)      return 0;
 
@@ -114,10 +120,10 @@ list_elem*
     list_push
         (list* par, obj* par_push, list_elem* par_at) {
             if (!par)                    return 0;
-            if (trait_of(par) != list_t) return 0;
             if (!par_at)                 return 0;
             if (!par_push)               return 0;
             if (!trait_of(par_push))     return 0;
+            if (trait_of(par) != list_t) return 0;
 
             if (!par->res)               return 0;
             if (par_at->list != par)     return 0;

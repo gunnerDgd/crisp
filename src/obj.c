@@ -3,7 +3,7 @@
 
 obj*
     obj_new
-		(mem_res* par_res, obj_trait* par_trait, u32_t par_count, ...) {
+		(mem* par_res, obj_trait* par_trait, u32_t par_count, ...) {
     		va_list  par;
 			va_start(par, par_count); obj* ret = obj_new_va(par_res, par_trait, par_count, par);
 			va_end  (par);
@@ -12,8 +12,8 @@ obj*
 
 obj*
     obj_new_va
-		(mem_res* par_res, obj_trait* par_trait, u32_t par_count, va_list par) {
-			if (!par_res)						par_res = get_mem_res();
+		(mem* par_res, obj_trait* par_trait, u32_t par_count, va_list par) {
+			if (!par_res)						par_res = get_mem();
 			if (!par_res)						return 0;
 			if (par_trait->size <= sizeof(obj)) return 0;
 
@@ -22,7 +22,7 @@ obj*
 
 			mem_set(ret, 0x00, par_trait->size);
 			ret->trait = par_trait;
-			ret->res   = par_res  ;
+			ret->mem   = par_res  ;
 			ret->ref   = 1		  ;
 
 			if (!ret->trait->on_new)			return ret;
@@ -53,7 +53,7 @@ bool_t
 
 			mem_set(par_obj, 0x00, par_trait->size);
 			par_obj->trait = par_trait;
-			par_obj->res   = 0		  ;
+			par_obj->mem   = 0		  ;
 			par_obj->ref   = 1		  ;
 
 			if (!par_obj->trait->on_new)			 return true_t;
@@ -69,28 +69,28 @@ obj*
 	obj_clone   
 		(obj* par)										 {
 			if (!par)							 return 0;
-			if (!par->res)						 return 0;
+			if (!par->mem)						 return 0;
 			if (!par->trait)					 return 0;
 			if (par->trait->size <= sizeof(obj)) return 0;
 
-			obj *ret = mem_new(par->res, par->trait->size); 
+			obj *ret = mem_new(par->mem, par->trait->size);
 			if (!ret)						return 0;
 			if (!par->trait->on_clone)				{
 				mem_copy(ret, par, par->trait->size);
 				ret->trait = par->trait;
-				ret->res   = par->res  ;
+				ret->mem   = par->mem  ;
 				ret->ref   = 1		   ;
 
 				return ret;
 			}
 
 			if(!par->trait->on_clone(ret, par)) {
-				mem_del(ret->res, ret);
+				mem_del(ret->mem, ret);
 				return 0;
 			}
 
 			ret->trait = par->trait;
-			ret->res   = par->res  ;
+			ret->mem   = par->mem  ;
 			ret->ref   = 1		   ;
 			return ret;
 }
@@ -102,20 +102,20 @@ bool_t
 			if (!par_clone)							   return 0;
 			if (!par_clone->trait)					   return 0;
 			if (par_clone->trait->size <= sizeof(obj)) return 0;
-			if (!par_clone->res && !par_clone->ref)    return 0;
+			if (!par_clone->mem && !par_clone->ref)    return 0;
 
 			if (!par_clone->trait->on_clone)					{
 				mem_copy(par, par_clone, par_clone->trait->size);
 				par->trait = par_clone->trait;
-				par->res   = 0;
+				par->mem   = 0;
 				par->ref   = 1;
 
 				return true_t;
 			}
 
 			par->trait = par_clone->trait;
-			par->res   = 0;
-			par->ref   = 1;
+			par->mem   = 0				 ;
+			par->ref   = 1				 ;
 
 			if(!par->trait->on_clone(par, par_clone))     {
 				mem_set(par, 0x00, par_clone->trait->size);
@@ -149,24 +149,37 @@ u64_t
 			if (par->ref == 0) return 0;
 
 			u64_t ref, ref_dec;
-			do					  {
-				ref		= par->ref;
+			do										  {
+				ref		= par->ref; if (!ref) return 0;
 				ref_dec = ref - 1 ;
 			}   while(lock_cas64(&par->ref, ref, ref_dec) != ref);
 
 			if (ref_dec == 0)								   {
 				if (par->trait->on_del) par->trait->on_del(par);
-				if (!par->res)						    {
+				if (!par->mem)						    {
 					mem_set(par, 0x00, par->trait->size);
 					return 0;
 				}
 
-				mem_del(par->res, par);
+				mem_del(par->mem, par);
 				return 0;
 			}
 
 			return ref_dec;
 }
 
-obj_trait* obj_get_trait(obj* par) { return (par) ? par->trait : 0; }
-u64_t      obj_use_count(obj* par) { return (par) ? par->ref   : 0; }
+obj_trait* 
+	obj_get_trait
+		(obj* par)		      {
+			if (!par) return 0;
+			return par->trait;
+}
+
+u64_t 
+	obj_use_count
+		(obj* par)					 {
+			if (!par)		 return 0;
+			if (!par->trait) return 0;
+
+			return par->ref;
+}

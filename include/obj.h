@@ -3,7 +3,7 @@
 
 #include "mem.h"
 
-typedef struct obj { u64_t obj[4]; } obj;
+typedef struct obj { u8_t obj[32]; } obj;
 typedef struct obj_trait                    {
     bool_t (*on_new)  (obj*, u32_t, va_list);
     bool_t (*on_clone)(obj*, obj*)          ;
@@ -12,8 +12,8 @@ typedef struct obj_trait                    {
     u64_t    size;
 }   obj_trait;
 
-obj*   obj_new      (mem_res*, obj_trait*, u32_t, ...)    ;
-obj*   obj_new_va   (mem_res*, obj_trait*, u32_t, va_list);
+obj*   obj_new      (mem*, obj_trait*, u32_t, ...)    ;
+obj*   obj_new_va   (mem*, obj_trait*, u32_t, va_list);
 
 bool_t obj_new_at   (obj*    , obj_trait*, u32_t, ...)    ;
 bool_t obj_new_at_va(obj*    , obj_trait*, u32_t, va_list);

@@ -6,10 +6,10 @@
 
 extern obj_trait* box_t;
 typedef struct    box  {
-    obj      head   ;
-    mem_res* mem_res;
-    void*    mem    ;
-    u64_t    size   ;
+    obj   head;
+    mem*  res ;
+    void* mem ;
+    u64_t size;
 }   box;
 
 bool_t box_new  (box*, u32_t, va_list);

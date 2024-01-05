@@ -12,17 +12,20 @@ obj_trait* str_t = &str_trait;
 
 bool_t
 	str_new
-		(str* par_str, u32_t par_count, va_list par)                               {
-			par_str->res = (par_count == 0) ? get_mem_res() : va_arg(par, mem_res*);
-			if (!par_str->res)             return false_t;
-            if (!par_str->res->on_new)     return false_t;
-            if (!par_str->res->on_del)     return false_t;
-            if (!par_str->res->on_mem_new) return false_t;
-            if (!par_str->res->on_mem_del) return false_t;
+		(str* par_str, u32_t par_count, va_list par)    {
+            mem* res = 0;
+            switch (par_count)                          {
+                case 0 : res = get_mem()         ; break;
+                case 1 : res = va_arg (par, mem*); break;
+                default: return false_t;
+            }
+
+			if (!res)         return false_t;
+            if (!res->on_new) return false_t;
+            if (!res->on_del) return false_t;
 			
-			par_str->mem = mem_new(par_str->res, 16);
-			if (!par_str->mem) 
-                return false_t;
+            par_str->res = res             ;
+			par_str->mem = mem_new(res, 16); if (!par_str->mem) return false_t;
 		
 			mem_set(par_str->mem, 0x00, 16);
 			par_str->front = 0 ;

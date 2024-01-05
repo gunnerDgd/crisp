@@ -13,14 +13,27 @@ obj_trait* map_t = &map_trait;
 bool_t    
     map_new
         (map* par_map, u32_t par_count, va_list par) {
-            par_map->key = va_arg(par, map_key*);
-            mem_res* res = (par_count == 1) ? get_mem_res() : va_arg(par, mem_res*);
-            if (!res)              return false_t;
-            if (!par_map->key->eq) return false_t;
-            if (!par_map->key->lt) return false_t;
-            if (!par_map->key->gt) return false_t;
+            map_key *key = 0;
+            mem     *res = 0;
+            switch (par_count)                       {
+                case 1 : key = va_arg (par, map_key*);
+                         res = get_mem()             ;
+                         break;
+                case 2 : key = va_arg (par, map_key*);
+                         res = va_arg (par, mem*)    ;
+                         break;
+                default: return false_t;
+            }
 
-            return make_at(&par_map->map, list_t) from (1, res);
+            if (!res)                                         return false_t;
+            if (!key)                                         return false_t;
+            if (!key->eq)                                     return false_t;
+            if (!key->lt)                                     return false_t;
+            if (!key->gt)                                     return false_t;
+            if (!make_at(&par_map->map, list_t) from(1, res)) return false_t;
+
+            par_map->key = key;
+            return true_t;
 }
 
 bool_t    

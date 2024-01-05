@@ -4,27 +4,17 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-bool_t cstd_mem_res_new() { return true_t; }
-void   cstd_mem_res_del() { return true_t; }
+void* cstd_mem_new(mem* par, u64_t par_size) { return malloc(par_size); }
+void  cstd_mem_del(mem* par, void* par_del)  { free(par_del); }
 
-void*  cstd_mem_new(mem_res* par, u64_t par_size) { return malloc(par_size); }
-void   cstd_mem_del(mem_res* par, void* par_del)  { free(par_del); }
-
-mem_res cstd_mem_res	         = {
-	.on_new		= &cstd_mem_res_new,
-	.on_del		= &cstd_mem_res_del,
-	.on_mem_new = &cstd_mem_new	   ,
-	.on_mem_del = &cstd_mem_del
+mem cstd_mem		     = {
+	.on_new = &cstd_mem_new,
+	.on_del = &cstd_mem_del
 };
 
-int main()						 {
-	mem_res_new(&cstd_mem_res, 0);
-	set_mem_res(&cstd_mem_res)   ;
-
-	str str;
-	if(!make_at(&str, str_t) from(0)) {
-		return false_t;
-	}
+int main()			  {
+	set_mem(&cstd_mem);
+	str str			  ; if (!make_at(&str, str_t) from(0)) return false_t;
 
 	str_push_back_cstr(&str, "Hello ", 6);
 	str_push_back_cstr(&str, "World" , 5);

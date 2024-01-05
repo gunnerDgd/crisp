@@ -7,9 +7,10 @@
 #include "type_atom.h"
 
 typedef struct obj         {
-    mem_res          *res  ;
     atom_u64_t        ref  ;
+    mem              *mem  ;
     struct obj_trait *trait;
+    void             *data ;
 }   obj;
 
 typedef struct obj_trait                    {
@@ -20,8 +21,8 @@ typedef struct obj_trait                    {
     u64_t    size;
 }   obj_trait;
 
-obj*   obj_new      (mem_res*, obj_trait*, u32_t, ...)    ;
-obj*   obj_new_va   (mem_res*, obj_trait*, u32_t, va_list);
+obj*   obj_new      (mem*, obj_trait*, u32_t, ...)    ;
+obj*   obj_new_va   (mem*, obj_trait*, u32_t, va_list);
 
 bool_t obj_new_at   (obj*    , obj_trait*, u32_t, ...)    ;
 bool_t obj_new_at_va(obj*    , obj_trait*, u32_t, va_list);
