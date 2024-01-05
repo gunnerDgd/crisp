@@ -58,6 +58,7 @@ add_library (build STATIC
 add_library (build-include STATIC
     include/atom.h
     include/box.h
+    include/bit.h
     include/cpu.h
     include/endian.h
     include/list.h

@@ -6,7 +6,7 @@
 
 #define shl(par, par_shift) (par << par_shift)
 #define shr(par, par_shift) (par >> par_shift)
-#define mask(par)           ((shl(1, par) - 1)
+#define mask(par)           ((shl(1, par) - 1))
 
 void  btc16     (u16_t*, u16_t);
 void  btc32     (u32_t*, u32_t);
