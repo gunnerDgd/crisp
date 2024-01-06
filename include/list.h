@@ -4,7 +4,7 @@
 #include "obj.h"
 
 extern obj_trait  *list_t   ;
-typedef struct     list     { u64_t handle[16]; } list;
+typedef struct     list     { u8_t handle[256]; } list;
 typedef void*      list_elem;
 
 list_elem list_push_back (list*, obj*)           ;
