@@ -19,10 +19,12 @@ bool_t
 
             if (!make_at(&par_sched->task, task_t) from (0)) return false_t;
             if (!make_at(&par_sched->run , list_t) from (0)) return false_t;
-            if (!sp_len)                                     return false_t;
-            if (!sp)                                         return false_t;
-            if (!sp->on_new)                                 return false_t;
-            if (!sp->on_del)                                 return false_t;
+            if (!sp_len)     sp_len = 1 MB ;
+            if (!sp)         sp = get_mem();
+            if (!sp)         return false_t;
+            if (!sp->on_new) return false_t;
+            if (!sp->on_del) return false_t;
+
             par_sched->sp_len = sp_len;
             par_sched->sp     = sp    ;
             par_sched->cur    = 0     ;

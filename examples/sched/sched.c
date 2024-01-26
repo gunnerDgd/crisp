@@ -19,14 +19,23 @@ void* test(task* par)                 {
     return "Hello World";
 }
 
+void* test2(task* par)                  {
+    printf("Goodbye\n"); task_yield(par);
+    printf("world\n")  ; task_yield(par);
+    return "Hello World";
+}
+
 int main()                {
     set_mem(&cstd_mem_res);
-    sched* run = make (sched_t) from (2, 1 MB, &cstd_mem_res);
+    sched* run = make (sched_t) from (0);
     task*  res = 0;
 
-    sched_dispatch (run, test, 0);
+    sched_dispatch (run, test , 0);
+    sched_dispatch (run, test2, 0);
     res = sched_run(run);
     res = sched_run(run);
     res = sched_run(run);
-    printf("%s\n", task_ret(res));
+    res = sched_run(run);
+    res = sched_run(run);
+    res = sched_run(run);
 }

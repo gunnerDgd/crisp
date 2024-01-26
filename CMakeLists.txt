@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.10)
-project(build)
+project(crisp)
 if     (PRESET_ARCH_X86_64)
     add_compile_definitions(PRESET_ARCH_X86_64)
 endif()
@@ -11,14 +11,14 @@ if (PRESET_ARCH_X86_64)
 
     if (WIN32)
         add_library                           (
-            build-arch-asm STATIC 
+            crisp-arch-asm STATIC 
             src/arch/x86_64/asm/atomic_msvc.asm
             src/arch/x86_64/asm/cpu_msvc.asm
             src/arch/x86_64/asm/bit_msvc.asm
         )
 
-        set_target_properties(build-arch-asm PROPERTIES NASM_OBJ_FORMAT win64)
-        add_library          (build-arch     
+        set_target_properties(crisp-arch-asm PROPERTIES NASM_OBJ_FORMAT win64)
+        add_library          (crisp-arch     
             STATIC     
             src/arch/x86_64/cpu.h 
             src/arch/x86_64/cpu.c
@@ -26,13 +26,13 @@ if (PRESET_ARCH_X86_64)
             src/arch/x86_64/atom.c
         )
     elseif (UNIX AND NOT APPLE)
-        add_library          (build-arch-asm STATIC     src/arch/x86_64/asm/atomic_gcc.asm src/arch/x86_64/asm/cpu_gcc.asm)
-        set_target_properties(build-arch-asm PROPERTIES NASM_OBJ_FORMAT win64)
-        add_library          (build-arch     STATIC     src/arch/x86_64/cpu.h src/arch/x86_64/cpu.c)
+        add_library          (build-crisp-asm STATIC     src/arch/x86_64/asm/atomic_gcc.asm src/arch/x86_64/asm/cpu_gcc.asm)
+        set_target_properties(build-crisp-asm PROPERTIES NASM_OBJ_FORMAT win64)
+        add_library          (build-crisp     STATIC     src/arch/x86_64/cpu.h src/arch/x86_64/cpu.c)
     endif()
 endif()
 
-add_library (build STATIC
+add_library (crisp STATIC
     src/type.h
     src/type_atom.h
     src/atom.h
@@ -73,7 +73,7 @@ add_library (build STATIC
     src/endian.c
 )
 
-add_library (build-include STATIC
+add_library (crisp-include STATIC
     include/atom.h
     include/box.h
     include/bit.h
@@ -93,7 +93,7 @@ add_library (build-include STATIC
     include/type.h
 )
 
-set_target_properties(build-include PROPERTIES LINKER_LANGUAGE C)
+set_target_properties(crisp-include PROPERTIES LINKER_LANGUAGE C)
 
 if(PRESET_BUILD_EXAMPLES)
     add_executable            (examples-mem-mem examples/mem/mem.c)
