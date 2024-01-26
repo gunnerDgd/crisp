@@ -40,9 +40,9 @@ int main()			  {
 	for(u64_t i = 0 ; i < 3 ; ++i)
 		list_push_front(list, make(&test_t) from(1, i));
 
-	list_for(list, it)								{
-		printf("%d\n", ((test*)list_get(it))->value);
-		del   (list_get(it));
+	list_for(list, node)							{
+		printf("%d\n", value_as(node, test*)->value);
+		del   (value(node));
 	}
 
 	del(list);

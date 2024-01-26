@@ -12,20 +12,13 @@ obj_trait* map_t = &map_trait;
 
 bool_t    
     map_new
-        (map* par_map, u32_t par_count, va_list par) {
-            map_key *key = 0;
-            mem     *res = 0;
-            switch (par_count)                       {
-                case 1 : key = va_arg (par, map_key*);
-                         res = get_mem()             ;
-                         break;
-                case 2 : key = va_arg (par, map_key*);
-                         res = va_arg (par, mem*)    ;
-                         break;
-                default: return false_t;
-            }
+        (map* par_map, u32_t par_count, va_list par)                        {
+            map_key *key = 0; if (par_count > 0) key = va_arg(par, map_key*);
+            mem     *res = 0; if (par_count > 1) res = va_arg(par, mem*)    ;
 
-            if (!res)                                         return false_t;
+            if (!res) res = get_mem();
+            if (!res) return false_t ;
+
             if (!key)                                         return false_t;
             if (!key->eq)                                     return false_t;
             if (!key->lt)                                     return false_t;
@@ -53,17 +46,23 @@ void
             del (&par->map);
 }
 
-map_elem*
+node*
     map_push
         (map* par, obj* par_push)               {
             if (!par)                   return 0;
             if (trait_of(par) != map_t) return 0;
 
-            list_for (&par->map, push_it)    {
-                obj *push = list_get(push_it);
-                if (!push)                        continue                                                 ;
-                if (par->key->lt(push, par_push)) return list_push(&par->map, par_push, list_prev(push_it));
-                if (par->key->eq(push, par_push)) return 0                                                 ;
+            list_for (&par->map, push)                       {
+                if (!push)                           continue;
+                if (par->key->eq(push, value(push))) return 0;
+                if (par->key->gt(push, value(push)))            {
+                    node *cur = make (node_t) from (1, par_push);
+                    if (!cur)                    return 0;
+                    if (trait_of(cur) != node_t) return 0;
+
+                    return next_as(par_push, push);
+                }
+                
             }
 
             return list_push_back(&par->map, par_push);
@@ -71,25 +70,25 @@ map_elem*
 
 void      
     map_pop
-        (map* par, map_elem* par_pop)         {
+        (map* par, obj* par_pop)              {
             if (!par)                   return;
             if (trait_of(par) != map_t) return;
 
-            list_pop(&par->map, par_pop);
+            node *pop = map_find(par, par_pop) ;
+            if (!pop)                    return;
+            if (trait_of(pop) != node_t) return;
+            del(pop);
 }
 
-map_elem*
+node*
     map_find
         (map* par, obj* par_key)                {
             if (!par)                   return 0;
             if (trait_of(par) != map_t) return 0;
 
-            list_for (&par->map, find_it)                 {
-                obj *find = list_get(find_it)             ;
-                if (!find)                        continue;
-                if (!par->key->eq(find, par_key)) continue;
-
-                return find_it;
+            list_for (&par->map, find)                           {
+                if (!par->key->eq(value(find), par_key)) continue;
+                return find;
             }
 
             return map_end(par);
@@ -100,47 +99,21 @@ bool_t
         (map* par)                                    {
             if (!par)                   return false_t;
             if (trait_of(par) != map_t) return false_t;
-
             return list_empty(&par->map);
 }
 
-map_elem* 
+node*
     map_begin
         (map* par)                              {
             if (!par)                   return 0;
             if (trait_of(par) != map_t) return 0;
-
             return list_begin(&par->map);
 }
 
-map_elem* 
+node*
     map_end
         (map* par)                              {
             if (!par)                   return 0;
             if (trait_of(par) != map_t) return 0;
-
             return list_end(&par->map);
-}
-
-map_elem*
-    map_next
-        (map_elem* par)                         {
-            if (!par)                   return 0;
-            if (trait_of(par) != map_t) return 0;
-
-            return list_next(par);
-}
-map_elem*
-    map_prev
-        (map_elem* par)                         {
-            if (!par)                   return 0;
-            if (trait_of(par) != map_t) return 0;
-
-            return list_prev(par);
-}
-
-obj*
-    map_get
-        (map_elem* par)         {
-            return list_get(par);
 }

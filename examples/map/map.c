@@ -41,11 +41,11 @@ int main()			  {
 	set_mem(&cstd_mem);
 
 	map* map   = make (map_t)   from (1, &ops);
-	obj* push1 = make (&test_t) from (1, 0)   ; map_elem elem1 = map_push(map, push1);
-	obj* push2 = make (&test_t) from (1, 1)   ; map_elem elem2 = map_push(map, push2);
+	obj* push1 = make (&test_t) from (1, 0)   ; node* elem1 = map_push(map, push1);
+	obj* push2 = make (&test_t) from (1, 1)   ; node* elem2 = map_push(map, push2);
 	obj* key1  = make (&test_t) from (1, 0)   ;
 	obj* key2  = make (&test_t) from (1, 2)   ;
 
-	obj* key_val1 = map_get(map_find(map, key1));
-	obj* key_val2 = map_get(map_find(map, key2));
+	obj* key_val1 = value(map_find(map, key1));
+	obj* key_val2 = value(map_find(map, key2));
 }

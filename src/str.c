@@ -12,17 +12,12 @@ obj_trait* str_t = &str_trait;
 
 bool_t
 	str_new
-		(str* par_str, u32_t par_count, va_list par)    {
-            mem* res = 0;
-            switch (par_count)                          {
-                case 0 : res = get_mem()         ; break;
-                case 1 : res = va_arg (par, mem*); break;
-                default: return false_t;
-            }
-
-			if (!res)         return false_t;
-            if (!res->on_new) return false_t;
-            if (!res->on_del) return false_t;
+		(str* par_str, u32_t par_count, va_list par)                {
+            mem *res = 0; if (par_count > 0) res = va_arg(par, mem*);
+			if (!res)         res = get_mem();
+			if (!res)         return false_t ;
+            if (!res->on_new) return false_t ;
+            if (!res->on_del) return false_t ;
 			
             par_str->res = res             ;
 			par_str->mem = mem_new(res, 16); if (!par_str->mem) return false_t;
@@ -70,7 +65,7 @@ void
             if (!par)                   return;
             if (trait_of(par) != str_t) return;
 
-            u64_t rsv_size = par->size << 1		        ; if (rsv_size < par_size) rsv_size = par_size + par->size;
+            u64_t rsv_size = shl(par->size, 1)          ; if (rsv_size < par_size) rsv_size = par_size + par->size;
 			u8_t* rsv	   = mem_new(par->res, rsv_size);
 			if  (!rsv) return;
 
@@ -88,7 +83,7 @@ void
             if (!par)                   return;
             if (trait_of(par) != str_t) return;
 
-            u64_t rsv_size = par->size << 1			    ; if (rsv_size < par_size) rsv_size = par_size + par->size;
+            u64_t rsv_size = shl(par->size, 1)          ; if (rsv_size < par_size) rsv_size = par_size + par->size;
 			u8_t *rsv	   = mem_new(par->res, rsv_size); 
             if  (!rsv) return;
 

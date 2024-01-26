@@ -18,10 +18,30 @@ atom_u16_t lock_inc16(atom_u16_t *);
 atom_u32_t lock_inc32(atom_u32_t *);
 atom_u64_t lock_inc64(atom_u64_t *);
 
+atom_u8_t  cas_inc8 (atom_u8_t  *);
+atom_u16_t cas_inc16(atom_u16_t *);
+atom_u32_t cas_inc32(atom_u32_t *);
+atom_u64_t cas_inc64(atom_u64_t *);
+
+atom_u8_t  lock_cas_inc8 (atom_u8_t  *);
+atom_u16_t lock_cas_inc16(atom_u16_t *);
+atom_u32_t lock_cas_inc32(atom_u32_t *);
+atom_u64_t lock_cas_inc64(atom_u64_t *);
+
 atom_u8_t  lock_dec8 (atom_u8_t *);
 atom_u16_t lock_dec16(atom_u16_t*);
 atom_u32_t lock_dec32(atom_u32_t*);
 atom_u64_t lock_dec64(atom_u64_t*);
+
+atom_u8_t  cas_dec8 (atom_u8_t *);
+atom_u16_t cas_dec16(atom_u16_t*);
+atom_u32_t cas_dec32(atom_u32_t*);
+atom_u64_t cas_dec64(atom_u64_t*);
+
+atom_u8_t  lock_cas_dec8 (atom_u8_t  *);
+atom_u16_t lock_cas_dec16(atom_u16_t *);
+atom_u32_t lock_cas_dec32(atom_u32_t *);
+atom_u64_t lock_cas_dec64(atom_u64_t *);
 
 atom_u8_t  lock_cas8 (atom_u8_t *, atom_u8_t , atom_u8_t) ;
 atom_u16_t lock_cas16(atom_u16_t*, atom_u16_t, atom_u16_t);
@@ -33,7 +53,7 @@ atom_u16_t lock_xchg16(atom_u16_t*, atom_u16_t);
 atom_u32_t lock_xchg32(atom_u32_t*, atom_u32_t);
 atom_u64_t lock_xchg64(atom_u64_t*, atom_u64_t);
 
-atom_u8_t  cas8 (atom_u8_t *, atom_u8_t , atom_u8_t);
+atom_u8_t  cas8 (atom_u8_t *, atom_u8_t , atom_u8_t) ;
 atom_u16_t cas16(atom_u16_t*, atom_u16_t, atom_u16_t);
 atom_u32_t cas32(atom_u32_t*, atom_u32_t, atom_u32_t);
 atom_u64_t cas64(atom_u64_t*, atom_u64_t, atom_u64_t);

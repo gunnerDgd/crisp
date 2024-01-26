@@ -2,6 +2,7 @@
 #define __STR_H__
 
 #include "obj.h"
+#include "bit.h"
 
 extern struct obj_trait* str_t;
 typedef struct	         str  {

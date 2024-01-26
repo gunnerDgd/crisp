@@ -18,7 +18,13 @@ if (PRESET_ARCH_X86_64)
         )
 
         set_target_properties(build-arch-asm PROPERTIES NASM_OBJ_FORMAT win64)
-        add_library          (build-arch     STATIC     src/arch/x86_64/cpu.h src/arch/x86_64/cpu.c)
+        add_library          (build-arch     
+            STATIC     
+            src/arch/x86_64/cpu.h 
+            src/arch/x86_64/cpu.c
+
+            src/arch/x86_64/atom.c
+        )
     elseif (UNIX AND NOT APPLE)
         add_library          (build-arch-asm STATIC     src/arch/x86_64/asm/atomic_gcc.asm src/arch/x86_64/asm/cpu_gcc.asm)
         set_target_properties(build-arch-asm PROPERTIES NASM_OBJ_FORMAT win64)
@@ -32,9 +38,18 @@ add_library (build STATIC
     src/atom.h
     src/cpu.h
     src/bit.h
+
+    src/task.h
+    src/task.c
+
+    src/sched.h
+    src/sched.c
         
     src/mem.h
     src/mem.c
+
+    src/node.h
+    src/node.c
 
     src/str.h
     src/str.c
@@ -63,8 +78,11 @@ add_library (build-include STATIC
     include/endian.h
     include/list.h
     include/mem.h
+    include/node.h
     include/obj.h
+    include/sched.h
     include/str.h
+    include/task.h
     include/map.h
 
     include/type_atom.h
@@ -94,7 +112,7 @@ if(PRESET_BUILD_EXAMPLES)
     target_link_libraries     (examples-map-map build build-arch build-arch-asm)
     target_include_directories(examples-map-map PRIVATE include)
 
-    add_executable            (examples-cpu-cpu examples/cpu/cpu.c)
-    target_link_libraries     (examples-cpu-cpu build build-arch build-arch-asm)
-    target_include_directories(examples-cpu-cpu PRIVATE include)
+    add_executable            (examples-sched-sched examples/sched/sched.c)
+    target_link_libraries     (examples-sched-sched build build-arch build-arch-asm)
+    target_include_directories(examples-sched-sched PRIVATE include)
 endif()
