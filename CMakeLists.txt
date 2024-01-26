@@ -66,6 +66,9 @@ add_library (build STATIC
     src/map.h
     src/map.c
 
+    src/set.h
+    src/set.c
+
     src/endian.h
     src/endian.c
 )
@@ -84,6 +87,7 @@ add_library (build-include STATIC
     include/str.h
     include/task.h
     include/map.h
+    include/set.h
 
     include/type_atom.h
     include/type.h
@@ -115,4 +119,8 @@ if(PRESET_BUILD_EXAMPLES)
     add_executable            (examples-sched-sched examples/sched/sched.c)
     target_link_libraries     (examples-sched-sched build build-arch build-arch-asm)
     target_include_directories(examples-sched-sched PRIVATE include)
+
+    add_executable            (examples-set-set examples/set/set.c)
+    target_link_libraries     (examples-set-set build build-arch build-arch-asm)
+    target_include_directories(examples-set-set PRIVATE include)
 endif()
