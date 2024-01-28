@@ -51,7 +51,7 @@ void
             del (&par->run) ; 
 }
 
-void         
+fut*
     sched_dispatch
         (sched* par, void*(*par_func)(task*, void*), void* par_arg) {
             if (!par_func)                return;
@@ -73,6 +73,7 @@ void
 
             list_push_back(&par->run, ret);
             if (!par->cur)  par->cur = list_begin(&par->run);
+            return task_fut(ret);
 }
 
 bool_t
@@ -83,7 +84,7 @@ bool_t
             return list_empty(&par->run);
 }
 
-task*
+fut*
     sched_run
         (sched* par)                              {
             if (!par)                     return 0;
@@ -92,16 +93,17 @@ task*
 
             node *run_node = par->cur       ;
             task *run      = value(run_node);
-            task *ret      = 0              ;
+            fut  *ret      = 0              ;
 
             if (!run)                     return 0;
             if (trait_of(run) != task_t)  return 0;
             par->cur = next(run_node);
 
             task_switch(&par->task, run);
-            if (task_poll(run) == task_none) {
-                del(run_node);
-                ret = run;
+            if (run->stat == fut_ready) {
+                del(run_node) ;
+                del(run)      ;
+                ret = run->fut;
             }
 
             if (par->cur == list_end(&par->run)) par->cur = list_begin(&par->run);

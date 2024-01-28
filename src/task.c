@@ -7,8 +7,8 @@ void
             if (!par)                    return;
             if (trait_of(par) != task_t) return;
 
-            par->stat = task_run ; par->ret = par->func(par, par->arg);
-            par->stat = task_none;
+            par->ret  = par->func(par, par->arg);
+            par->stat = fut_ready;
             task_yield(par);
 }
 
@@ -22,6 +22,28 @@ obj_trait task_trait     = {
 
 obj_trait *task_t = &task_trait;
 
+
+u64_t  
+    task_do_poll
+        (task* par)                                    {
+            if (!par)                    return fut_err;
+            if (trait_of(par) != task_t) return fut_err;
+            return par->stat;
+}
+
+void* 
+    task_do_ret
+        (task* par)                              {
+            if (!par)                    return 0;
+            if (trait_of(par) != task_t) return 0;
+            return par->ret;
+}
+
+fut_ops task_fut_ops   = {
+    .poll = &task_do_poll,
+    .ret  = &task_do_ret 
+};
+
 bool_t
     task_new
         (task* par_task, u32_t par_count, va_list par)                     {
@@ -32,7 +54,7 @@ bool_t
 
             if (!par_count)                                                {
                 if (!make_at(&par_task->cpu, cpu_t) from(0)) return false_t;
-                par_task->stat = task_run;
+                par_task->stat = fut_pend;
                 return true_t;
             }
 
@@ -44,12 +66,13 @@ bool_t
             cpu_stack(&par_task->cpu, stack, len);
             cpu_entry(&par_task->cpu, task_main) ;
             cpu_arg  (&par_task->cpu, par_task)  ;
-            par_task->stat   = task_none;
-            par_task->func   = func     ;
-            par_task->arg    = arg      ;
+            par_task->fut    = make (fut_t) from (2, task_fut_ops, par_task);
+            par_task->stat   = fut_pend;
+            par_task->func   = func    ;
+            par_task->arg    = arg     ;
 
-            par_task->sp_len = len      ;
-            par_task->sp     = stack    ;
+            par_task->sp_len = len     ;
+            par_task->sp     = stack   ;
             return true_t;
 }
 
@@ -78,11 +101,6 @@ void
 
             par_task->pend = par; cpu_switch(&par->cpu, &par_task->cpu);
             par_task->pend = 0  ;
-            if (par_task->stat == task_none)                             {
-                cpu_stack(&par_task->cpu, par_task->sp, par_task->sp_len);
-                cpu_entry(&par_task->cpu, task_main) ;
-                cpu_arg  (&par_task->cpu, par_task)  ;
-            }
 }
 
 void
@@ -91,25 +109,15 @@ void
             if (!par)                          return;
             if (trait_of(par)       != task_t) return;
             if (trait_of(par->pend) != task_t) return;
+            if (par->stat == fut_err)          return;
 
-            if (par->stat == task_pend)        return               ;
-            if (par->stat != task_none)        par->stat = task_pend;
             cpu_switch(&par->cpu, &par->pend->cpu);
-            par->stat = task_run;
 }
 
-u64_t  
-    task_poll
-        (task* par)                                     {
-            if (!par)                    return task_err;
-            if (trait_of(par) != task_t) return task_err;
-            return par->stat;
-}
-
-void* 
-    task_ret
+fut*
+    task_fut
         (task* par)                              {
             if (!par)                    return 0;
             if (trait_of(par) != task_t) return 0;
-            return par->ret;
+            return par->fut;
 }

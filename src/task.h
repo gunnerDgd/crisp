@@ -2,11 +2,8 @@
 #define __TASK_H__
 
 #include "cpu.h"
+#include "fut.h"
 
-#define           task_none 0
-#define           task_pend 1
-#define           task_run  2
-#define           task_err  3
 extern obj_trait* task_t;
 typedef struct    task  {
     obj          head;
@@ -17,6 +14,7 @@ typedef struct    task  {
     void        *arg ;
     void        *ret ;
     
+    fut         *fut   ;
     cpu          cpu   ;
     u64_t        sp_len;
     u64_t        sp    ;
@@ -28,7 +26,6 @@ void   task_del   (task*)                ;
 
 void   task_switch(task*, task*);
 void   task_yield (task*)       ;
-u64_t  task_poll  (task*)       ;
-void*  task_ret   (task*)       ;
+fut*   task_fut   (task*)       ;
 
 #endif

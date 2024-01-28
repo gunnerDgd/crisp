@@ -3,6 +3,7 @@
 
 #include "list.h"
 #include "task.h"
+#include "fut.h"
 
 extern obj_trait *sched_t;
 typedef struct    sched  {
@@ -18,8 +19,8 @@ bool_t sched_new     (sched*, u32_t, va_list)               ;
 bool_t sched_clone   (sched*, sched*)                       ;
 void   sched_del     (sched*)                               ;
 
-void   sched_dispatch(sched*, void*(*)(task*, void*), void*);
+fut*   sched_dispatch(sched*, void*(*)(task*, void*), void*);
 bool_t sched_idle    (sched*)                               ;
-task*  sched_run     (sched*)                               ;
+fut*   sched_run     (sched*)                               ;
 
 #endif

@@ -44,6 +44,9 @@ add_library (crisp STATIC
 
     src/sched.h
     src/sched.c
+
+    src/fut.h
+    src/fut.c
         
     src/mem.h
     src/mem.c
