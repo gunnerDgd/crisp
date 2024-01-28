@@ -1,5 +1,15 @@
 #include "fut.h"
 
+obj_trait fut_trait     = {
+    .on_new   = &fut_new  ,
+    .on_clone = &fut_clone,
+    .on_ref   = 0         ,
+    .on_del   = &fut_del  ,
+    .size     = sizeof(fut)
+};
+
+obj_trait* fut_t = &fut_trait;
+
 bool_t
     fut_new
         (fut* par_fut, u32_t par_count, va_list par)                        {

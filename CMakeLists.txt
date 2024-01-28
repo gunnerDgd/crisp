@@ -87,6 +87,7 @@ add_library (crisp-include STATIC
     include/node.h
     include/obj.h
     include/sched.h
+    include/fut.h
     include/str.h
     include/task.h
     include/map.h
