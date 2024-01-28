@@ -14,7 +14,6 @@ typedef struct    task  {
     void        *arg ;
     void        *ret ;
     
-    fut         *fut   ;
     cpu          cpu   ;
     u64_t        sp_len;
     u64_t        sp    ;

@@ -65,7 +65,7 @@ fut*
                 par_func  ,
                 par_arg   ,
                 sp        ,
-                sp_len - 16
+                sp_len - 24
             );
 
             if (!ret)                    return;
@@ -84,29 +84,28 @@ bool_t
             return list_empty(&par->run);
 }
 
-fut*
+void
     sched_run
-        (sched* par)                              {
-            if (!par)                     return 0;
-            if (trait_of(par) != sched_t) return 0;
-            if (!par->cur)                return 0;
+        (sched* par)                            {
+            if (!par)                     return;
+            if (trait_of(par) != sched_t) return;
+            if (!par->cur)                return;
 
             node *run_node = par->cur       ;
             task *run      = value(run_node);
-            fut  *ret      = 0              ;
-
-            if (!run)                     return 0;
-            if (trait_of(run) != task_t)  return 0;
+            if (!run_node)                    return 0;
+            if (!run)                         return 0;
+            if (trait_of(run_node) != node_t) return 0;
+            if (trait_of(run)      != task_t) return 0;
             par->cur = next(run_node);
 
             task_switch(&par->task, run);
-            if (run->stat == fut_ready) {
-                del(run_node) ;
-                del(run)      ;
-                ret = run->fut;
+            if (run->stat == fut_ready)  {
+                mem_del(par->sp, run->sp);
+                del    (run_node);
+                del    (run)     ;
             }
 
             if (par->cur == list_end(&par->run)) par->cur = list_begin(&par->run);
             if (par->cur == list_end(&par->run)) par->cur = 0;
-            return ret;
 }

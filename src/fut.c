@@ -45,24 +45,17 @@ u64_t
             if (trait_of(par) != fut_t) return fut_err;
             
             par->stat = par->ops->poll(par->fut);
-            if (par->stat == fut_ready) {
-                fut_ret(par);
-                par->fut = 0;
-            }
+            if (par->stat == fut_ready)
+                par->ret = par->ops->ret(par->fut);
 
             return par->stat;
 }
 
-void* 
+void*
     fut_ret
-        (fut* par)                                     {
-            if (!par)                   return 0       ;
-            if (trait_of(par) != fut_t) return 0       ;
-            if (par->stat == fut_ready) return par->ret;
-            
-            par->ret  = par->ops->ret(par->fut);
-            par->stat = fut_ready              ;
-            
-            del   (par->fut);
-            return par->ret;
+        (fut* par)                                         {
+            if (!par)                       return 0       ;
+            if (trait_of(par) != fut_t)     return 0       ;
+            if (fut_poll(par) == fut_ready) return par->ret;
+            return 0;
 }

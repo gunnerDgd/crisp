@@ -31,16 +31,16 @@ bool_t
 
 bool_t
     list_clone
-        (list* par, list* par_clone)                                 {
-            if (!par_clone->mem)                       return false_t;
-            if (!par_clone->mem->on_new)               return false_t;
-            if (!par_clone->mem->on_del)               return false_t;
+        (list* par, list* par_clone)                                    {
+            if (!par_clone->mem)                          return false_t;
+            if (!par_clone->mem->on_new)                  return false_t;
+            if (!par_clone->mem->on_del)                  return false_t;
 
-            if (!make_at(&par->begin, node_t) from(0)) return false_t;
-            if (!make_at(&par->end  , node_t) from(0)) return false_t;
+            if (!make_at(&par->begin, node_t) from(0))    return false_t;
+            if (!make_at(&par->end  , node_t) from(0))    return false_t;
 
-            if (!next(&par->begin, &par_clone->end))   return false_t;
-            if (!prev(&par->end  , &par_clone->begin)) return false_t;
+            if (!next_as(&par->begin, &par_clone->end))   return false_t;
+            if (!prev_as(&par->end  , &par_clone->begin)) return false_t;
 
             par->mem = par_clone->mem;
             list_for(par_clone, push)                            {
@@ -53,8 +53,8 @@ bool_t
 
 void
     list_del
-        (list* par)                                  {
-            while(next(&par->begin, 0) != &par->end) {
+        (list* par)                               {
+            while(next(&par->begin) != &par->end) {
                 list_pop_back(par);
             }
 }

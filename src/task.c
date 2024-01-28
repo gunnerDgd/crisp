@@ -66,7 +66,6 @@ bool_t
             cpu_stack(&par_task->cpu, stack, len);
             cpu_entry(&par_task->cpu, task_main) ;
             cpu_arg  (&par_task->cpu, par_task)  ;
-            par_task->fut    = make (fut_t) from (2, task_fut_ops, par_task);
             par_task->stat   = fut_pend;
             par_task->func   = func    ;
             par_task->arg    = arg     ;
@@ -119,5 +118,9 @@ fut*
         (task* par)                              {
             if (!par)                    return 0;
             if (trait_of(par) != task_t) return 0;
-            return par->fut;
+            return make (fut_t) from (
+                2            ,
+                &task_fut_ops,
+                par
+            );
 }

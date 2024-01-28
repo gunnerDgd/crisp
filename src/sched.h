@@ -21,6 +21,6 @@ void   sched_del     (sched*)                               ;
 
 fut*   sched_dispatch(sched*, void*(*)(task*, void*), void*);
 bool_t sched_idle    (sched*)                               ;
-fut*   sched_run     (sched*)                               ;
+void   sched_run     (sched*)                               ;
 
 #endif
