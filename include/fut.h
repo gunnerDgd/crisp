@@ -3,6 +3,9 @@
 
 #include "obj.h"
 
+#define           fut_ready 0
+#define           fut_pend  1
+#define           fut_err   2
 extern obj_trait *fut_t;
 typedef struct    fut     { u8_t fut[128]; } fut;
 typedef struct    fut_ops {
