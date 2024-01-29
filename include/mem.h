@@ -25,4 +25,9 @@ bool_t mem_lt  (void*, void*, u64_t)       ;
 #define MB *(1ULL << 20ULL)
 #define GB *(1ULL << 30ULL)
 
+#ifndef __cplusplus
+#define new(par)  mem_new(0, sizeof(par))
+#define drop(par) mem_del(0, par)
+#endif
+
 #endif
