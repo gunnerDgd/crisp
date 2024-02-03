@@ -77,5 +77,9 @@ void
 		(cpu* par, void* par_arg)			  {
 			if (!par)					return;
 			if (trait_of(par) != cpu_t) return;
+#ifdef PRESET_WIN32
 			par->reg.rcx = par_arg;
+#elif PRESET_LINUX
+            par->reg.rdi = par_arg;
+#endif
 }

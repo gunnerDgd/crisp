@@ -5,7 +5,7 @@
 
 typedef struct mem                      {
     void* (*on_new) (struct mem*, u64_t);
-    void  (*on_del) (struct mem*)       ;
+    void  (*on_del) (struct mem*, void*);
 }   mem;
 
 mem*     get_mem ()                          ;

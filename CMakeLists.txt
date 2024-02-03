@@ -18,18 +18,23 @@ if (PRESET_ARCH_X86_64)
         )
 
         set_target_properties(crisp-arch-asm PROPERTIES NASM_OBJ_FORMAT win64)
-        add_library          (crisp-arch     
-            STATIC     
-            src/arch/x86_64/cpu.h 
-            src/arch/x86_64/cpu.c
-
-            src/arch/x86_64/atom.c
-        )
     elseif (UNIX AND NOT APPLE)
-        add_library          (build-crisp-asm STATIC     src/arch/x86_64/asm/atomic_gcc.asm src/arch/x86_64/asm/cpu_gcc.asm)
-        set_target_properties(build-crisp-asm PROPERTIES NASM_OBJ_FORMAT win64)
-        add_library          (build-crisp     STATIC     src/arch/x86_64/cpu.h src/arch/x86_64/cpu.c)
+        add_library                               (
+                crisp-arch-asm STATIC
+                src/arch/x86_64/asm/atomic_gcc.asm
+                src/arch/x86_64/asm/cpu_gcc.asm
+                src/arch/x86_64/asm/bit_gcc.asm
+        )
+
+        set_target_properties(crisp-arch-asm PROPERTIES NASM_OBJ_FORMAT elf64)
     endif()
+    add_library                  (
+            crisp-arch
+            STATIC
+            src/arch/x86_64/cpu.h
+            src/arch/x86_64/cpu.c
+            src/arch/x86_64/atom.c
+    )
 endif()
 
 add_library (crisp STATIC
