@@ -6,26 +6,30 @@
 #include "type.h"
 #include "type_atom.h"
 
-typedef struct obj         {
-    atom_u64_t        ref  ;
-    mem              *mem  ;
-    struct obj_trait *trait;
-    void             *data ;
-}   obj;
+#include "ops.h"
 
-typedef struct obj_trait                    {
-    bool_t (*on_new)  (obj*, u32_t, va_list);
-    bool_t (*on_clone)(obj*, obj*)          ;
-    bool_t (*on_ref)  (obj*)                ;
-    void   (*on_del)  (obj*)                ;
+struct obj;
+typedef struct obj_trait                           {
+    bool_t (*on_new)  (struct obj*, u32_t, va_list);
+    bool_t (*on_clone)(struct obj*, struct obj*)   ;
+    bool_t (*on_ref)  (struct obj*)                ;
+    void   (*on_del)  (struct obj*)                ;
     u64_t    size;
+    obj_ops *ops ;
 }   obj_trait;
+
+typedef struct obj  {
+    obj_trait *trait;
+    atom_u64_t ref  ;
+    mem       *mem  ;
+    void      *data ;
+}   obj;
 
 obj*   obj_new      (mem*, obj_trait*, u32_t, ...)    ;
 obj*   obj_new_va   (mem*, obj_trait*, u32_t, va_list);
 
-bool_t obj_new_at   (obj*    , obj_trait*, u32_t, ...)    ;
-bool_t obj_new_at_va(obj*    , obj_trait*, u32_t, va_list);
+bool_t obj_new_at   (obj*, obj_trait*, u32_t, ...)    ;
+bool_t obj_new_at_va(obj*, obj_trait*, u32_t, va_list);
 
 obj*   obj_clone    (obj*)      ;
 bool_t obj_clone_at (obj*, obj*);
