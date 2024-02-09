@@ -19,32 +19,32 @@ bool_t test_clone(test* par    , test* par_clone)			   { par->value     = par_cl
 bool_t test_ref  (test* par)								   { return true_t; }
 void   test_del  (test* par)								   { }
 
-obj_trait test_t		 = {
-	.on_new	  = &test_new  ,
-	.on_clone = &test_clone,
-	.on_ref   = &test_ref  ,
-	.on_del	  = &test_del  ,
-	.size	  = sizeof(test)
-};
+ord_t test_ord(test* par, test* par_cmp)		   {
+	if (par->value == par_cmp->value) return ord_eq;
+	if (par->value <  par_cmp->value) return ord_lt;
+	if (par->value >  par_cmp->value) return ord_gt;
+}
 
-bool_t map_eq (test* par, test* par_cmp) { return par->value == par_cmp->value; }
-bool_t map_lt (test* par, test* par_cmp) { return par->value <  par_cmp->value; }
-bool_t map_gt (test* par, test* par_cmp) { return par->value >  par_cmp->value; }
+ops_cmp cmp_ops  = { .ord = test_ord };
+obj_ops test_ops = { .cmp = &cmp_ops };
 
-map_key ops =		 {
-	.eq     = &map_eq,
-	.lt     = &map_lt,
-	.gt     = &map_gt
+obj_trait test_t		  = {
+	.on_new	  = &test_new   ,
+	.on_clone = &test_clone ,
+	.on_ref   = &test_ref   ,
+	.on_del	  = &test_del   ,
+	.size	  = sizeof(test),
+	.ops      = &test_ops
 };
 
 int main()			  {
 	set_mem(&cstd_mem);
 
-	map* map   = make (map_t)   from (1, &ops);
-	obj* push1 = make (&test_t) from (1, 0)   ; node* elem1 = map_push(map, push1);
-	obj* push2 = make (&test_t) from (1, 1)   ; node* elem2 = map_push(map, push2);
-	obj* key1  = make (&test_t) from (1, 0)   ;
-	obj* key2  = make (&test_t) from (1, 2)   ;
+	map* map   = make (map_t)   from (0)   ;
+	obj* push1 = make (&test_t) from (1, 0); node* elem1 = map_push(map, push1);
+	obj* push2 = make (&test_t) from (1, 1); node* elem2 = map_push(map, push2);
+	obj* key1  = make (&test_t) from (1, 0);
+	obj* key2  = make (&test_t) from (1, 2);
 
 	obj* key_val1 = value(map_find(map, key1));
 	obj* key_val2 = value(map_find(map, key2));

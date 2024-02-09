@@ -33,7 +33,7 @@ void
     set_root_del
         (set_root* par)                                                  {
             for (u64_t i = 0; i < par->sub_count ; ++i) del(par->sub [i]);
-            for (u64_t i = 0; i < 64             ; ++i) del(par->node[i]);
+            for (u64_t i = 0; i < PRESET_ARCH_BIT; ++i) del(par->node[i]);
 }
 
 obj* 
@@ -50,9 +50,9 @@ obj*
                 return 0;
             }
 
-            u64_t acq_idx = bsr64(par->free); if (acq_idx >= 64) return 0;
-            par->free ^= shl(1, acq_idx);
-            par->use  |= shl(1, acq_idx);
+            u64_t acq_idx = bsr(par->free) ; if (acq_idx >= 64) return 0;
+            par->free    ^= shl(1, acq_idx);
+            par->use     |= shl(1, acq_idx);
             
             obj   *acq = par->node[acq_idx]; par->node[acq_idx] = 0;
             del   (acq);
@@ -64,9 +64,9 @@ bool_t
         (set_root* par, obj* par_rel)                {
             if (!par)                        return 0;
             if (trait_of(par) != set_root_t) return 0;
-            if (!par->use)                                   {
-                if (par->sub_count >= 64)                    {
-                    for (u64_t i = 0; i < 64; ++i)
+            if (!par->use)                                    {
+                if (par->sub_count >= PRESET_ARCH_BIT)        {
+                    for (u64_t i = 0; i < PRESET_ARCH_BIT; ++i)
                         if (set_root_rel(par->sub[i], par_rel))
                             return true_t;
                 }
@@ -80,9 +80,9 @@ bool_t
                 return set_root_rel(root, par_rel);
             }
 
-            u64_t rel_idx = bsr64(par->use); if (rel_idx >= 64) return 0;
-            par->use  ^= shl(1, rel_idx);
-            par->free |= shl(1, rel_idx);
+            u64_t rel_idx = bsr(par->use)  ; if (rel_idx >= PRESET_ARCH_BIT) return 0;
+            par->use     ^= shl(1, rel_idx);
+            par->free    |= shl(1, rel_idx);
 
             par->node[rel_idx] = ref(par_rel);
             return true_t;

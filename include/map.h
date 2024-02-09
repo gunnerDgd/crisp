@@ -3,13 +3,8 @@
 
 #include "node.h"
 
-extern obj_trait* map_t     ;
-typedef struct    map       { u8_t map[256]; } map;
-typedef struct    map_key   {
-    bool_t (*eq)(obj*, obj*);
-    bool_t (*lt)(obj*, obj*);
-    bool_t (*gt)(obj*, obj*);
-}   map_key;
+extern obj_trait* map_t;
+typedef struct    map  { u8_t map[256]; } map;
 
 node*  map_push (map*, obj*);
 void   map_pop  (map*, obj*);

@@ -12,31 +12,19 @@ obj_trait* map_t = &map_trait;
 
 bool_t    
     map_new
-        (map* par_map, u32_t par_count, va_list par)                        {
-            map_key *key = 0; if (par_count > 0) key = va_arg(par, map_key*);
-            mem     *res = 0; if (par_count > 1) res = va_arg(par, mem*)    ;
-
+        (map* par_map, u32_t par_count, va_list par)                {
+            mem *res = 0; if (par_count > 1) res = va_arg(par, mem*);
             if (!res) res = get_mem();
             if (!res) return false_t ;
 
-            if (!key)                                         return false_t;
-            if (!key->eq)                                     return false_t;
-            if (!key->lt)                                     return false_t;
-            if (!key->gt)                                     return false_t;
             if (!make_at(&par_map->map, list_t) from(1, res)) return false_t;
-
-            par_map->key = key;
             return true_t;
 }
 
 bool_t    
     map_clone
-        (map* par, map* par_clone)   {
-            par->key = par_clone->key;
-
-            if (par->key)                              return false_t;
+        (map* par, map* par_clone)                                   {
             if (!clone_at(&par->map, &par_clone->map)) return false_t;
-
             return true_t;
 }
 
@@ -52,19 +40,16 @@ node*
             if (!par)                   return 0;
             if (trait_of(par) != map_t) return 0;
 
-            list_for (&par->map, push)                       {
-                if (!push)                           continue;
-                if (par->key->eq(push, value(push))) return 0;
-                if (par->key->gt(push, value(push)))            {
+            list_for (&par->map, push)                {
+                if (!push)                    continue;
+                if (op_eq(push, value(push))) return 0;
+                if (op_gt(push, value(push)))                   {
                     node *cur = make (node_t) from (1, par_push);
                     if (!cur)                    return 0;
                     if (trait_of(cur) != node_t) return 0;
-
                     return next_as(par_push, push);
                 }
-                
             }
-
             return list_push_back(&par->map, par_push);
 }
 
@@ -86,8 +71,8 @@ node*
             if (!par)                   return 0;
             if (trait_of(par) != map_t) return 0;
 
-            list_for (&par->map, find)                           {
-                if (!par->key->eq(value(find), par_key)) continue;
+            list_for (&par->map, find)                   {
+                if (op_ne(value(find), par_key)) continue;
                 return find;
             }
 

@@ -2,7 +2,7 @@
 #include "../obj.h"
 
 struct obj* 
-    add(struct obj* par, any_t par_arg)                         {
+    op_add(struct obj* par, any_t par_arg)                      {
         obj*       add   = par       ; if (!add)   return null_t;
         any_t      arg   = par_arg   ; if (!arg)   return null_t;
         obj_trait *trait = add->trait; if (!trait) return null_t;
@@ -14,7 +14,7 @@ struct obj*
 }
 
 struct obj* 
-    add_eq(struct obj* par, any_t par_arg)                      {
+    op_add_eq(struct obj* par, any_t par_arg)                   {
         obj*       add   = par       ; if (!add)   return null_t;
         any_t      arg   = par_arg   ; if (!arg)   return null_t;
         obj_trait *trait = add->trait; if (!trait) return null_t;
@@ -28,7 +28,7 @@ struct obj*
 
 
 struct obj* 
-    sub(struct obj* par, any_t par_arg)                         {
+    op_sub(struct obj* par, any_t par_arg)                      {
         obj*       sub   = par       ; if (!sub)   return null_t;
         any_t      arg   = par_arg   ; if (!arg)   return null_t;
         obj_trait *trait = sub->trait; if (!trait) return null_t;
@@ -40,7 +40,7 @@ struct obj*
 }
 
 struct obj* 
-    sub_eq(struct obj* par, any_t par_arg)                      {
+    op_sub_eq(struct obj* par, any_t par_arg)                   {
         obj*       sub   = par       ; if (!sub)   return null_t;
         any_t      arg   = par_arg   ; if (!arg)   return null_t;
         obj_trait *trait = sub->trait; if (!trait) return null_t;
@@ -54,7 +54,7 @@ struct obj*
 
 
 struct obj* 
-    mul(struct obj* par, any_t par_arg)                         {
+    op_mul(struct obj* par, any_t par_arg)                      {
         obj*       mul   = par       ; if (!mul)   return null_t;
         any_t      arg   = par_arg   ; if (!arg)   return null_t;
         obj_trait *trait = mul->trait; if (!trait) return null_t;
@@ -66,7 +66,7 @@ struct obj*
 }
 
 struct obj* 
-    mul_eq(struct obj* par, any_t par_arg)                         {
+    op_mul_eq(struct obj* par, any_t par_arg)                   {
         obj*       mul   = par       ; if (!mul)   return null_t;
         any_t      arg   = par_arg   ; if (!arg)   return null_t;
         obj_trait *trait = mul->trait; if (!trait) return null_t;
@@ -80,7 +80,7 @@ struct obj*
 
 
 struct obj* 
-    div(struct obj* par, any_t par_arg)                         {
+    op_div(struct obj* par, any_t par_arg)                      {
         obj*       div   = par       ; if (!div)   return null_t;
         any_t      arg   = par_arg   ; if (!arg)   return null_t;
         obj_trait *trait = div->trait; if (!trait) return null_t;
@@ -91,7 +91,7 @@ struct obj*
 }
 
 struct obj* 
-    div_eq(struct obj* par, any_t par_arg)                      {
+    op_div_eq(struct obj* par, any_t par_arg)                   {
         obj*       div   = par       ; if (!div)   return null_t;
         any_t      arg   = par_arg   ; if (!arg)   return null_t;
         obj_trait *trait = div->trait; if (!trait) return null_t;
@@ -105,7 +105,7 @@ struct obj*
 
 
 struct obj* 
-    mod(struct obj* par, any_t par_arg)                         {
+    op_mod(struct obj* par, any_t par_arg)                      {
         obj*       mod   = par       ; if (!mod)   return null_t;
         any_t      arg   = par_arg   ; if (!arg)   return null_t;
         obj_trait *trait = mod->trait; if (!trait) return null_t;
@@ -117,7 +117,7 @@ struct obj*
 }
 
 struct obj* 
-    mod_eq(struct obj* par, any_t par_arg)                      {
+    op_mod_eq(struct obj* par, any_t par_arg)                   {
         obj*       mod   = par       ; if (!mod)   return null_t;
         any_t      arg   = par_arg   ; if (!arg)   return null_t;
         obj_trait *trait = mod->trait; if (!trait) return null_t;

@@ -20,7 +20,7 @@ typedef struct obj_trait                           {
 
 typedef struct obj  {
     obj_trait *trait;
-    atom_u64_t ref  ;
+    reg_t      ref  ;
     mem       *mem  ;
     void      *data ;
 }   obj;

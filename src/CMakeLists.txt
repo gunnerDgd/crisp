@@ -159,6 +159,13 @@ add_library (crisp-include STATIC
 
     ../include/type_atom.h
     ../include/type.h
+
+    ../include/ops.h
+    ../include/ops/arith.h
+    ../include/ops/cast.h
+    ../include/ops/bit.h
+    ../include/ops/cmp.h
+    ../include/ops/logical.h
 )
 
 set_target_properties(crisp-include PROPERTIES LINKER_LANGUAGE C)

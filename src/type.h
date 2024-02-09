@@ -1,9 +1,9 @@
 #ifndef __TYPE_H__
 #define __TYPE_H__
 
-#include <stdarg.h>
 #ifdef PRESET_LINUX_MODULE
 #else
+#include <stdarg.h>
 #include <stdint.h>
 #include <stddef.h>
 #include <stdbool.h>
@@ -35,16 +35,28 @@ typedef i64_t i128_t[2];
 typedef u64_t u256_t[4];
 typedef i64_t i256_t[4];
 
-#define        cstr(par) { .str = par, .len = sizeof(par) }
+#define        cstr(par) { .str = par, .len = sizeof(par) - 1 }
 typedef struct cstr_t    { 
     const char *str;
     u64_t       len; 
 }   cstr_t;
 
-#define        wcstr(par) { .str = L##par, .len = sizeof(par) / sizeof(wchar_t) }
+#define        wcstr(par) { .str = L##par, .len = (sizeof(par) - 1) / sizeof(wchar_t) }
 typedef struct wcstr_t    { 
     const wchar_t *str; 
     u64_t          len;
 }   wcstr_t;
+
+#if PRESET_ARCH_BIT == 64
+typedef u64_t reg_t;
+#endif
+
+#if PRESET_ARCH_BIT == 32
+typedef u32_t reg_t;
+#endif
+
+#if PRESET_ARCH_BIT == 16
+typedef u16_t reg_t;
+#endif
 
 #endif

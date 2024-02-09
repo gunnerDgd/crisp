@@ -3,15 +3,15 @@
 
 #include "obj.h"
 
-extern obj_trait* set_root_t  ;
-typedef struct    set_root    {
-    obj              head     ;
-    obj             *node[64] ;
-    u64_t            free     ;
-    u64_t            use      ;
+extern obj_trait* set_root_t              ;
+typedef struct    set_root                {
+    obj              head                 ;
+    obj             *node[PRESET_ARCH_BIT];
+    reg_t            free                 ;
+    reg_t            use                  ;
 
-    u64_t            sub_count;
-    struct set_root *sub [64] ;
+    reg_t            sub_count            ;
+    struct set_root *sub [PRESET_ARCH_BIT];
 }   set_root;
 
 bool_t set_root_new  (set_root*, u32_t, va_list);

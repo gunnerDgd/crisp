@@ -2,7 +2,7 @@
 #include "../obj.h"
 
 struct obj* 
-    and(struct obj* par, any_t par_arg)                         {
+    op_and(struct obj* par, any_t par_arg)                      {
         obj*       and   = par       ; if (!and)   return null_t;
         any_t      arg   = par_arg   ; if (!arg)   return null_t;
         obj_trait *trait = and->trait; if (!trait) return null_t;
@@ -14,7 +14,7 @@ struct obj*
 }
 
 struct obj* 
-    and_eq(struct obj* par, any_t par_arg)                      {
+    op_and_eq(struct obj* par, any_t par_arg)                   {
         obj*       and   = par       ; if (!and)   return null_t;
         any_t      arg   = par_arg   ; if (!arg)   return null_t;
         obj_trait *trait = and->trait; if (!trait) return null_t;
@@ -28,7 +28,7 @@ struct obj*
 
 
 struct obj* 
-    or(struct obj* par, any_t par_arg)                          {
+    op_or(struct obj* par, any_t par_arg)                       {
         obj*       or    = par       ; if (!or)    return null_t;
         any_t      arg   = par_arg   ; if (!arg)   return null_t;
         obj_trait *trait = or->trait ; if (!trait) return null_t;
@@ -40,7 +40,7 @@ struct obj*
 }
 
 struct obj* 
-    or_eq(struct obj* par, any_t par_arg)                       {
+    op_or_eq(struct obj* par, any_t par_arg)                    {
         obj*       or    = par       ; if (!or)    return null_t;
         any_t      arg   = par_arg   ; if (!arg)   return null_t;
         obj_trait *trait = or->trait ; if (!trait) return null_t;
@@ -54,7 +54,7 @@ struct obj*
 
 
 struct obj* 
-    xor(struct obj* par, any_t par_arg)                         {
+    op_xor(struct obj* par, any_t par_arg)                      {
         obj*       xor   = par       ; if (!xor)   return null_t;
         any_t      arg   = par_arg   ; if (!arg)   return null_t;
         obj_trait *trait = xor->trait; if (!trait) return null_t;
@@ -66,7 +66,7 @@ struct obj*
 }
 
 struct obj* 
-    xor_eq(struct obj* par, any_t par_arg)                      {
+    op_xor_eq(struct obj* par, any_t par_arg)                   {
         obj*       xor   = par       ; if (!xor)   return null_t;
         any_t      arg   = par_arg   ; if (!arg)   return null_t;
         obj_trait *trait = xor->trait; if (!trait) return null_t;
@@ -80,7 +80,7 @@ struct obj*
 
 
 struct obj* 
-    not(struct obj* par)                                        {
+    op_not(struct obj* par)                                     {
         obj*       not   = par       ; if (!not)   return null_t;
         obj_trait *trait = not->trait; if (!trait) return null_t;
         obj_ops   *ops   = trait->ops; if (!ops)   return null_t;

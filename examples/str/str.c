@@ -16,15 +16,19 @@ int main()			  {
 	set_mem(&cstd_mem);
 	str str			  ; if (!make_at(&str, str_t) from(0)) return false_t;
 
-	str_push_back_cstr(&str, "Hello ", 6);
-	str_push_back_cstr(&str, "World" , 5);
+	cstr_t cstr0 = cstr("Hello ");
+	cstr_t cstr1 = cstr("World") ;
+	cstr_t cstr2 = cstr(" ")	 ;
 
-	printf("Before Pop At : %s\n", str_ptr(&str)); str_pop(&str, 5, 1);
-	printf("After Pop At : %s\n" , str_ptr(&str));
+	str_push_back_cstr(&str, cstr0);
+	str_push_back_cstr(&str, cstr1);
 
-	str_push_cstr(&str, 5, " ", 1);
-	printf("After Push At : %s\n", str_ptr(&str))									  ;
-	printf("Find Result : %s\n"  , str_ptr(&str) + str_find_cstr(&str, 0, "World", 5));
+	printf("Before Pop At : %s\n", str_as_raw(&str)); str_pop(&str, 5, 1);
+	printf("After Pop At : %s\n" , str_as_raw(&str));
+
+	str_push_cstr(&str, 5, cstr2, 1);
+	printf("After Push At : %s\n", str_as_raw(&str))								;
+	printf("Find Result : %s\n"  , str_as_raw(&str) + str_find_cstr(&str, 0, cstr1));
 
 	del(&str);
 }

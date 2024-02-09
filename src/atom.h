@@ -69,4 +69,55 @@ u64_t lock_cas64    (u64_t*, u64_t, u64_t);
 u64_t lock_xchg64   (u64_t*, u64_t);
 #endif
 
+#if PRESET_ARCH_BIT == 64
+#define lock_add_ptr(par, par_arg) lock_add64(par, par_arg)
+#define lock_sub_ptr(par, par_arg) lock_sub64(par, par_arg)
+#define lock_inc_ptr(par)          lock_inc64(par)
+#define lock_dec_ptr(par)          lock_dec64(par)
+
+#define cas_inc_ptr(par)                  cas_inc64(par)
+#define cas_dec_ptr(par)                  cas_dec64(par)
+#define cas_ptr(par, par_expect, par_arg) cas64    (par, par_expect, par_arg)
+#define xchg_ptr(par, par_arg)            xchg64   (par, par_arg)
+
+#define lock_cas_inc_ptr(par)                  lock_cas_inc64(par)
+#define lock_cas_dec_ptr(par)                  lock_cas_dec64(par)
+#define lock_cas_ptr(par, par_expect, par_arg) lock_cas64    (par, par_expect, par_arg)
+#define lock_xchg_ptr(par, par_arg)            lock_xchg64   (par, par_arg)
+#endif
+
+#if PRESET_ARCH_BIT == 32
+#define lock_add_ptr(par, par_arg) lock_add32(par, par_arg)
+#define lock_sub_ptr(par, par_arg) lock_sub32(par, par_arg)
+#define lock_inc_ptr(par)          lock_inc32(par, par_arg)
+#define lock_dec_ptr(par)          lock_dec32(par, par_arg)
+
+#define cas_inc_ptr(par)                  cas_inc32(par)
+#define cas_dec_ptr(par)                  cas_dec32(par)
+#define cas_ptr(par, par_expect, par_arg) cas32    (par, par_expect, par_arg)
+#define xchg_ptr(par, par_arg)            xchg32   (par, par_arg)
+
+#define lock_cas_inc_ptr(par)                  lock_cas_inc32(par)
+#define lock_cas_dec_ptr(par)                  lock_cas_dec32(par)
+#define lock_cas_ptr(par, par_expect, par_arg) lock_cas32    (par, par_expect, par_arg)
+#define lock_xchg_ptr(par, par_arg)            lock_xchg32   (par, par_arg)
+#endif
+
+#if PRESET_ARCH_BIT == 16
+#define lock_add_ptr(par, par_arg) lock_add16(par, par_arg)
+#define lock_sub_ptr(par, par_arg) lock_sub16(par, par_arg)
+#define lock_inc_ptr(par)          lock_inc16(par, par_arg)
+#define lock_dec_ptr(par)          lock_dec16(par, par_arg)
+
+#define cas_inc_ptr(par)                  cas_inc16(par)
+#define cas_dec_ptr(par)                  cas_dec16(par)
+#define cas_ptr(par, par_expect, par_arg) cas16    (par, par_expect, par_arg)
+#define xchg_ptr(par, par_arg)            xchg16   (par, par_arg)
+
+#define lock_cas_inc_ptr(par)                  lock_cas_inc16(par)
+#define lock_cas_dec_ptr(par)                  lock_cas_dec16(par)
+#define lock_cas_ptr(par, par_expect, par_arg) lock_cas16    (par, par_expect, par_arg)
+#define lock_xchg_ptr(par, par_arg)            lock_xchg16   (par, par_arg)
+#endif
+
 #endif

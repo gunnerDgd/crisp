@@ -2,6 +2,7 @@
 #define __OBJ_H__
 
 #include "mem.h"
+#include "ops.h"
 
 typedef struct obj { u8_t obj[32]; } obj;
 typedef struct obj_trait                    {
@@ -10,6 +11,7 @@ typedef struct obj_trait                    {
     bool_t (*on_ref)  (obj*)                ;
     void   (*on_del)  (obj*)                ;
     u64_t    size;
+    obj_ops *ops ;
 }   obj_trait;
 
 obj*   obj_new      (mem*, obj_trait*, u32_t, ...)    ;

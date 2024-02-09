@@ -52,10 +52,8 @@ bool_t
 bool_t 
 	obj_new_at_va
 		(obj* par_obj, obj_trait* par_trait, u32_t par_count, va_list par) {
-			obj		  *ret   = par_obj  ; if (!ret)		  return false_t;
-			obj_trait *trait = par_trait; if (ret->trait) return false_t;
-			if (!trait)					    return false_t;
-			if (ret->ref)					return false_t;
+			obj		  *ret   = par_obj  ; if (!ret)   return false_t;
+			obj_trait *trait = par_trait; if (!trait) return false_t;
 			if (trait->size <= sizeof(obj)) return false_t;
 
 			mem_set(ret, 0x00, trait->size);
@@ -132,8 +130,8 @@ obj*
 			if (!par->trait) return 0;
 			if (!par->ref)	 return 0;
 
-			if (!par->trait->on_ref) { 
-				lock_inc64(&par->ref);
+			if (!par->trait->on_ref)   { 
+				lock_inc_ptr(&par->ref);
 				return par;
 			}
 			
@@ -148,7 +146,7 @@ u64_t
 			if(!par->trait)    return 0;
 			if (par->ref == 0) return 0;
 
-			u64_t ref = lock_cas_dec64(&par->ref);
+			u64_t ref = lock_cas_dec_ptr(&par->ref);
 			if (ref) return ref;
 			if (par->trait->on_del) par->trait->on_del(par);
 			if (!par->mem)						    {
