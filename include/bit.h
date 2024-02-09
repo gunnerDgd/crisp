@@ -4,44 +4,45 @@
 #include "type.h"
 #include "type_atom.h"
 
-#define shl(par, par_shift) (par << par_shift)
-#define shr(par, par_shift) (par >> par_shift)
-#define mask(par)           ((shl(1, par) - 1))
+#define shl(par, par_shift)  ((par) << (par_shift))
+#define shr(par, par_shift)  ((par) >> (par_shift))
+#define test(par, par_shift) ((par) & shl(1, par_shift))
+#define mask(par)            ((shl(1, par) - 1))
 
 #if PRESET_ARCH_BIT >= 16
-void  btc16     (u16_t*, u16_t);
+u16_t btc16     (u16_t*, u16_t);
 u16_t bsf16     (u16_t)        ;
-void  btr16     (u16_t*, u16_t);
-void  bts16     (u16_t*, u16_t);
+u16_t btr16     (u16_t*, u16_t);
+u16_t bts16     (u16_t*, u16_t);
 u16_t bsr16     (u16_t)        ;
 
-void  lock_btc16(u16_t*, u16_t);
-void  lock_btr16(u16_t*, u16_t);
-void  lock_bts16(u16_t*, u16_t);
+u16_t lock_btc16(u16_t*, u16_t);
+u16_t lock_btr16(u16_t*, u16_t);
+u16_t lock_bts16(u16_t*, u16_t);
 #endif
 
 #if PRESET_ARCH_BIT >= 32
-void  btc32     (u32_t*, u32_t);
-u16_t bsf32     (u32_t)        ;
-void  btr32     (u32_t*, u32_t);
-void  bts32     (u32_t*, u32_t);
-u16_t bsr32     (u32_t)        ;
+u32_t btc32     (u32_t*, u32_t);
+u32_t bsf32     (u32_t)        ;
+u32_t btr32     (u32_t*, u32_t);
+u32_t bts32     (u32_t*, u32_t);
+u32_t bsr32     (u32_t)        ;
 
-void  lock_btc32(u32_t*, u32_t);
-void  lock_btr32(u32_t*, u32_t);
-void  lock_bts32(u32_t*, u32_t);
+u32_t lock_btc32(u32_t*, u32_t);
+u32_t lock_btr32(u32_t*, u32_t);
+u32_t lock_bts32(u32_t*, u32_t);
 #endif
 
 #if PRESET_ARCH_BIT >= 64
-void  btc64     (u64_t*, u64_t);
+u64_t btc64     (u64_t*, u64_t);
 u64_t bsf64     (u64_t)        ;
-void  btr64     (u64_t*, u64_t);
-void  bts64     (u64_t*, u64_t);
+u64_t btr64     (u64_t*, u64_t);
+u64_t bts64     (u64_t*, u64_t);
 u64_t bsr64     (u64_t)        ;
 
-void  lock_btc64(u64_t*, u64_t);
-void  lock_btr64(u64_t*, u64_t);
-void  lock_bts64(u64_t*, u64_t);
+u64_t lock_btc64(u64_t*, u64_t);
+u64_t lock_btr64(u64_t*, u64_t);
+u64_t lock_bts64(u64_t*, u64_t);
 #endif
 
 #if PRESET_ARCH_BIT == 64
@@ -78,5 +79,7 @@ void  lock_bts64(u64_t*, u64_t);
 #define lock_btc(par, par_arg) lock_btc16(par, par_arg)
 #define lock_btr(par, par_arg) lock_btr16(par, par_arg)
 #define lock_bts(par, par_arg) lock_bts16(par, par_arg)
+
+#endif
 
 #endif

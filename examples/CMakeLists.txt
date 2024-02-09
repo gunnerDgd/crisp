@@ -26,3 +26,7 @@ target_include_directories(examples-sched-sched PRIVATE ../include)
 add_executable            (examples-set-set set/set.c)
 target_link_libraries     (examples-set-set crisp)
 target_include_directories(examples-set-set PRIVATE ../include)
+
+add_executable            (examples-sync-mpmc sync/mpmc.c)
+target_link_libraries     (examples-sync-mpmc crisp)
+target_include_directories(examples-sync-mpmc PRIVATE ../include)

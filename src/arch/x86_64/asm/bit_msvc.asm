@@ -29,41 +29,59 @@ global lock_btr64
 section .text
 
 btc16:
-    btc word [rcx], dx
+    btc   word [rcx], dx
+    setc  al
+    movzx ax, al
     ret
 
 btc32:
-    btc dword[rcx], edx
+    btc   dword[rcx], edx
+    setc  al
+    movzx eax, al
     ret
 
 btc64:
     btc qword[rcx], rdx
+    setc  al
+    movzx rax, al
     ret
 
 
 btr16:
     btr word [rcx], dx
+    setc  al
+    movzx ax, al
     ret
 
 btr32:
     btr dword[rcx], edx
+    setc  al
+    movzx eax, al
     ret
 
 btr64:
     btr qword[rcx], rdx
+    setc  al
+    movzx rax, al
     ret
 
 
 bts16:
     bts word [rcx], dx
+    setc  al
+    movzx ax, al
     ret
 
 bts32:
     bts dword[rcx], edx
+    setc  al
+    movzx eax, al
     ret
 
 bts64:
     bts qword[rcx], rdx
+    setc  al
+    movzx rax, al
     ret
 
 
@@ -100,39 +118,57 @@ bsr64:
 
 
 lock_btc16:
-    lock btc word [rcx], ax
+    lock btc word [rcx], dx
+    setc  al
+    movzx ax, al
     ret
 
 lock_btc32:
-    lock btc dword[rcx], eax
+    lock btc dword[rcx], edx
+    setc  al
+    movzx eax, al
     ret
 
 lock_btc64:
-    lock btc qword[rcx], rax
+    lock btc qword[rcx], rdx
+    setc  al
+    movzx rax, al
     ret
 
 
 lock_btr16:
-    lock btr word [rcx], ax
+    lock btr word [rcx], dx
+    setc  al
+    movzx ax, al
     ret
 
 lock_btr32:
-    lock btr dword[rcx], eax
+    lock btr dword[rcx], edx
+    setc  al
+    movzx eax, al
     ret
 
 lock_btr64:
-    lock btr qword[rcx], rax
+    lock btr qword[rcx], rdx
+    setc  al
+    movzx rax, al
     ret
 
 
 lock_bts16:
-    lock bts word [rcx], ax
+    lock bts word [rcx], dx
+    setc  al
+    movzx ax, al
     ret
 
 lock_bts32:
-    lock bts dword[rcx], eax
+    lock bts dword[rcx], edx
+    setc  al
+    movzx eax, al
     ret
 
 lock_bts64:
-    lock bts qword[rcx], rax
+    lock bts qword[rcx], rdx
+    setc  al
+    movzx rax, al
     ret

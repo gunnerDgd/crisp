@@ -136,6 +136,18 @@ add_library (crisp STATIC
 
     ops/logical.h
     ops/logical.c
+
+    sync/spsc.h
+    sync/spsc.c
+
+    sync/spmc.h
+    sync/spmc.c
+
+    sync/mpsc.h
+    sync/mpsc.c
+
+    sync/mpmc.h
+    sync/mpmc.c
 )
 
 target_link_libraries(crisp PRIVATE crisp-arch)
@@ -166,6 +178,11 @@ add_library (crisp-include STATIC
     ../include/ops/bit.h
     ../include/ops/cmp.h
     ../include/ops/logical.h
+
+    ../include/sync/spsc.h
+    ../include/sync/spmc.h
+    ../include/sync/mpsc.h
+    ../include/sync/mpmc.h
 )
 
 set_target_properties(crisp-include PROPERTIES LINKER_LANGUAGE C)
