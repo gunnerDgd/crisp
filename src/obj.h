@@ -54,5 +54,14 @@ u64_t      obj_use_count(obj*);
 #define use_count(par)           obj_use_count(par)
 #define trait_of(par)            obj_get_trait(par)
 
+#define make_trait(par_new, par_clone, par_ref, par_del, par_size, par_ops) {\
+    .on_new   = ((bool_t (*)(obj*, u32_t, va_list))(par_new))  ,             \
+    .on_clone = ((bool_t (*)(obj*, obj*))          (par_clone)),             \
+    .on_ref   = ((bool_t (*)(obj*))(par_ref))                  ,             \
+    .on_del   = ((void   (*)(obj*))(par_del))                  ,             \
+    .size     = ((u64_t)(par_size))                            ,             \
+    .ops      = ((obj_ops*)(par_ops))                          ,             \
+}
+
 #endif
 #endif

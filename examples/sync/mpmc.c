@@ -24,13 +24,14 @@ bool_t test_clone(test* par    , test* par_clone)			   { return true_t; }
 bool_t test_ref  (test* par)								   { return true_t; }
 void   test_del  (test* par)								   {  }
 
-obj_trait test_t		 = {
-	.on_new	  = &test_new  ,
-	.on_clone = &test_clone,
-	.on_ref   = &test_ref  ,
-	.on_del	  = &test_del  ,
-	.size	  = sizeof(test)
-};
+obj_trait test_t = make_trait (
+	test_new    ,
+	test_clone  ,
+	test_ref    ,
+	test_del    ,
+	sizeof(test),
+	null_t
+);
 
 void tx_thd(mpmc* par)				  {
 	for (int i = 1 ; i <= 1000 ; ++i) {

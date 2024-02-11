@@ -27,6 +27,7 @@ typedef void*    any_t ;
 
 #define false_t  0
 #define true_t   1
+#define null_t  ((void*)0)
 
 typedef u64_t u128_t[2];
 typedef i64_t i128_t[2];
