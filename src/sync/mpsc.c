@@ -3,13 +3,14 @@
 #include "../atom.h"
 #include "../bit.h"
 
-obj_trait mpsc_trait     = {
-    .on_new   = &mpsc_new  ,
-    .on_clone = &mpsc_clone,
-    .on_ref   = 0          ,
-    .on_del   = &mpsc_del  ,
-    .size     = sizeof(mpsc)
-};
+obj_trait mpsc_trait = make_trait (
+    mpsc_new    ,
+    mpsc_clone  ,
+    null_t      ,
+    mpsc_del    ,
+    sizeof(mpsc),
+    null_t
+);
 
 obj_trait *mpsc_t = &mpsc_trait;
 

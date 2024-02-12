@@ -1,13 +1,14 @@
 #include "set.h"
 #include "bit.h"
 
-obj_trait set_root_trait     = {
-    .on_new   = &set_root_new  ,
-    .on_clone = &set_root_clone,
-    .on_ref   = 0              ,
-    .on_del   = &set_root_del  ,
-    .size     = sizeof(set_root)
-};
+obj_trait set_root_trait = make_trait (
+    set_root_new    ,
+    set_root_clone  ,
+    null_t          ,
+    set_root_del    ,
+    sizeof(set_root),
+    null_t
+);
 
 obj_trait *set_root_t = &set_root_trait;
 
@@ -16,10 +17,9 @@ bool_t
         (set_root* par_root, u32_t par_count, va_list par)       {
             mem_set(par_root->node, 0x00, sizeof(par_root->node));
             mem_set(par_root->sub , 0x00, sizeof(par_root->sub)) ;
-
-            par_root->sub_count =  0;
-            par_root->free      =  0;
-            par_root->use       = -1;
+            par_root->num  =  0;
+            par_root->free =  0;
+            par_root->use  = -1;
             return true_t;
 }
 
@@ -32,8 +32,8 @@ bool_t
 void   
     set_root_del
         (set_root* par)                                                  {
-            for (u64_t i = 0; i < par->sub_count ; ++i) del(par->sub [i]);
             for (u64_t i = 0; i < PRESET_ARCH_BIT; ++i) del(par->node[i]);
+            for (u64_t i = 0; i < par->num       ; ++i) del(par->sub [i]);
 }
 
 obj* 
@@ -41,8 +41,8 @@ obj*
         (set_root* par)                              {
             if (!par)                        return 0;
             if (trait_of(par) != set_root_t) return 0;
-            if (!par->free)                                  {
-                for (u64_t i = 0 ; i < par->sub_count ; ++i) {
+            if (!par->free)                             {
+                for (u64_t i = 0 ; i < par->num ; ++i)  {
                     obj *acq = set_root_acq(par->sub[i]);
                     if  (acq) return acq;
                 }
@@ -65,18 +65,18 @@ bool_t
             if (!par)                        return 0;
             if (trait_of(par) != set_root_t) return 0;
             if (!par->use)                                    {
-                if (par->sub_count >= PRESET_ARCH_BIT)        {
+                if (par->num >= PRESET_ARCH_BIT)              {
                     for (u64_t i = 0; i < PRESET_ARCH_BIT; ++i)
                         if (set_root_rel(par->sub[i], par_rel))
                             return true_t;
                 }
                 
-                set_root* root = make(set_root_t) from(0);
+                set_root* root = make(set_root) from(0);
                 if (!root)                        return false_t;
                 if (trait_of(root) != set_root_t) return false_t;
 
-                par->sub[par->sub_count] = root;
-                par->sub_count++;
+                par->sub[par->num] = root;
+                par->num++;
                 return set_root_rel(root, par_rel);
             }
 
@@ -88,20 +88,21 @@ bool_t
             return true_t;
 }
 
-obj_trait set_trait     = {
-    .on_new   = &set_new  ,
-    .on_clone = &set_clone,
-    .on_ref   = 0         ,
-    .on_del   = &set_del  ,
-    .size     = sizeof(set)
-};
+obj_trait set_trait = make_trait (
+    set_new    ,
+    set_clone  ,
+    null_t     ,
+    set_del    ,
+    sizeof(set),
+    null_t
+);
 
 obj_trait *set_t = &set_trait;
 
 bool_t 
     set_new
         (set* par_set, u32_t par_count, va_list par) {
-            par_set->set = make (set_root_t) from (0);
+            par_set->set = make (set_root) from (0);
 
             if (!par_set->set) return false_t;
             return true_t;
@@ -134,9 +135,9 @@ void
             if (!par)                            return;
             if (trait_of(par) != set_t)          return;
 
-            if (set_root_rel(par->set, par_rel)) return; set_root* root = make (set_root_t) from (0);
+            if (set_root_rel(par->set, par_rel)) return; set_root* root = make (set_root) from (0);
             if (!root)                           return;
-            root->sub_count = 1       ;
+            root->num = 1       ;
             root->sub[0]    = par->set;
             par ->set       = root     ;
 }

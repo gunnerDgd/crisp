@@ -22,20 +22,21 @@ void* test(task* par)                 {
 void* test2(task* par)                  {
     printf("Goodbye\n"); task_yield(par);
     printf("world\n")  ; task_yield(par);
-    return "Hello World";
+    return "Goodbye World";
 }
 
 int main()                {
     set_mem(&cstd_mem_res);
-    sched* run = make (sched_t) from (0);
-    task*  res = 0;
+    sched *run    = make (sched) from (0);
+    fut   *task_1 = sched_dispatch (run, test , 0);
+    fut   *task_2 = sched_dispatch (run, test2, 0);
 
-    sched_dispatch (run, test , 0);
-    sched_dispatch (run, test2, 0);
-    res = sched_run(run);
-    res = sched_run(run);
-    res = sched_run(run);
-    res = sched_run(run);
-    res = sched_run(run);
-    res = sched_run(run);
+    while (fut_poll(task_1) == fut_pend) sched_run(run);
+    while (fut_poll(task_2) == fut_pend) sched_run(run);
+    printf("%s ", (const char*) fut_ret(task_1));
+    printf("%s" , (const char*) fut_ret(task_2));
+
+    del(task_1);
+    del(task_2);
+    del(run)   ;
 }

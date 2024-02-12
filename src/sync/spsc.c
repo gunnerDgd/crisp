@@ -3,13 +3,14 @@
 #include "../atom.h"
 #include "../bit.h"
 
-obj_trait spsc_trait     = {
-    .on_new   = &spsc_new  ,
-    .on_clone = &spsc_clone,
-    .on_ref   = 0          ,
-    .on_del   = &spsc_del  ,
-    .size     = sizeof(spsc)
-};
+obj_trait spsc_trait = make_trait (
+    spsc_new    ,
+    spsc_clone  ,
+    null_t      ,
+    spsc_del    ,
+    sizeof(spsc),
+    null_t
+);
 
 obj_trait *spsc_t = &spsc_trait;
 

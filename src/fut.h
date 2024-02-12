@@ -11,6 +11,13 @@ typedef struct fut_ops {
     void* (*ret) (obj*);
 }   fut_ops;
 
+#ifndef __cplusplus
+#define make_fut_ops(par_poll, par_ret) {\
+    .poll = ((u64_t(*)(obj*))(par_poll)),\
+    .ret  = ((void*(*)(obj*))(par_ret)) ,\
+}
+#endif
+
 extern obj_trait* fut_t;
 typedef struct    fut  {
     obj      head;

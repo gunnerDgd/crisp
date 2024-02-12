@@ -14,35 +14,37 @@ mem cstd_mem		     = {
 	.on_del = &cstd_mem_del
 };
 
-typedef struct test {
+typedef struct val {
 	obj   head ;
 	u64_t value;
-}	test;
+}	val;
 
-bool_t test_new	 (test* par_obj, u32_t par_count, va_list par) { par_obj->value = va_arg(par, u64_t); return true_t; }
-bool_t test_clone(test* par    , test* par_clone)			   { return true_t; }
-bool_t test_ref  (test* par)								   { return true_t; }
-void   test_del  (test* par)								   {  }
+bool_t val_new	(val* par_obj, u32_t par_count, va_list par) { par_obj->value = va_arg(par, u64_t); return true_t; }
+bool_t val_clone(val* par    , val  *par_clone)			     { return true_t; }
+bool_t val_ref  (val* par)								     { return true_t; }
+void   val_del  (val* par)								     {  }
 
-obj_trait test_t = make_trait (
-	test_new    ,
-	test_clone  ,
-	test_ref    ,
-	test_del    ,
-	sizeof(test),
+obj_trait val_trait = make_trait (
+	val_new    ,
+	val_clone  ,
+	val_ref    ,
+	val_del    ,
+	sizeof(val),
 	null_t
 );
 
+obj_trait *val_t = &val_trait;
+
 void tx_thd(mpmc* par)				  {
 	for (int i = 1 ; i <= 1000 ; ++i) {
-		mpmc_enq(par, make(&test_t) from (1, i));
+		mpmc_enq(par, make(val) from(1, i));
 	}
 }
 
 u64_t rx_thd(mpmc* par)				  {
 	u64_t ret = 0;
 	for (int i = 1 ; i <= 1000 ; ++i) {
-		test*  deq = mpmc_deq(par);
+		val   *deq = (val*) mpmc_deq(par);
 		ret += deq->value;
 	}
 
@@ -51,15 +53,15 @@ u64_t rx_thd(mpmc* par)				  {
 
 int main()			  {
 	set_mem(&cstd_mem);
-	mpmc  *mpmc = make (mpmc_t) from (0);
-	u64_t  sum  = 0						;
+	mpmc  *Mpmc = make (mpmc) from (0);
+	u64_t  sum  = 0					  ;
 	HANDLE rx [8];
 	HANDLE tx [8];
 	u64_t  ret[8];
 
 	for(int i = 0 ; i < 8 ; ++i)				      {
-		rx[i] = CreateThread(0, 0, rx_thd, mpmc, 0, 0);
-		tx[i] = CreateThread(0, 0, tx_thd, mpmc, 0, 0);
+		rx[i] = CreateThread(0, 0, rx_thd, Mpmc, 0, 0);
+		tx[i] = CreateThread(0, 0, tx_thd, Mpmc, 0, 0);
 	}
 
 	for(int i = 0 ; i < 8 ; ++i)			{

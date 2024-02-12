@@ -30,18 +30,19 @@ obj_trait* obj_get_trait(obj*);
 u64_t      obj_use_count(obj*);
 
 #ifndef __cplusplus
-#define make(par_type)          obj_new      (0  , par_type,
-#define make_at(par, par_type)  obj_new_at   (par, par_type,
-#define vmake(par_type)         obj_new_va   (0  , par_type,
-#define vmake_at(par, par_type) obj_new_at_va(par, par_type,
-#define from(...)               __VA_ARGS__)
 
-#define clone(par)               obj_clone    (par)
-#define clone_at(par, par_clone) obj_clone_at (par, par_clone)
-#define ref(par)                 obj_ref      (par)
-#define del(par)                 obj_del      (par)
-#define use_count(par)           obj_use_count(par)
-#define trait_of(par)            obj_get_trait(par)
+#define make(par_type)           (par_type*)obj_new      (null_t       , ((obj_trait*)(par_type##_t)),
+#define vmake(par_type)          (par_type*)obj_new_va   (null_t       , ((obj_trait*)(par_type##_t)),
+#define make_at(par, par_type)              obj_new_at   (((obj*)(par)), ((obj_trait*)(par_type##_t)),
+#define vmake_at(par, par_type)             obj_new_at_va(((obj*)(par)), ((obj_trait*)(par_type##_t)),
+#define from(...)                __VA_ARGS__)
+
+#define clone(par)               obj_clone    (((obj*)par))
+#define clone_at(par, par_clone) obj_clone_at (((obj*)par), ((obj*)par_clone))
+#define ref(par)                 obj_ref      (((obj*)par))
+#define del(par)                 obj_del      (((obj*)par))
+#define use_count(par)           obj_use_count(((obj*)par))
+#define trait_of(par)            obj_get_trait(((obj*)par))
 
 #define make_trait(par_new, par_clone, par_ref, par_del, par_size, par_ops) {\
     .on_new   = ((bool_t (*)(obj*, u32_t, va_list))(par_new))  ,             \
@@ -51,5 +52,6 @@ u64_t      obj_use_count(obj*);
     .size     = ((u64_t)(par_size))                            ,             \
     .ops      = ((obj_ops*)(par_ops))                          ,             \
 }
+
 #endif
 #endif

@@ -1,6 +1,6 @@
 #include "endian.h"
 
-#ifdef PRESET_ARCH_X86_64
+#ifdef PRESET_ARCH_ENDIAN_LITTLE
 u16_t 
     be16(u16_t par) { 
         return ((par & 0xFF00) >> 8) | ((par & 0x00FF) << 8); 

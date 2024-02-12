@@ -11,6 +11,16 @@ typedef struct ops_logical                {
     struct obj* (*not)(struct obj*)       ;
 }   ops_logical;
 
+#ifndef __cplusplus
+
+#define make_logical_ops (par_and, par_or, par_not)       {\
+    .and = ((struct obj*(*)(struct obj*, any_t))(par_and)),\
+    .or  = ((struct obj*(*)(struct obj*, any_t))(par_or)) ,\
+    .not = ((struct obj*(*)(struct obj*))       (par_not)) \
+}
+
+#endif
+
 struct obj* op_log_and(struct obj*, any_t);
 struct obj* op_log_or (struct obj*, any_t);
 struct obj* op_log_not(struct obj*)       ;

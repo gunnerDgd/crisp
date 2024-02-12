@@ -14,10 +14,6 @@ mem cstd_mem		     = {
 
 int main()			     {
 	set_mem(&cstd_mem)   ;
-	reg_t a = 0;
-	printf("%d ", a); printf("%d\n", btr(&a, 1));
-	printf("%d ", a); printf("%d\n", btr(&a, 1));
-	printf("%d\n", a);
 	
 	i8_t* ret = new(i8_t);
 	*ret = 5;

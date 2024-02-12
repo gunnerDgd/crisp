@@ -1,12 +1,13 @@
 #include "str.h"
 
-obj_trait str_trait     = {
-    .on_new   = &str_new  ,
-    .on_clone = &str_clone,
-    .on_ref   = 0         ,
-    .on_del   = &str_del  ,
-    .size     = sizeof(str)
-};
+obj_trait str_trait = make_trait (
+    str_new    ,
+    str_clone  ,
+    null_t     ,
+    str_del    ,
+    sizeof(str),
+    null_t
+);
 
 obj_trait* str_t = &str_trait;
 

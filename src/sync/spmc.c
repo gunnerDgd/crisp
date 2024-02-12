@@ -3,13 +3,14 @@
 #include "../atom.h"
 #include "../bit.h"
 
-obj_trait spmc_trait     = {
-    .on_new   = &spmc_new  ,
-    .on_clone = &spmc_clone,
-    .on_ref   = 0          ,
-    .on_del   = &spmc_del  ,
-    .size     = sizeof(spmc)
-};
+obj_trait spmc_trait = make_trait (
+    spmc_new    ,
+    spmc_clone  ,
+    null_t      ,
+    spmc_del    ,
+    sizeof(spmc),
+    null_t
+);
 
 obj_trait *spmc_t = &spmc_trait;
 

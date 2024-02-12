@@ -14,21 +14,21 @@ mem cstd_mem		     = {
 
 int main()			  {
 	set_mem(&cstd_mem);
-	str str			  ; if (!make_at(&str, str_t) from(0)) return false_t;
+	str *Str = make(str) from(0);
 
 	cstr_t cstr0 = cstr("Hello ");
 	cstr_t cstr1 = cstr("World") ;
 	cstr_t cstr2 = cstr(" ")	 ;
 
-	str_push_back_cstr(&str, cstr0);
-	str_push_back_cstr(&str, cstr1);
+	str_push_back_cstr(Str, cstr0);
+	str_push_back_cstr(Str, cstr1);
 
-	printf("Before Pop At : %s\n", str_as_raw(&str)); str_pop(&str, 5, 1);
-	printf("After Pop At : %s\n" , str_as_raw(&str));
+	printf("Before Pop At : %s\n", str_as_raw(Str)); str_pop(Str, 5, 1);
+	printf("After Pop At : %s\n" , str_as_raw(Str));
 
-	str_push_cstr(&str, 5, cstr2, 1);
-	printf("After Push At : %s\n", str_as_raw(&str))								;
-	printf("Find Result : %s\n"  , str_as_raw(&str) + str_find_cstr(&str, 0, cstr1));
+	str_push_cstr(&Str, 5, cstr2, 1);
+	printf("After Push At : %s\n", str_as_raw(Str))								  ;
+	printf("Find Result : %s\n"  , str_as_raw(Str) + str_find_cstr(Str, 0, cstr1));
 
-	del(&str);
+	del(Str);
 }

@@ -12,13 +12,14 @@ void
             task_yield(par);
 }
 
-obj_trait task_trait     = {
-    .on_new   = &task_new  ,
-    .on_clone = &task_clone,
-    .on_ref   = 0          ,
-    .on_del   = &task_del  ,
-    .size     = sizeof(task)
-};
+obj_trait task_trait = make_trait (
+    task_new    ,
+    task_clone  ,
+    null_t      ,
+    task_del    ,
+    sizeof(task),
+    null_t
+);
 
 obj_trait *task_t = &task_trait;
 
@@ -26,23 +27,21 @@ obj_trait *task_t = &task_trait;
 u64_t  
     task_do_poll
         (task* par)                                    {
-            if (!par)                    return fut_err;
             if (trait_of(par) != task_t) return fut_err;
             return par->stat;
 }
 
 void* 
     task_do_ret
-        (task* par)                              {
-            if (!par)                    return 0;
-            if (trait_of(par) != task_t) return 0;
+        (task* par)                                   {
+            if (trait_of(par) != task_t) return null_t;
             return par->ret;
 }
 
-fut_ops task_fut_ops   = {
-    .poll = &task_do_poll,
-    .ret  = &task_do_ret 
-};
+fut_ops task_fut_ops = make_fut_ops (
+    task_do_poll,
+    task_do_ret
+);
 
 bool_t
     task_new
@@ -52,16 +51,16 @@ bool_t
             u64_t  stack = 0; if (par_count > 2) stack = va_arg(par, u64_t);
             u64_t  len   = 0; if (par_count > 3) len   = va_arg(par, u64_t);
 
-            if (!par_count)                                                {
-                if (!make_at(&par_task->cpu, cpu_t) from(0)) return false_t;
+            if (!par_count)                                              {
+                if (!make_at(&par_task->cpu, cpu) from(0)) return false_t;
                 par_task->stat = fut_pend;
                 return true_t;
             }
 
-            if (!make_at(&par_task->cpu, cpu_t) from(0)) return false_t;
-            if (!func)                                   return false_t;
-            if (!stack)                                  return false_t;
-            if (!len)                                    return false_t;
+            if (!make_at(&par_task->cpu, cpu) from(0)) return false_t;
+            if (!func)                                 return false_t;
+            if (!stack)                                return false_t;
+            if (!len)                                  return false_t;
             
             cpu_stack(&par_task->cpu, stack, len);
             cpu_entry(&par_task->cpu, task_main) ;
@@ -115,10 +114,10 @@ void
 
 fut*
     task_fut
-        (task* par)                              {
-            if (!par)                    return 0;
-            if (trait_of(par) != task_t) return 0;
-            return make (fut_t) from (
+        (task* par)                                   {
+            if (!par)                    return null_t;
+            if (trait_of(par) != task_t) return null_t;
+            return make (fut) from (
                 2            ,
                 &task_fut_ops,
                 par

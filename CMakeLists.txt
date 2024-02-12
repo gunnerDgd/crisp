@@ -1,11 +1,23 @@
 if     (PRESET_ARCH_X86_64)
     add_compile_definitions(PRESET_ARCH_X86_64)
     add_compile_definitions(PRESET_ARCH_BIT=64)
+    add_compile_definitions(PRESET_ARCH_ENDIAN_LITTLE)
+    
+    set(PRESET_ARCH_ENDIAN_LITTLE on)
+    set(PRESET_ARCH_ENDIAN_BIG    off)
+
     set(PRESET_ARCH_X86_64 on)
+    set(PRESET_ARCH_BIT 64)
 elseif (PRESET_ARCH_X86)
     add_compile_definitions(PRESET_ARCH_X86)
     add_compile_definitions(PRESET_ARCH_BIT=32)
+    add_compile_definitions(PRESET_ARCH_ENDIAN_LITTLE)
+    
+    set(PRESET_ARCH_ENDIAN_LITTLE on)
+    set(PRESET_ARCH_ENDIAN_BIG    off)
+
     set(PRESET_ARCH_X86 on)
+    set(PRESET_ARCH_BIT 32)
 endif()
 
 if (WIN32)

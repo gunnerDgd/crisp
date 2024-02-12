@@ -7,11 +7,10 @@ extern obj_trait* set_root_t              ;
 typedef struct    set_root                {
     obj              head                 ;
     obj             *node[PRESET_ARCH_BIT];
-    reg_t            free                 ;
-    reg_t            use                  ;
-
-    reg_t            sub_count            ;
     struct set_root *sub [PRESET_ARCH_BIT];
+    reg_t            free;
+    reg_t            use ;
+    reg_t            num ;
 }   set_root;
 
 bool_t set_root_new  (set_root*, u32_t, va_list);
