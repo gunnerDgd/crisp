@@ -5,74 +5,29 @@ if (PRESET_ARCH_X86_64)
     enable_language        (ASM_NASM)
     set                    (CMAKE_ASM_NASM_COMPILE_OBJECT "<CMAKE_ASM_NASM_COMPILER> <INCLUDES> <FLAGS> -o <OBJECT> <SOURCE>")
     add_compile_options    ("$<$<COMPILE_LANGUAGE:ASM_NASM>:-f $<IF:$<BOOL:$<TARGET_PROPERTY:NASM_OBJ_FORMAT>>, \ $<TARGET_PROPERTY:NASM_OBJ_FORMAT>, ${CMAKE_ASM_NASM_OBJECT_FORMAT}>>")
+    if    (PRESET_CALL_VECTORCALL)
+        add_library                           (
+            crisp-arch-asm STATIC
+            arch/x86_64/asm/vectorcall_atom.asm
+            arch/x86_64/asm/vectorcall_cpu.asm
+            arch/x86_64/asm/vectorcall_bit.asm
+        )
+    elseif(PRESET_CALL_SYSV)
+        add_library                      (
+            crisp-arch-asm STATIC
+            arch/x86_64/asm/sysv_atom.asm
+            arch/x86_64/asm/sysv_cpu.asm
+            arch/x86_64/asm/sysv_bit.asm
+        )
+    endif ()
 
-    if     (PRESET_WIN32)
-        if (PRESET_ARCH_X86_64)
-            add_library                        (
-                crisp-arch-asm STATIC
-                arch/x86_64/asm/atomic_msvc.asm
-                arch/x86_64/asm/cpu_msvc.asm
-                arch/x86_64/asm/bit_msvc.asm
-            )
-
-            set_target_properties(crisp-arch-asm PROPERTIES NASM_OBJ_FORMAT win64)
-            add_library          (
-                crisp-arch STATIC
-                arch/x86_64/cpu.h
-                arch/x86_64/cpu.c
-            )
-
-            target_link_libraries(crisp-arch PRIVATE crisp-arch-asm)
-        elseif (PRESET_ARCH_X86)
-            add_library                        (
-                crisp-arch-asm STATIC
-                arch/x86/asm/atomic_msvc.asm
-                arch/x86/asm/cpu_msvc.asm
-                arch/x86/asm/bit_msvc.asm
-            )
-
-            set_target_properties(crisp-arch-asm PROPERTIES NASM_OBJ_FORMAT win32)
-            add_library          (
-                crisp-arch STATIC
-                arch/x86/cpu.h
-                arch/x86/cpu.c
-            )
-
-            target_link_libraries(crisp-arch PRIVATE crisp-arch-asm)
-        endif  ()
+    add_library (crisp-arch STATIC arch/x86_64/cpu.h arch/x86_64/cpu.c)
+    if (PRESET_WIN32)
+        set_target_properties(crisp-arch-asm PROPERTIES NASM_OBJ_FORMAT win64)
+        target_link_libraries(crisp-arch PRIVATE crisp-arch-asm)
     elseif (UNIX AND NOT APPLE)
-        if (PRESET_ARCH_X86_64)
-            add_library                       (
-                crisp-arch-asm STATIC
-                arch/x86_64/asm/atomic_gcc.asm
-                arch/x86_64/asm/cpu_gcc.asm
-                arch/x86_64/asm/bit_gcc.asm
-            )
-            set_target_properties(crisp-arch-asm PROPERTIES NASM_OBJ_FORMAT elf64)
-            add_library          (
-                crisp-arch STATIC
-                arch/x86_64/cpu.h
-                arch/x86_64/cpu.c
-            )
-
-            target_link_libraries(crisp-arch PRIVATE crisp-arch-asm)
-        elseif (PRESET_ARCH_X86)
-            add_library                        (
-                crisp-arch-asm STATIC
-                arch/x86/asm/atomic_gcc.asm
-                arch/x86/asm/cpu_gcc.asm
-                arch/x86/asm/bit_gcc.asm
-            )
-
-            set_target_properties(crisp-arch-asm PROPERTIES NASM_OBJ_FORMAT elf32)
-            add_library          (
-                crisp-arch STATIC
-                arch/x86/cpu.h
-                arch/x86/cpu.c
-            )
-
-            target_link_libraries(crisp-arch PRIVATE crisp-arch-asm)
-        endif()
+        set_target_properties(crisp-arch-asm PROPERTIES NASM_OBJ_FORMAT elf64)
+        target_link_libraries(crisp-arch PRIVATE crisp-arch-asm)
     endif()
 endif()
 

@@ -13,6 +13,7 @@ obj_trait* cpu_t = &cpu_trait;
 bool_t 
 	cpu_new  
 		(cpu* par_cpu, u32_t par_count, va_list par)				  {
+#ifdef PRESET_CALL_VECTORCALL
 			u64_t rip = 0; if (par_count > 0) rip = va_arg(par, u64_t);
 			u64_t rcx = 0; if (par_count > 1) rcx = va_arg(par, u64_t);
 			u64_t rsp = 0; if (par_count > 2) rsp = va_arg(par, u64_t);
@@ -25,6 +26,20 @@ bool_t
 			par_cpu->reg.rsp  = rsp;
 			par_cpu->reg.rsp += len;
 			return true_t; 
+#elif  PRESET_CALL_SYSV
+			u64_t rip = 0; if (par_count > 0) rip = va_arg(par, u64_t);
+			u64_t rdi = 0; if (par_count > 1) rdi = va_arg(par, u64_t);
+			u64_t rsp = 0; if (par_count > 2) rsp = va_arg(par, u64_t);
+			u64_t len = 0; if (par_count > 3) len = va_arg(par, u64_t);
+
+			if (par_count == 0) return true_t ;
+			if (par_count != 4) return false_t;
+			par_cpu->reg.rip  = rip;
+			par_cpu->reg.rdi  = rdi;
+			par_cpu->reg.rsp  = rsp;
+			par_cpu->reg.rsp += len;
+			return true_t; 
+#endif
 }
 
 bool_t 
