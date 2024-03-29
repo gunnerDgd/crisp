@@ -69,7 +69,7 @@ bool_t
             if (!make_at(&par_task->cpu  , cpu) from (0))              return false_t;
             if (!make_at(&par_task->stack, box) from (2, sp_len, mem)) return false_t;
 
-            cpu_stack(&par_task->cpu, box_ptr(&par_task->stack), sp_len - 16);
+            cpu_stack(&par_task->cpu, box_ptr(&par_task->stack), sp_len - 24);
             cpu_entry(&par_task->cpu, task_do_run);
             cpu_arg  (&par_task->cpu, par_task)   ;
             par_task->stat   = fut_pend;

@@ -1,8 +1,20 @@
-//
-// Created by enbay on 3/28/24.
-//
+#ifndef __WIN32_MTX_H__
+#define __WIN32_MTX_H__
 
-#ifndef CRISP_MTX_H
-#define CRISP_MTX_H
+#include "../../core.h"
 
-#endif //CRISP_MTX_H
+extern obj_trait *mtx_t;
+typedef struct    mtx  {
+    obj   head;
+    any_t mtx ;
+}   mtx;
+
+bool_t mtx_new     (mtx*, u32_t, va_list);
+bool_t mtx_clone   (mtx*, mtx*)          ;
+void   mtx_del     (mtx*)                ;
+
+bool_t mtx_lock_try(mtx*);
+void   mtx_lock    (mtx*);
+void   mtx_unlock  (mtx*);
+
+#endif

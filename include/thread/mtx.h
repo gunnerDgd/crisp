@@ -1,7 +1,6 @@
-#ifndef __LINUX_MTX_H__
-#define __LINUX_MTX_H__
+#ifndef __THREAD_MTX_H__
+#define __THREAD_MTX_H__
 
-#ifdef PRESET_FEATURE_THREAD
 #include "../core.h"
 
 extern obj_trait *mtx_t ;
@@ -11,5 +10,4 @@ bool_t mtx_lock_try(mtx*);
 void   mtx_lock    (mtx*);
 void   mtx_unlock  (mtx*);
 
-#endif
 #endif

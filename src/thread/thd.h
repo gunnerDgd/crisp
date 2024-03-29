@@ -7,6 +7,9 @@
 #include "linux/thd.h"
 #endif
 
+#ifdef PRESET_WIN32
+#include "win32/thd.h"
 #endif
 
+#endif
 #endif

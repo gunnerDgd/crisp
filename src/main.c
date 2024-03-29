@@ -7,6 +7,7 @@ int main (int argc, char** argv)                 {
 #include "libc.h"
     if (!make_at(&libc, libc) from (0)) return -2;
 #endif
+
 #ifdef PRESET_FEATURE_THREAD
 #include "thread.h"
 #endif

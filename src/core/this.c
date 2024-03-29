@@ -4,6 +4,11 @@
 #ifdef PRESET_COMPILER_GCC
 __thread struct this *this;
 #endif
+
+#ifdef PRESET_COMPILER_MSVC
+__declspec(thread) struct this* this;
+#endif
+
 #else
 struct this          *this;
 #endif
@@ -26,6 +31,6 @@ bool_t
             return true_t;
 }
 
-bool_t this_clone(struct this* par, struct this*) { return false_t; }
-bool_t this_ref  (struct this* par)               { return false_t; }
-void   this_del  (struct this* par)               {                 }
+bool_t this_clone(struct this* par, struct this* par_clone) { return false_t; }
+bool_t this_ref  (struct this* par)                         { return false_t; }
+void   this_del  (struct this* par)                         {                 }

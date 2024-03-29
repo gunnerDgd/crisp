@@ -7,6 +7,9 @@
 #include "linux/mtx.h"
 #endif
 
+#ifdef PRESET_WIN32
+#include "win32/mtx.h"
 #endif
 
+#endif
 #endif

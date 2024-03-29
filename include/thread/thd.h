@@ -1,6 +1,5 @@
-#ifndef __POSIX_THD_H__
-#define __POSIX_THD_H__
-#ifdef PRESET_FEATURE_THREAD
+#ifndef __THREAD_THD_H__
+#define __THREAD_THD_H__
 
 #include "../core.h"
 
@@ -9,5 +8,4 @@ typedef struct    thd  { u8_t thd[128]; } thd;
 
 fut*   thd_fut(thd*);
 
-#endif
 #endif

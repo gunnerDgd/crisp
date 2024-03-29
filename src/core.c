@@ -33,6 +33,6 @@ bool_t
             return true_t;
 }
 
-bool_t core_clone(struct core*, struct core*) { return false_t; }
-bool_t core_ref  (struct core*)               { return false_t; }
-void   core_del  (struct core*)               {  }
+bool_t core_clone(struct core* par, struct core* par_clone) { return false_t; }
+bool_t core_ref  (struct core* par)                         { return false_t; }
+void   core_del  (struct core* par)                         {                 }

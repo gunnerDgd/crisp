@@ -71,4 +71,6 @@ int run()                                 {
     while (fut_poll(fut_1) == fut_pend)   {
         printf("Polling Async Task...\n");
     }
+
+    del(fut_1);
 }

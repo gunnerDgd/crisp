@@ -3,7 +3,13 @@ if   (PRESET_WIN32)
         win32/thd.h
         win32/thd.c
 
+        win32/mtx.h
+        win32/mtx.c
+
         thd.h
+        mtx.h
+
+        ../thread.h
     )
 endif()
 

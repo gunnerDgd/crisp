@@ -88,6 +88,7 @@ add_library (crisp-core STATIC
 
     sync/mpmc.h
     sync/mpmc.c
+    sync.h
 
     ../core.h
     ../core.c
@@ -120,6 +121,7 @@ add_library          (crisp-core-include STATIC
     ../../include/core/sync/spmc.h
     ../../include/core/sync/mpsc.h
     ../../include/core/sync/mpmc.h
+    ../../include/core/sync.h
 )
 
 set_target_properties(crisp-core-include PROPERTIES LINKER_LANGUAGE C)

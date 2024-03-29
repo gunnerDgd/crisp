@@ -18,7 +18,7 @@ bool_t
             if (trait_of(mem) != mem_t) mem = get_mem();
             if (trait_of(mem) != mem_t) return false_t;
 
-            if (!make_at(&par_str->str, seq) from (1, mem)) return false_t;
+            if (!make_at(&par_str->str, seq) from (2, 16, mem)) return false_t;
             return true_t;
 }
 

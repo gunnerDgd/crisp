@@ -1,18 +1,8 @@
-#include <obj.h>
-#include <sync/mpmc.h>
+#include <core.h>
+#include <core/sync.h>
+#include <thread.h>
 
 #include <stdio.h>
-#include <stdlib.h>
-
-#include <Windows.h>
-
-void* cstd_mem_new(mem* par, u64_t par_size) { return malloc(par_size); }
-void  cstd_mem_del(mem* par, void* par_del)  { free(par_del); }
-
-mem cstd_mem		     = {
-	.on_new = &cstd_mem_new,
-	.on_del = &cstd_mem_del
-};
 
 typedef struct val {
 	obj   head ;
@@ -51,25 +41,25 @@ u64_t rx_thd(mpmc* par)				  {
 	return ret;
 }
 
-int main()			  {
-	set_mem(&cstd_mem);
-	mpmc  *Mpmc = make (mpmc) from (0);
-	u64_t  sum  = 0					  ;
-	HANDLE rx [8];
-	HANDLE tx [8];
+int run()								{
+	mpmc  *mpmc_1 = make (mpmc) from (0);
+	u64_t  sum    = 0					;
+	thd   *rx [8];
+	thd   *tx [8];
 	u64_t  ret[8];
 
-	for(int i = 0 ; i < 8 ; ++i)				      {
-		rx[i] = CreateThread(0, 0, rx_thd, Mpmc, 0, 0);
-		tx[i] = CreateThread(0, 0, tx_thd, Mpmc, 0, 0);
+	for(int i = 0 ; i < 8 ; ++i)			       {
+		rx[i] = make (thd) from (2, rx_thd, mpmc_1);
+		tx[i] = make (thd) from (2, tx_thd, mpmc_1);
 	}
 
 	for(int i = 0 ; i < 8 ; ++i)			{
-		WaitForSingleObject(rx[i], INFINITE);
-		WaitForSingleObject(tx[i], INFINITE);
-		GetExitCodeThread  (rx[i], &ret[i]) ;
+		fut   *fut = thd_fut(rx[i]);
+		while (fut_poll(fut) == fut_pend);
+		sum += (u64_t) fut_ret (fut);
 
-		sum += ret[i];
+		del (rx[i]);
+		del (fut)  ;
 	}
 
 	printf("%d\n", sum);
