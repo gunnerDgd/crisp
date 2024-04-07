@@ -7,14 +7,14 @@
 typedef struct mem_ops                  {
     void* (*on_acq)(any_t, void*, u64_t);
     void  (*on_rel)(any_t, void*, u64_t);
-    any_t (*on_new)(struct mem*);
+    any_t (*on_new)(u32_t, va_list);
     void  (*on_del)(any_t);
 }   mem_ops;
 
 #define make_mem_ops(par_acq, par_rel, par_new, par_del) {\
     .on_acq = ((void* (*)(any_t, void*, u64_t))(par_acq)),\
     .on_rel = ((void  (*)(any_t, void*, u64_t))(par_rel)),\
-    .on_new = ((any_t (*)(struct mem*))        (par_new)),\
+    .on_new = ((any_t (*)(u32_t, va_list))     (par_new)),\
     .on_del = ((void  (*)(any_t))              (par_del)),\
 }
 

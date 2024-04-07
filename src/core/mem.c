@@ -22,7 +22,7 @@ bool_t
             if (!ops->on_new) return false_t;
             if (!ops->on_del) return false_t;
 
-            par_mem->mem = ops->on_new(par_mem);
+            par_mem->mem = ops->on_new(par_count - 1, par);
             par_mem->ops = ops;
 
             if (!par_mem->mem) return false_t;
