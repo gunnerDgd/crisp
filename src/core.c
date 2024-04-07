@@ -28,7 +28,6 @@ bool_t
     core_new
         (struct core* par_core, u32_t par_count, va_list par)             {
             mem* mem = null_t; if (par_count > 0) mem = va_arg(par, void*);
-
             par_core->mem = mem;
             return true_t;
 }

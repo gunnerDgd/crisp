@@ -4,8 +4,8 @@
 #include <stdlib.h>
 #include <string.h>
 
-any_t   libc_mem_do_new(mem*  par)                               { return &libc_mem_do; }
-void    libc_mem_do_del(any_t par)                               {  }
+any_t   libc_mem_do_new(u32_t par_count, va_list par) { return &libc_mem_do; }
+void    libc_mem_do_del(any_t par)                    {  }
 
 void*   
     libc_mem_do_acq
