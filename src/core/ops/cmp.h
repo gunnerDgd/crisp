@@ -6,21 +6,41 @@
 struct obj;
 
 typedef enum ord_t {
-    ord_lt = -1,
-    ord_eq =  0,
-    ord_gt =  1
+    ord_err = -1,
+    ord_lt  =  0,
+    ord_eq  =  1,
+    ord_gt  =  2
 }   ord_t;
 
-typedef struct ops_cmp              {
-    ord_t (*ord)(struct obj*, any_t);
+typedef struct ops_cmp                        {
+    ord_t (*ord)    (struct obj*, struct obj*);
+    ord_t (*ord_arg)(struct obj*, any_t)      ;
 }   ops_cmp;
 
-ord_t  op_ord  (struct obj*, any_t);
-bool_t op_gt   (struct obj*, any_t);
-bool_t op_gt_eq(struct obj*, any_t);
-bool_t op_lt   (struct obj*, any_t);
-bool_t op_lt_eq(struct obj*, any_t);
-bool_t op_eq   (struct obj*, any_t);
-bool_t op_ne   (struct obj*, any_t);
+#define make_ops_cmp(ord, ord_arg) {                            \
+    .ord_arg = ((ord_t)(*)(struct obj*, struct obj*))(ord_arg), \
+    .ord     = ((ord_t)(*)(struct obj*, any_t))      (ord)      \
+}
+
+ord_t  op_ord      (struct obj*, struct obj*);
+ord_t  op_org_arg  (struct obj*, any_t)      ;
+
+bool_t op_gt       (struct obj*, struct obj*);
+bool_t op_gt_arg   (struct obj*, any_t)      ;
+
+bool_t op_gt_eq    (struct obj*, struct obj*);
+bool_t op_gt_eq_arg(struct obj*, any_t)      ;
+
+bool_t op_lt       (struct obj*, struct obj*);
+bool_t op_lt_arg   (struct obj*, any_t)      ;
+
+bool_t op_lt_eq    (struct obj*, struct obj*);
+bool_t op_lt_eq_arg(struct obj*, any_t)      ;
+
+bool_t op_eq       (struct obj*, struct obj*);
+bool_t op_eq_arg   (struct obj*, any_t)      ;
+
+bool_t op_ne       (struct obj*, struct obj*);
+bool_t op_ne_arg   (struct obj*, any_t)      ;
 
 #endif
