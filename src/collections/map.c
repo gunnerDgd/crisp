@@ -61,10 +61,10 @@ void
 
 node*
     map_find
-        (map* par, obj* par_key)                     {
+        (map* par, any_t par_key)                    {
             if (trait_of(par) != map_t) return null_t;
-            list_for (&par->map, find)                   {
-                if (op_ne(value(find), par_key)) continue;
+            list_for (&par->map, find)                       {
+                if (op_ne_arg(value(find), par_key)) continue;
                 return find;
             }
 

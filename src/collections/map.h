@@ -15,7 +15,7 @@ void   map_del  (map*)                ;
 
 node*  map_push (map*, obj*)          ;
 void   map_pop  (map*, obj*)          ;
-node*  map_find (map*, obj*)          ;
+node*  map_find (map*, any_t)         ;
 
 bool_t map_empty(map*)                ;
 node*  map_begin(map*)                ;
