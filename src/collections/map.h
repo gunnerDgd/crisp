@@ -13,8 +13,9 @@ bool_t map_new  (map*, u32_t, va_list);
 bool_t map_clone(map*, map*)          ;
 void   map_del  (map*)                ;
 
+node*  map_move (map*, obj*)          ;
 node*  map_push (map*, obj*)          ;
-void   map_pop  (map*, obj*)          ;
+void   map_pop  (map*, any_t)         ;
 node*  map_find (map*, any_t)         ;
 
 bool_t map_empty(map*)                ;

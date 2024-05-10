@@ -51,10 +51,19 @@ node*
             return list_push_back(&par->map, par_push);
 }
 
+node*
+    map_move
+        (map* par, obj* par_move)                      {
+            if (trait_of (par) != map_t)  return null_t;
+            if (!map_push(par, par_move)) return null_t;
+            del   (par_move);
+            return par_move ;
+}
+
 void      
     map_pop
-        (map* par, obj* par_pop)                                                   {
-            if (trait_of(par) != map_t)  return; node *pop = map_find(par, par_pop);
+        (map* par, any_t par_key)                                                  {
+            if (trait_of(par) != map_t)  return; node *pop = map_find(par, par_key);
             if (trait_of(pop) != node_t) return;
             del(pop);
 }
