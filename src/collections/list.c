@@ -85,6 +85,26 @@ node*
             return  ret;
 }
 
+node*
+    list_move_back
+        (list* par, obj* par_push)                   {
+            node* ret = list_push_back(par, par_push);
+
+            if (trait_of(ret) != node_t) return null_t;
+            del(par_push);
+            return ret;
+}
+
+node*
+    list_move_front
+        (list* par, obj* par_push)                    {
+            node* ret = list_push_front(par, par_push);
+
+            if (trait_of(ret) != node_t) return null_t;
+            del(par_push);
+            return ret;
+}
+
 obj*
     list_pop_front
         (list* par)                                   {

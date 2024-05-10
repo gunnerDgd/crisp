@@ -14,6 +14,9 @@ bool_t list_new       (list*, u32_t, va_list);
 bool_t list_clone     (list*, list*)         ;
 void   list_del       (list*)                ;
 
+node*  list_move_front(list*, obj*)          ;
+node*  list_move_back (list*, obj*)          ;
+
 node*  list_push_front(list*, obj*)          ;
 node*  list_push_back (list*, obj*)          ;
 

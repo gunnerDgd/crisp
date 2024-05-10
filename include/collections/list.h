@@ -9,6 +9,9 @@ typedef struct     list     { u8_t handle[256]; } list;
 node*  list_push_back (list*, obj*);
 node*  list_push_front(list*, obj*);
 
+node*  list_move_front(list*, obj*);
+node*  list_move_back (list*, obj*);
+
 obj*   list_pop_front (list*)      ;
 obj*   list_pop_back  (list*)	   ;
 
