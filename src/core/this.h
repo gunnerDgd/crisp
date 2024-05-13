@@ -2,6 +2,7 @@
 #define __THIS_H__
 
 #include "obj.h"
+#include "mod.h"
 
 struct task;
 
@@ -9,6 +10,9 @@ extern obj_trait *this_t;
 struct            this  {
     obj          head;
     struct task *task;
+    any_t      (*run)(any_t);
+    any_t        arg;
+    any_t        ret;
 };
 
 #ifdef PRESET_FEATURE_THREAD

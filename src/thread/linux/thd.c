@@ -3,27 +3,34 @@
 
 void
     thd_do_run
-        (thd* par)                            {
-            if (trait_of(par) != thd_t) return;
-            if (this)                   return;
+        (thd* self)                            {
+            if (trait_of(self) != thd_t) return;
+            if (this)                    return;
+            this = (struct this*) obj_new      (
+                null_t     ,
+                this_t    ,
+                2         ,
+                self->func,
+                self->arg
+            );
 
-            this      = obj_new(null_t, this_t, 0);
-            par->ret  = par->func(par->arg);
-            par->stat = fut_ready          ;
+            self->ret  = this->ret;
+            self->stat = fut_ready;
+            del(this);
 }
 
 u64_t
     thd_do_poll
-        (thd* par)                                    {
-            if (trait_of(par) != thd_t) return fut_err;
-            return par->stat;
+        (thd* self)                                    {
+            if (trait_of(self) != thd_t) return fut_err;
+            return self->stat;
 }
 
 void*
     thd_do_ret
-        (thd* par)                                   {
-            if (trait_of(par) != thd_t) return null_t;
-            return par->ret;
+        (thd* self)                                   {
+            if (trait_of(self) != thd_t) return null_t;
+            return self->ret;
 }
 
 fut_ops thd_fut_ops = make_fut_ops (
@@ -45,8 +52,8 @@ obj_trait *thd_t = &thd_trait;
 bool_t
     thd_new
         (thd* self, u32_t par_count, va_list par)                            {
-            void* func = null_t; if (par_count > 0) func = va_arg(par, void*);
-            void* arg  = null_t; if (par_count > 1) arg  = va_arg(par, void*);
+            any_t func = null_t; if (par_count > 0) func = va_arg(par, any_t);
+            any_t arg  = null_t; if (par_count > 1) arg  = va_arg(par, any_t);
             if (!func) return false_t;
             self->stat = fut_pend;
             self->func = func    ;

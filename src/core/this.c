@@ -26,11 +26,26 @@ obj_trait *this_t = &this_trait;
 
 bool_t
     this_new
-        (struct this* par_this, u32_t par_count, va_list par) {
-            par_this->task = null_t;
+        (struct this* self, u32_t count, va_list par)                  {
+            any_t run = null_t; if (count > 0) run = va_arg(par, any_t);
+            any_t arg = null_t; if (count > 1) arg = va_arg(par, any_t);
+
+            if (!mod_new()) return false_t;
+            if (!run)       return false_t;
+
+            self->task = null_t;
+            self->run  = run;
+            self->arg  = arg;
+
+            self->ret = self->run (self->arg);
             return true_t;
 }
 
-bool_t this_clone(struct this* par, struct this* par_clone) { return false_t; }
-bool_t this_ref  (struct this* par)                         { return false_t; }
-void   this_del  (struct this* par)                         {                 }
+bool_t this_clone(struct this* self, struct this* clone) { return false_t; }
+bool_t this_ref  (struct this* self)                     { return false_t; }
+
+void
+    this_del
+        (struct this* self) {
+            mod_del();
+}
