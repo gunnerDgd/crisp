@@ -8,6 +8,7 @@ function   (preset_compiler)
     elseif ("${CMAKE_C_COMPILER_ID}" STREQUAL "GNU")
         add_compile_definitions(PRESET_COMPILER_GCC)
         add_compile_definitions(PRESET_CALL_SYSV)
+        add_compile_options    (-Wno-incompatible-pointer-types)
 
         set(PRESET_COMPILER_GCC on PARENT_SCOPE)
         set(PRESET_CALL_SYSV    on PARENT_SCOPE)
