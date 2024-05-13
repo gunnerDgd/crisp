@@ -32,41 +32,42 @@ bool_t
 
 bool_t
     fut_clone
-        (fut* par, fut* par_clone) {
+        (fut* self, fut* clone) {
             return false_t;
 }
 
 void   
     fut_del
-        (fut* par)        {
-            del (par->fut);
+        (fut* self)        {
+            del (self->fut);
 }
 
 u64_t  
     fut_poll
-        (fut* par)                                    {
-            if (trait_of(par) != fut_t) return fut_err;
-            par->stat = par->ops->poll(par->fut);
-            return par->stat;
+        (fut* self)                                       {
+            if (trait_of(self) != fut_t) return    fut_err;
+            if (self->stat != fut_pend)  return self->stat;
+            self->stat = self->ops->poll(self->fut);
+            return self->stat;
 }
 
 void*
     fut_ret
-        (fut* par)                                   {
-            if (trait_of(par) != fut_t) return null_t;
-            if (par->stat == fut_pend)  return null_t;
+        (fut* self)                                   {
+            if (trait_of(self) != fut_t) return null_t;
+            if (self->stat == fut_pend)  return null_t;
 
-            par->ret = par->ops->ret(par->fut);
-            return par->ret;
+            self->ret = self->ops->ret(self->fut);
+            return self->ret;
 }
 
 void*
     await
-        (fut* par)                                           {
+        (fut* self)                                          {
             if (trait_of(this->task) != task_t) return null_t;
-            if (trait_of(par)        != fut_t)  return null_t;
+            if (trait_of(self)       != fut_t)  return null_t;
             task* task = this->task;
 
-            while (fut_poll(par) == fut_pend) cpu_switch(&task->cpu, task->ret);
-            return fut_ret (par);
+            while (fut_poll(self) == fut_pend) cpu_switch(&task->cpu, task->ret);
+            return fut_ret (self);
 }
