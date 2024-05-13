@@ -29,9 +29,8 @@ bool_t
         (struct this* self, u32_t count, va_list par)                  {
             any_t run = null_t; if (count > 0) run = va_arg(par, any_t);
             any_t arg = null_t; if (count > 1) arg = va_arg(par, any_t);
-
-            if (!mod_new()) return false_t;
-            if (!run)       return false_t;
+            if (!run) return false_t;
+            this = self;
 
             self->task = null_t;
             self->run  = run;
@@ -43,9 +42,4 @@ bool_t
 
 bool_t this_clone(struct this* self, struct this* clone) { return false_t; }
 bool_t this_ref  (struct this* self)                     { return false_t; }
-
-void
-    this_del
-        (struct this* self) {
-            mod_del();
-}
+void   this_del  (struct this* self)                     {}
