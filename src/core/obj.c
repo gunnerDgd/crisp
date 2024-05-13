@@ -4,29 +4,36 @@
 
 obj*
     obj_new
-		(mem* par_mem, obj_trait* par_trait, u32_t par_count, ...) {
-    		va_list  par;
-			va_start(par, par_count); obj* ret = obj_new_va(par_mem, par_trait, par_count, par);
-			va_end  (par);
+		(mem* mem, obj_trait* trait, u32_t count, ...) {
+    		va_list  arg;
+			va_start(arg, count); obj* ret = obj_new_va(mem, trait, count, arg);
+			va_end  (arg);
 			return   ret ;
 }
 
 obj*
     obj_new_va
-		(mem* par_mem, obj_trait* par_trait, u32_t par_count, va_list par)   		  {
-			obj_trait *trait = par_trait; if (!trait)				     return null_t;
-			mem       *mem   = par_mem  ; if (trait->size < sizeof(obj)) return null_t;
+		(mem* mem, obj_trait* trait, u32_t count, va_list arg)   		  {
+			if (trait_of(mem) != mem_t) return null_t;
+			if (!trait)					return null_t;
+
 			if (!mem) mem = get_mem();
 			if (!mem) return   null_t;
 			
-			obj    *ret = mem_acq(mem, null_t, trait->size); if (!ret) return null_t;
-			mem_set(ret, 0x00, trait->size)		           ;
+			if (trait->size < sizeof(obj)) return null_t;
+			obj *ret = mem_acq						    (
+				mem		   , 
+				null_t	   ,
+				trait->size
+			); 
+			
+			if (!ret) return null_t;
 			ret->trait = trait;
 			ret->mem   = mem  ;
 			ret->ref   = 1	  ;
 
-			if (!trait->on_new)			   return ret;
-			if (!trait->on_new(ret, par_count, par)) {
+			if (!trait->on_new)		   return ret;
+			if (!trait->on_new(ret, count, arg)) {
 				mem_rel(mem, ret, 0);
 				return null_t;
 			}
@@ -36,35 +43,36 @@ obj*
 
 bool_t
 	obj_new_at
-		(obj* par_obj, obj_trait* par_trait, u32_t par_count, ...) {
-			va_list  par;
-			va_start(par, par_count); 
+		(obj* self, obj_trait* trait, u32_t count, ...) {
+			va_list  arg;
+			va_start(arg, count); 
 			bool_t ret = obj_new_at_va (
-				par_obj  , 
-				par_trait,
-				par_count,
-				par
+				self , 
+				trait,
+				count,
+				arg
 			);
 			
-			va_end (par);
+			va_end (arg);
 			return  ret ;
 }
 
 bool_t 
 	obj_new_at_va
-		(obj* par_obj, obj_trait* par_trait, u32_t par_count, va_list par) {
-			obj		  *ret   = par_obj  ; if (!ret)   return false_t;
-			obj_trait *trait = par_trait; if (!trait) return false_t;
-			if (trait->size < sizeof(obj)) return false_t;
+		(obj* self, obj_trait* trait, u32_t count, va_list arg) {
+			if (trait_of(self)) return false_t;
+			if (!trait)			return false_t;
+			if (!self)		    return false_t;
 
-			mem_set(ret, 0x00, trait->size);
-			ret->trait = par_trait;
-			ret->mem   = 0		  ;
-			ret->ref   = 1		  ;
+			if (trait->size < sizeof(obj)) return false_t;
+			mem_set(self, 0x00, trait->size);
+			self->trait = trait ;
+			self->mem   = null_t;
+			self->ref   = 1     ;
 
 			if (!trait->on_new)			return true_t;
-			if (!trait->on_new(ret, par_count, par)) {
-				mem_set(ret, 0x00, trait->size);
+			if (!trait->on_new(self, count, arg))    {
+				mem_set(self, 0x00, trait->size);
 				return false_t;
 			}
 
@@ -126,43 +134,42 @@ bool_t
 
 obj*
 	obj_ref
-		(obj* par)					 {
-			if (!par)		 return 0;
-			if (!par->trait) return 0;
-			if (!par->ref)	 return 0;
+		(obj* self)							    {
+			if (!use_count(self)) return false_t;
+			if (!trait_of (self)) return false_t;
 
-			if (!par->trait->on_ref)   { 
-				lock_inc_ptr(&par->ref);
-				return par;
+			if (!self->trait->on_ref)   {
+				lock_inc_ptr(&self->ref);
+				return self;
 			}
 			
-			if   (!par->trait->on_ref(par)) return 0; lock_inc64(&par->ref);
-			return par;
+			if (!self->trait->on_ref(self)) return null_t;
+			lock_inc_ptr(&self->ref);
+			return self;
 }
 
 u64_t
 	obj_del
-		(obj* par)			           {
-			if(!par)		   return 0;
-			if(!par->trait)    return 0;
-			if (par->ref == 0) return 0;
+		(obj* self)								{
+			if (!use_count(self)) return false_t;
+			if (!trait_of (self)) return false_t;
 
-			u64_t ref = lock_cas_dec_ptr(&par->ref);
+			u64_t ref = lock_cas_dec_ptr(&self->ref);
 			if (ref) return ref;
-			if (par->trait->on_del) par->trait->on_del(par);
-			if (!par->mem)						    {
-				mem_set(par, 0x00, par->trait->size);
+			if (self->trait->on_del) self->trait->on_del(self);
+			if (!self->mem)						      {
+				mem_set(self, 0x00, self->trait->size);
 				return 0;
 			}
 
-			mem_rel(par->mem, par, 0);
+			mem_rel(self->mem, self, 0);
 			return 0;
 }
 
 obj_trait* 
 	obj_get_trait
-		(obj* par)		      {
-			if (!par) return 0;
+		(obj* par)				   {
+			if (!par) return null_t;
 			return par->trait;
 }
 

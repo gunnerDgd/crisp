@@ -15,4 +15,6 @@
 #include "core/obj.h"
 #include "core/ops.h"
 
+#include "core/mod.h"
+
 #endif

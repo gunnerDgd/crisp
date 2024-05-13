@@ -43,25 +43,28 @@ void
 
 void*
     mem_acq
-        (mem* par, void* par_hint, u64_t par_len)    {
-            if (trait_of(par) != mem_t) return null_t;
-            if (!par_len)               return null_t;
-            return par->ops->on_acq                  (
-                par->mem,
-                par_hint,
-                par_len
+        (mem* self, void* hint, u64_t len)            {
+            if (trait_of(self) != mem_t) return null_t;
+            if (!len)                    return null_t;
+            void* ret = self->ops->on_acq             (
+                self->mem,
+                hint     ,
+                len
             );
+
+            mem_set(ret, 0x00, len);
+            return  ret;
 }
 
 void
     mem_rel
-        (mem* par, void* par_rel, u64_t par_len) {
-            if (trait_of(par) != mem_t) return;
-            if (!par_rel)               return;
-            return par->ops->on_rel           (
-                par->mem,
-                par_rel ,
-                par_len
+        (mem* self, void* rel, u64_t len)      {
+            if (trait_of(self) != mem_t) return;
+            if (!rel)                    return;
+            return self->ops->on_rel           (
+                self->mem,
+                rel      ,
+                len
             );
 }
 
