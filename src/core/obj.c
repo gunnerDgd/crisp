@@ -14,6 +14,7 @@ obj*
 obj*
     obj_new_va
 		(mem* mem, obj_trait* trait, u32_t count, va_list arg)   		  {
+			if (trait_of(mem) != mem_t) mem = get_mem();
 			if (trait_of(mem) != mem_t) return null_t;
 			if (!trait)					return null_t;
 
@@ -60,9 +61,8 @@ bool_t
 bool_t 
 	obj_new_at_va
 		(obj* self, obj_trait* trait, u32_t count, va_list arg) {
-			if (trait_of(self)) return false_t;
-			if (!trait)			return false_t;
-			if (!self)		    return false_t;
+			if (!trait) return false_t;
+			if (!self)  return false_t;
 
 			if (trait->size < sizeof(obj)) return false_t;
 			mem_set(self, 0x00, trait->size);
@@ -81,26 +81,32 @@ bool_t
 
 obj*	   
 	obj_clone   
-		(obj* par)											        {
-			obj		  *arg   = par		 ; if (!arg)   return null_t;
-			obj_trait *trait = arg->trait; if (!trait) return null_t;
-			mem		  *mem   = par->mem  ;
-			if (!mem)					   mem = get_mem();
-			if (!mem)					   return null_t;
-			if (trait->size < sizeof(obj)) return null_t;
-			if (!arg->ref)				   return null_t;
+		(obj* self)                             {
+		    if (!trait_of (self)) return false_t;
+		    if (!use_count(self)) return false_t;
+			obj_trait *trait = self->trait;
+			mem		  *mem   = self->mem  ;
 
-			obj *ret   = mem_acq(par->mem, null_t, par->trait->size); if (!ret) return null_t;
+			if (trait_of(mem) != mem_t)    mem = get_mem();
+			if (trait_of(mem) != mem_t)    return null_t;
+			if (trait->size < sizeof(obj)) return null_t;
+			obj *ret = mem_acq                          (
+			    mem       ,
+			    null_t    ,
+			    trait->size
+			);
+
+			if (!ret) return null_t;
 			ret->trait = trait;
 			ret->mem   = mem  ;
 			ret->ref   = 1	  ;
 
-			if (!trait->on_clone)			   {
-				mem_copy(ret, arg, trait->size);
+			if (!trait->on_clone)			    {
+				mem_copy(ret, self, trait->size);
 				return   ret;
 			}
 
-			if (!trait->on_clone(ret, arg)) goto clone_failed;
+			if (!trait->on_clone(ret, self)) goto clone_failed;
 			return ret;
 	clone_failed:
 			mem_rel(mem, ret, 0);
