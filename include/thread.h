@@ -7,11 +7,13 @@
 extern obj_trait *thread_t;
 struct thread { u8_t thread[2 KB]; };
 
-#ifdef PRESET_COMPILER_GCC
-extern __thread           struct thread thread;
-#elif  PRESET_COMPILER_MSVC
-extern __declspec(thread) struct thread thread;
+#ifdef PRESET_COMPILER_MSVC
+#define thd_local __declspec(thread)
+#elif  PRESET_COMPILER_GCC
+#define thd_local __thread
 #endif
+
+extern thd_local struct thread thread;
 
 u64_t this_thd_id();
 thd*  this_thd   ();
