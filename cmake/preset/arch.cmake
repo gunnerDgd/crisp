@@ -1,0 +1,20 @@
+function   (preset_arch)
+    if     (${CMAKE_HOST_SYSTEM_PROCESSOR} STREQUAL "x86_64")
+        set                    (PRESET_ARCH_X86_64 ON PARENT_SCOPE)
+        set                    (PRESET_ARCH        ON PARENT_SCOPE)
+        add_compile_definitions(PRESET_ARCH_X86_64)
+
+        message("[Crisp] Architecture Detected : x86_64 (AMD64)")
+    elseif (${CMAKE_HOST_SYSTEM_PROCESSOR} STREQUAL "AMD64")
+        set                    (PRESET_ARCH_X86_64 ON PARENT_SCOPE)
+        set                    (PRESET_ARCH        ON PARENT_SCOPE)
+        add_compile_definitions(PRESET_ARCH_X86_64)
+
+        message("[Crisp] Architecture Detected : x86_64 (AMD64)")
+    elseif (${CMAKE_HOST_SYSTEM_PROCESSOR} STREQUAL "x86")
+        set                    (PRESET_ARCH_X86 ON)
+        add_compile_definitions(PRESET_ARCH_X86)
+
+        message("[Crisp] Architecture Detected : x86 (i686)")
+    endif  ()
+endfunction()

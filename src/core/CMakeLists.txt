@@ -36,6 +36,7 @@ add_library (crisp-core STATIC
     macro.h
     cpu.h
     bit.h
+    mod.h
 
     atom.h
     atom.c
@@ -100,6 +101,7 @@ add_library          (crisp-core-include STATIC
 
     ../../include/core/atom.h
     ../../include/core/box.h
+    ../../include/core/mod.h
     ../../include/core/bit.h
     ../../include/core/cpu.h
     ../../include/core/endian.h
