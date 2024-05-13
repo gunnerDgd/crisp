@@ -75,15 +75,15 @@ void
 			if (!par_stack)             return;
             if (!par_len)	            return;
 
-			par->reg.rsp  = par_stack;
-			par->reg.rsp += par_len  ;
+			par->reg.rsp  = (u64_t) par_stack;
+			par->reg.rsp += par_len;
 }
 
 void   
 	cpu_entry
 		(cpu* par, void* par_entry)			  {
 			if (trait_of(par) != cpu_t) return;
-			par->reg.rip = par_entry;
+			par->reg.rip = (u64_t) par_entry;
 }
 
 void   
@@ -93,6 +93,6 @@ void
 #ifdef PRESET_WIN32
 			par->reg.rcx = par_arg;
 #elif PRESET_LINUX
-            par->reg.rdi = par_arg;
+            par->reg.rdi = (u64_t) par_arg;
 #endif
 }

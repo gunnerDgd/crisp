@@ -46,10 +46,10 @@ u64_t lock_bts64(u64_t*, u64_t);
 
 #if PRESET_ARCH_BIT == 64
 #define btc(par, par_arg) btc64(((u64_t*)par), ((u64_t)par_arg))
-#define bsf(par)          bsf64(((u64_t*)par))
+#define bsf(par)          bsf64(((u64_t) par))
 #define btr(par, par_arg) btr64(((u64_t*)par), ((u64_t)par_arg))
 #define bts(par, par_arg) bts64(((u64_t*)par), ((u64_t)par_arg))
-#define bsr(par)          bsr64(((u64_t*)par))
+#define bsr(par)          bsr64(((u64_t) par))
 
 #define lock_btc(par, par_arg) lock_btc64(((u64_t*)par), ((u64_t)par_arg))
 #define lock_btr(par, par_arg) lock_btr64(((u64_t*)par), ((u64_t)par_arg))

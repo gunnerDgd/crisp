@@ -12,6 +12,14 @@ int main (int argc, char** argv)                 {
 #include "thread.h"
 #endif
 
-    this = (struct this*) obj_new(null_t, this_t, 0);
-    run();
+    this = (struct this*) obj_new (
+        null_t,
+        this_t,
+        2     ,
+        run   ,
+        null_t
+    );
+
+    del(this);
+    return true_t;
 }

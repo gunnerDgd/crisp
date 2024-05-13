@@ -39,13 +39,13 @@ node*
     map_push
         (map* par, obj* par_push)                    {
             if (trait_of(par) != map_t) return null_t;
-            list_for (&par->map, push)                     {
-                if (!push)                    continue     ;
-                if (op_eq(push, value(push))) return null_t;
-                if (op_gt(push, value(push)))                 {
+            list_for (&par->map, push)                            {
+                if (!push)                           continue     ;
+                if (op_eq((obj*) push, value(push))) return null_t;
+                if (op_gt((obj*) push, value(push)))              {
                     node *cur = make (node) from (1, par_push);
                     if (trait_of(cur) != node_t) return null_t;
-                    return next_as(par_push, push);
+                    return next_as(cur, push);
                 }
             }
             return list_push_back(&par->map, par_push);
@@ -53,11 +53,13 @@ node*
 
 node*
     map_move
-        (map* par, obj* par_move)                      {
-            if (trait_of (par) != map_t)  return null_t;
-            if (!map_push(par, par_move)) return null_t;
-            del   (par_move);
-            return par_move ;
+        (map* self, obj* move)                          {
+            if (trait_of (self) != map_t)  return null_t;
+            node *ret = map_push (self, move);
+
+            if (trait_of(ret) != node_t) return null_t;
+            del (move);
+            return ret;
 }
 
 void      

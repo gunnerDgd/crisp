@@ -46,14 +46,11 @@ void*
         (mem* self, void* hint, u64_t len)            {
             if (trait_of(self) != mem_t) return null_t;
             if (!len)                    return null_t;
-            void* ret = self->ops->on_acq             (
+            return self->ops->on_acq (
                 self->mem,
                 hint     ,
                 len
             );
-
-            mem_set(ret, 0x00, len);
-            return  ret;
 }
 
 void
