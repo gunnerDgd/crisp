@@ -10,6 +10,7 @@ if   (PRESET_WIN32)
         mtx.h
 
         ../thread.h
+        ../thread.c
     )
 endif()
 
@@ -25,6 +26,7 @@ if   (PRESET_LINUX)
         mtx.h
 
         ../thread.h
+        ../thread.c
     )
 endif()
 

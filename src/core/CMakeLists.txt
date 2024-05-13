@@ -36,7 +36,9 @@ add_library (crisp-core STATIC
     macro.h
     cpu.h
     bit.h
+
     mod.h
+    mod.c
 
     atom.h
     atom.c
