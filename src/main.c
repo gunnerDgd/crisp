@@ -12,7 +12,8 @@ int main (int argc, char** argv)                 {
 #include "thread.h"
 #endif
 
-    this = (struct this*) obj_new (
+    if (!mod_new()) return -3;
+    this = obj_new           (
         null_t,
         this_t,
         2     ,
@@ -21,5 +22,6 @@ int main (int argc, char** argv)                 {
     );
 
     del(this);
+    mod_del();
     return true_t;
 }

@@ -9,28 +9,8 @@ struct mod                 {
     struct obj       *mod  ;
 };
 
-bool_t
-    mod_do_new
-        (struct mod* mod)                          {
-            for (u64_t i = 0 ; mod[i].trait ; ++i) {
-                if (trait_of(mod[i].mod)) {
-                    ref (mod[i].mod);
-                    continue;
-                }
-
-                if (!obj_new_at(mod[i].mod,mod[i].trait, 0)) return false_t;
-            }
-
-            return true_t;
-}
-
-void
-    mod_do_del
-        (struct mod* mod)                          {
-            for (u64_t i = 0 ; mod[i].trait ; ++i) {
-                del (mod[i].mod);
-            }
-};
+bool_t mod_do_new(struct mod*);
+void   mod_do_del(struct mod*);
 
 #define dep(name) { (obj_trait*)name##_t, (obj*)&name }
 #define use(...)               \
