@@ -68,6 +68,7 @@ void*
             if (trait_of(self)       != fut_t)  return null_t;
             task* task = this->task;
 
-            while (fut_poll(self) == fut_pend) cpu_switch(&task->cpu, task->ret);
-            return fut_ret (self);
+            for ( ; fut_poll(self) == fut_pend ; cpu_switch(&task->cpu, task->ret));
+            any_t  ret = fut_ret (self); del(self);
+            return ret;
 }
