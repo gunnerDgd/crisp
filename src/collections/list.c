@@ -41,8 +41,8 @@ bool_t
 
 void
     list_del
-        (list* self)                                       {
-            for ( ; list_empty(self) ; list_pop_back(self));
+        (list* self)                                        {
+            for ( ; !list_empty(self) ; list_pop_back(self));
 }
 
 node*
