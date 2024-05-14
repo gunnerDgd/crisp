@@ -22,7 +22,7 @@ bool_t
 }
 
 bool_t libc_clone(struct libc* par, struct libc* par_clone) { return false_t; }
-bool_t libc_ref  (struct libc* par)                         { return false_t; }
+bool_t libc_ref  (struct libc* par)                         { return true_t ; }
 
 void
     libc_del

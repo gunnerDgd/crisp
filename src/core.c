@@ -33,5 +33,5 @@ bool_t
 }
 
 bool_t core_clone(struct core* par, struct core* par_clone) { return false_t; }
-bool_t core_ref  (struct core* par)                         { return false_t; }
+bool_t core_ref  (struct core* par)                         { return true_t ; }
 void   core_del  (struct core* par)                         {                 }
