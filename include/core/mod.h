@@ -12,11 +12,11 @@ struct mod                 {
 bool_t mod_do_new(struct mod*);
 void   mod_do_del(struct mod*);
 
-#define dep(name) { (obj_trait*)name##_t, (obj*)&name }
+#define dep(name) { (obj_trait*)name##_t, (obj*)&name },
 #define use(...)               \
     bool_t mod_new()         { \
         struct mod mod[] =   { \
-            __VA_ARGS__      , \
+            __VA_ARGS__        \
             { null_t, null_t } \
         };                     \
         return mod_do_new(mod);\
@@ -24,7 +24,7 @@ void   mod_do_del(struct mod*);
                                \
     void mod_del()           { \
         struct mod mod[] =   { \
-            __VA_ARGS__      , \
+            __VA_ARGS__        \
             { null_t, null_t } \
         };                     \
         mod_do_del(mod);       \
