@@ -2,7 +2,7 @@
 
 #ifdef PRESET_FEATURE_THREAD
 #ifdef PRESET_COMPILER_GCC
-__thread struct this *this;
+__thread struct this this;
 #endif
 
 #ifdef PRESET_COMPILER_MSVC
@@ -10,7 +10,7 @@ __declspec(thread) struct this* this;
 #endif
 
 #else
-struct this          *this;
+struct this this;
 #endif
 
 obj_trait this_trait = make_trait (
@@ -30,7 +30,6 @@ bool_t
             any_t run = null_t; if (count > 0) run = va_arg(par, any_t);
             any_t arg = null_t; if (count > 1) arg = va_arg(par, any_t);
             if (!run) return false_t;
-            this = self;
 
             self->task = null_t;
             self->run  = run;

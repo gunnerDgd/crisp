@@ -17,7 +17,7 @@ struct            this  {
 
 #ifdef PRESET_FEATURE_THREAD
 #ifdef PRESET_COMPILER_GCC
-extern __thread struct this *this;
+extern __thread struct this this;
 #endif
 
 #ifdef PRESET_COMPILER_MSVC
@@ -25,7 +25,7 @@ extern __declspec(thread) struct this* this;
 #endif
 
 #else
-extern struct this          *this;
+extern struct this this;
 #endif
 
 bool_t this_new  (struct this*, u32_t, va_list);

@@ -64,9 +64,9 @@ void*
 void*
     await
         (fut* self)                                          {
-            if (trait_of(this->task) != task_t) return null_t;
-            if (trait_of(self)       != fut_t)  return null_t;
-            task* task = this->task;
+            if (trait_of(this.task) != task_t) return null_t;
+            if (trait_of(self)      != fut_t)  return null_t;
+            task* task = this.task;
 
             for ( ; fut_poll(self) == fut_pend ; cpu_switch(&task->cpu, task->ret));
             any_t  ret = fut_ret (self); del(self);

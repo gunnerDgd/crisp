@@ -4,26 +4,17 @@
 
 void
     thd_do_run
-        (thd* self)                                  {
-            if (trait_of(self) != thd_t) goto run_err;
-            if (!mod_new())              goto run_err;
-            if (this)                    goto run_err;
-
+        (thd* self)                              {
+            if (trait_of(self) != thd_t) goto err;
+            if (!mod_new())              goto err;
             thread.this = self;
-            this = obj_new    (
-                null_t    ,
-                this_t    ,
-                2         ,
-                self->func,
-                self->arg
-            );
 
-            self->ret  = this->ret;
+            if (!obj_new_at(&this, this_t, 2, self->func, self->arg)) goto err;
+            self->ret  = this.ret;
             self->stat = fut_ready;
-            mod_del();
-            del(this);
-    run_err:
-            self->stat = fut_err;
+            mod_del ();
+            del(&this);
+    err:    self->stat = fut_err;
 }
 
 u64_t

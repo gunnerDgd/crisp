@@ -6,13 +6,13 @@ void
         (task* par)                                  {
             if (trait_of(par)       != task_t) return;
             if (trait_of(&par->cpu) != cpu_t)  return;
-            task* task = this->task;
-            this->task = par       ;
+            task* task = this.task;
+            this.task  = par       ;
 
-            par->res   = par->func(par->arg);
-            par->stat  = fut_ready          ;
+            par->res  = par->func(par->arg);
+            par->stat = fut_ready          ;
             cpu_switch(&par->cpu, par->ret);
-            this->task = task;
+            this.task = task;
 }
 
 u64_t  
@@ -21,14 +21,14 @@ u64_t
             if (trait_of(par) != task_t)      return fut_err  ; cpu ret;
             if (!make_at(&ret, cpu) from (0)) return fut_err  ;
             if (par->stat != fut_pend)        return par->stat;
-            task* task = this->task;
-            this->task = par       ;
+            task* task = this.task;
+            this.task  = par      ;
 
             par->ret = &ret  ; cpu_switch(&ret, &par->cpu);
             par->ret = null_t;
             del (&ret);
 
-            this->task = task;
+            this.task = task;
             return par->stat ;
 }
 
@@ -63,8 +63,6 @@ bool_t
             if (!func) return false_t;
             u8_t *spa = self->spa;
             u64_t len = 1 MB;
-            spa += 1 MB;
-            spa -= 24;
             len -= 24;
 
             if (!make_at(&self->cpu, cpu) from (0)) return false_t;
@@ -72,20 +70,31 @@ bool_t
             cpu_stack(&self->cpu, spa, len);
             cpu_arg  (&self->cpu, self);
 
-            self->stat   = fut_pend;
-            self->func   = func    ;
-            self->ret    = null_t  ;
-            self->res    = null_t  ;
-            self->arg    = arg     ;
+            self->stat = fut_pend;
+            self->func = func    ;
+            self->ret  = null_t  ;
+            self->res  = null_t  ;
+            self->arg  = arg     ;
             return true_t;
 }
 
 bool_t
     task_clone
-        (task* par, task* par_clone)   {
-            par->func = par_clone->func;
-            par->arg  = par_clone->arg ;
-            par->stat = fut_pend;
+        (task* self, task* clone)                                 {
+            if (!make_at(&self->cpu, cpu) from (0)) return false_t;
+            u8_t *spa = self->spa;
+            u64_t len = 1 MB;
+            len -= 24;
+
+            cpu_entry(&self->cpu, task_do_run);
+            cpu_stack(&self->cpu, spa, len);
+            cpu_arg  (&self->cpu, self);
+            self->func = clone->func;
+            self->arg  = clone->arg ;
+            self->stat = fut_pend;
+            self->ret  = null_t  ;
+            self->res  = null_t  ;
+
             return true_t;
 }
 

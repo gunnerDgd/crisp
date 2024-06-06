@@ -7,21 +7,10 @@ int main (int argc, char** argv)                 {
 #include "libc.h"
     if (!make_at(&libc, libc) from (0)) return -2;
 #endif
+    if (!mod_new())                     return -3;
 
-#ifdef PRESET_FEATURE_THREAD
-#include "thread.h"
-#endif
-
-    if (!mod_new()) return -3;
-    this = obj_new           (
-        null_t,
-        this_t,
-        2     ,
-        run   ,
-        null_t
-    );
-
-    del(this);
-    mod_del();
-    return true_t;
+    if (!obj_new_at(&this, this_t, 2, run, null_t)) return -4;
+    del(&this);
+    mod_del ();
+    return   0;
 }
