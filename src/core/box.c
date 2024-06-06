@@ -13,50 +13,50 @@ obj_trait* box_t = &box_trait;
 
 bool_t 
     box_new
-        (box* par_box, u32_t par_count, va_list par)                  {
-            u64_t len = 0; if (par_count > 0) len = va_arg(par, u64_t);
-            mem  *mem = 0; if (par_count > 1) mem = va_arg(par, void*);
+        (box* self, u32_t count, va_list arg)                          {
+            u64_t len = 0ull  ; if (count > 0) len = va_arg(arg, u64_t);
+            mem  *mem = null_t; if (count > 1) mem = va_arg(arg, void*);
             if (trait_of(mem) != mem_t) mem = get_mem();
             if (trait_of(mem) != mem_t) return false_t;
             if (!len) return false_t;
 
-            par_box->ptr = mem_acq(mem, null_t, len);
-            par_box->len = len;
-            par_box->mem = mem;
-            return par_box->ptr != 0;
+            self->ptr = mem_acq(mem, null_t, len);
+            self->len = len;
+            self->mem = mem;
+            return self->ptr != 0;
 }
 
 bool_t 
     box_clone
-        (box* par, box* par_clone)                                         {
-            if (!par_clone->mem) return false_t; mem  *mem = par_clone->mem;
-            if (!par_clone->ptr) return false_t; void *ptr = par_clone->ptr;
-            if (!par_clone->len) return false_t; u64_t len = par_clone->len;
+        (box* self, box* clone)                                    {
+            if (!clone->mem) return false_t; mem  *mem = clone->mem;
+            if (!clone->ptr) return false_t; void *ptr = clone->ptr;
+            if (!clone->len) return false_t; u64_t len = clone->len;
 
-            par->ptr = mem_acq(mem, null_t, len); if (!par->ptr) return false_t;
-            par->len = par_clone->len;
-            par->mem = par_clone->mem;
+            self->ptr = mem_acq(mem, null_t, len); if (!self->ptr) return false_t;
+            self->len = clone->len;
+            self->mem = clone->mem;
 
-            mem_copy(par->ptr, par_clone->ptr, len);
+            mem_copy(self->ptr, clone->ptr, len);
             return true_t;
 }
 
 void   
     box_del
-        (box* par)                        {
-            mem_rel(par->mem, par->ptr, 0);
+        (box* self)                         {
+            mem_rel(self->mem, self->ptr, 0);
 }
 
 void*
     box_ptr
-        (box* par)                                   {
-            if (trait_of(par) != box_t) return null_t;
-            return par->ptr;
+        (box* self)                                   {
+            if (trait_of(self) != box_t) return null_t;
+            return self->ptr;
 }
 
 u64_t 
     box_size
-        (box* par)                              {
-            if (trait_of(par) != box_t) return 0;
-            return par->len;
+        (box* self)                              {
+            if (trait_of(self) != box_t) return 0;
+            return self->len;
 }
