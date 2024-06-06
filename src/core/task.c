@@ -57,26 +57,26 @@ obj_trait *task_t = &task_trait;
 
 bool_t
     task_new
-        (task* par_task, u32_t par_count, va_list par)                           {
-            void *func   = null_t; if (par_count > 0) func   = va_arg(par, void*);
-            void *arg    = null_t; if (par_count > 1) arg    = va_arg(par, void*);
-            u64_t sp_len = 1 MB  ; if (par_count > 2) sp_len = va_arg(par, u64_t);
-            mem  *mem    = null_t; if (par_count > 3) mem    = va_arg(par, any_t);
-            if (trait_of(mem) != mem_t) mem = get_mem();
-            if (trait_of(mem) != mem_t) return false_t;
-            if (!func)                  return false_t;
+        (task* self, u32_t count, va_list par)                           {
+            void *func = null_t; if (count > 0) func = va_arg(par, void*);
+            void *arg  = null_t; if (count > 1) arg  = va_arg(par, void*);
+            if (!func) return false_t;
+            u8_t *spa = self->spa;
+            u64_t len = 1 MB;
+            spa += 1 MB;
+            spa -= 24;
+            len -= 24;
 
-            if (!make_at(&par_task->cpu  , cpu) from (0))              return false_t;
-            if (!make_at(&par_task->stack, box) from (2, sp_len, mem)) return false_t;
+            if (!make_at(&self->cpu, cpu) from (0)) return false_t;
+            cpu_entry(&self->cpu, task_do_run);
+            cpu_stack(&self->cpu, spa, len);
+            cpu_arg  (&self->cpu, self);
 
-            cpu_stack(&par_task->cpu, box_ptr(&par_task->stack), sp_len - 24);
-            cpu_entry(&par_task->cpu, task_do_run);
-            cpu_arg  (&par_task->cpu, par_task)   ;
-            par_task->stat   = fut_pend;
-            par_task->func   = func    ;
-            par_task->ret    = null_t  ;
-            par_task->res    = null_t  ;
-            par_task->arg    = arg     ;
+            self->stat   = fut_pend;
+            self->func   = func    ;
+            self->ret    = null_t  ;
+            self->res    = null_t  ;
+            self->arg    = arg     ;
             return true_t;
 }
 
@@ -91,9 +91,8 @@ bool_t
 
 void   
     task_del
-        (task* par)          {
-            del (&par->stack);
-            del (&par->cpu)  ;
+        (task* par)        {
+            del (&par->cpu);
 }
 
 fut*
@@ -109,9 +108,9 @@ fut*
 
 fut*
     async
-        (void*(*par)(void*), void* par_arg)               {
-            task *ret = make (task) from (2, par, par_arg);
-            fut  *fut = task_fut(ret)                     ;
+        (void*(*func)(void*), void* arg)               {
+            task *ret = make (task) from (2, func, arg);
+            fut  *fut = task_fut(ret)                  ;
             if (trait_of(ret) != task_t) return null_t;
             if (trait_of(fut) != fut_t)  return null_t;
             del(ret);

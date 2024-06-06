@@ -12,11 +12,11 @@ typedef struct    task  {
     obj     head;
     u64_t   stat;
 
-    void* (*func)(void*);
+    any_t (*func)(any_t);
     void   *arg;
     void   *res;
 
-    box     stack;
+    u8_t    spa[1 MB];
     cpu    *ret,
             cpu;
 }   task;
