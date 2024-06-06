@@ -19,6 +19,8 @@ obj_trait test_trait = make_trait (
 
 obj_trait* test_t = &test_trait;
 
+use()
+
 int run()			                  {
 	obj* test_obj = make(test) from (0);
 	ref (test_obj); printf("Use Count : %llu\n", use_count(test_obj));

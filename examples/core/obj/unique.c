@@ -17,6 +17,8 @@ obj_trait test_trait = make_trait (
         null_t
 );
 
+use()
+
 obj_trait* test_t = &test_trait;
 
 int run()			                    {

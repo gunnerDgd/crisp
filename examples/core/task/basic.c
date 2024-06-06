@@ -1,21 +1,22 @@
-#include <core/task.h>
-#include <core/mem.h>
-
+#include <core.h>
+#include <thread.h>
 #include <stdio.h>
 
-void* test2()        {
+use ()
+
+void* world()        {
     printf("World\n");
 }
 
-void* test()         {
+void* hello()         {
     printf("Hello\n");
-    fut     *fut_1 = async(test2, null_t);
+    fut     *fut_1 = async(world, null_t);
     fut_poll(fut_1);
     del     (fut_1);
 }
 
-int run()                               {
-    fut     *fut_1 = async(test, null_t);
+int run()                                {
+    fut     *fut_1 = async(hello, null_t);
     fut_poll(fut_1);
     del     (fut_1);
 }

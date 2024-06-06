@@ -7,6 +7,8 @@ struct test {
     u16_t c;
 };
 
+use()
+
 int run()                               {
     struct test* test = new(struct test);
     test->a = 1; printf("test::a : %d\n", test->a);

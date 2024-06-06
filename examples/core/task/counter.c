@@ -1,6 +1,8 @@
 #include <core.h>
 #include <stdio.h>
 
+use()
+
 typedef struct counter {
     obj   head ;
     u64_t count;
