@@ -21,7 +21,7 @@ extern __thread struct this this;
 #endif
 
 #ifdef PRESET_COMPILER_MSVC
-extern __declspec(thread) struct this* this;
+extern __declspec(thread) struct this this;
 #endif
 
 #else

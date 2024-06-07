@@ -4,13 +4,15 @@
 
 void
     thd_do_run
-        (thd* par)                            {
-            if (trait_of(par) != thd_t) return;
-            if (this)                   return;
+        (thd* self)                              {
+            if (trait_of(self) != thd_t) goto err;
+            if (!mod_new())              goto err;
 
-            this      = obj_new(null_t, this_t, 0);
-            par->ret  = par->func(par->arg);
-            par->stat = fut_ready          ;
+            if (!obj_new_at(&this, this_t, 2, self->func, self->arg)) goto err;
+            self->stat = fut_ready;
+            mod_del ();
+            del(&this);
+    err:    self->stat = fut_pend;
 }
 
 u64_t

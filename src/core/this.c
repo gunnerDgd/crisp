@@ -6,7 +6,7 @@ __thread struct this this;
 #endif
 
 #ifdef PRESET_COMPILER_MSVC
-__declspec(thread) struct this* this;
+__declspec(thread) struct this this;
 #endif
 
 #else
