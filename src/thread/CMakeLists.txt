@@ -1,5 +1,11 @@
+if   (NOT DEFINED PRESET_OS)
+    message("[crisp] Target OS is not defined.")
+    message("[crisp] thread feature requires OS preset definition.")
+    message(SEND_ERROR)
+endif()
+
 if   (PRESET_WIN32)
-    add_library (crisp-thread STATIC
+    lib (crisp-thread
         win32/thd.h
         win32/thd.c
 
@@ -15,7 +21,7 @@ if   (PRESET_WIN32)
 endif()
 
 if   (PRESET_LINUX)
-    add_library (crisp-thread STATIC
+    lib (crisp-thread
         linux/thd.h
         linux/thd.c
 
@@ -30,10 +36,9 @@ if   (PRESET_LINUX)
     )
 endif()
 
-add_library(crisp-thread-include STATIC
-        ../../include/thread/thd.h
-        ../../include/thread/mtx.h
-        ../../include/thread.h
+inc                           (
+    crisp-thread-include
+    ../../include/thread/thd.h
+    ../../include/thread/mtx.h
+    ../../include/thread.h
 )
-
-set_target_properties(crisp-thread-include PROPERTIES LINKER_LANGUAGE C)

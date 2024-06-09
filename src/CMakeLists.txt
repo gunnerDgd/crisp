@@ -3,29 +3,21 @@ if   (PRESET_FEATURE_THREAD)
     add_subdirectory       (thread)
 endif()
 
-if   (PRESET_FEATURE_LIBC)
-    add_compile_definitions(PRESET_FEATURE_LIBC)
-    add_subdirectory       (libc)
-endif()
-
 if   (PRESET_FEATURE_COLLECTIONS)
     add_compile_definitions(PRESET_FEATURE_COLLECTIONS)
     add_subdirectory       (collections)
 endif()
 
-add_subdirectory     (core)
-add_library          (crisp STATIC main.c)
+add_subdirectory(core)
+add_subdirectory(sub)
+add_library          (crisp INTERFACE)
+target_link_libraries(crisp INTERFACE crisp-core)
+target_link_libraries(crisp INTERFACE crisp-sub)
 
 if   (PRESET_FEATURE_THREAD)
-    target_link_libraries  (crisp crisp-thread)
-endif()
-
-if   (PRESET_FEATURE_LIBC)
-    target_link_libraries  (crisp crisp-libc)
+    target_link_libraries  (crisp INTERFACE crisp-thread)
 endif()
 
 if   (PRESET_FEATURE_COLLECTIONS)
-    target_link_libraries  (crisp crisp-collections)
+    target_link_libraries  (crisp INTERFACE crisp-collections)
 endif()
-
-target_link_libraries(crisp crisp-core)
