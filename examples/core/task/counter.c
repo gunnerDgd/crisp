@@ -1,77 +1,76 @@
 #include <core.h>
-#include <stdio.h>
 
 use()
 
-typedef struct counter {
+typedef struct num {
     obj   head ;
     u64_t count;
-}   counter;
+}   num;
 
-bool_t counter_new  (counter* par_counter, u32_t par_count, va_list par) { par_counter->count = 0; return true_t; }
-bool_t counter_clone(counter* par, counter* par_clone)                   { return true_t; }
-void   counter_del  (counter* par)                                       {  }
+bool_t num_new  (num* self, u32_t count, va_list arg) { self->count = 0; return true_t; }
+bool_t num_clone(num* self, num* clone)               { return true_t; }
+void   num_del  (num* self)                           {  }
 
-obj_trait counter_trait = make_trait (
-    counter_new    ,
-    counter_clone  ,
-    null_t         ,
-    counter_del    ,
-    sizeof(counter),
+obj_trait num_trait = make_trait (
+    num_new    ,
+    num_clone  ,
+    null_t     ,
+    num_del    ,
+    sizeof(num),
     null_t
 );
 
-obj_trait *counter_t = &counter_trait;
+obj_trait *num_t = &num_trait;
 
 u64_t
-    counter_do_poll
-        (counter* par)  {
+    num_do_poll
+        (num* par)      {
             ++par->count;
             if (par->count >= 5)             {
-                printf ("Counter Ready !!\n");
+                println ("num Ready !!");
                 return fut_ready;
             }
 
-            printf ("Be Patient... (%d Remaining)\n", 5 - par->count);
+            println ("Be Patient... (%d Remaining)", 5 - par->count);
             return fut_pend;
 }
 
 u64_t
-    counter_do_ret
-        (counter* par)       {
+    num_do_ret
+        (num* par)           {
             return par->count;
 }
 
-fut_ops counter_do = make_fut_ops (
-    counter_do_poll,
-    counter_do_ret
+fut_ops num_do = make_fut_ops (
+    num_do_poll,
+    num_do_ret
 );
 
 fut*
-    counter_fut
-        (counter* par)             {
+    num_fut
+        (num* par)                 {
             return make (fut) from (
                 2          ,
-                &counter_do,
+                &num_do,
                 par
             );
 }
 
 void*
     test_1()                                    {
-        counter *count = make (counter) from (0);
-        fut     *fut   = counter_fut(count);
+        num *count = make (num) from (0);
+        fut     *fut   = num_fut(count);
         await(fut)  ;
         del  (count);
         del  (fut)  ;
 
-        printf("Finished !!");
+        println("Finished !!");
 }
 
 int run()                                 {
     fut     *fut_1 = async(test_1, null_t);
     while (fut_poll(fut_1) == fut_pend)   {
-        printf("Polling Async Task...\n");
+        println("Polling Async Task...");
     }
 
     del(fut_1);
