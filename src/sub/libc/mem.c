@@ -39,13 +39,13 @@ void
             free(par_rel);
 }
 
-void mem_set (void* des, u8_t  set, u64_t len) { memset(des, set, len); }
-void mem_copy(void* des, void* src, u64_t len) { memcpy(des, src, len); }
-void mem_move(void* des, void* src, u64_t len) { memcpy(des, src, len); memset(src, 0x00, len); }
+void mem_set (u8_t* des, u8_t  set, u64_t len) { memset(des, set, len); }
+void mem_copy(u8_t* des, u8_t* src, u64_t len) { memcpy(des, src, len); }
+void mem_move(u8_t* des, u8_t* src, u64_t len) { memcpy(des, src, len); memset(src, 0x00, len); }
 
 u64_t
     mem_find
-        (void* des, void* src, u64_t dlen, u64_t slen) {
+        (u8_t* des, u8_t* src, u64_t dlen, u64_t slen) {
             if (dlen > slen) return -1;
             return (u64_t) strstr     (
                 des,
@@ -53,36 +53,23 @@ u64_t
             );
 }
 
-bool_t
-    mem_eq
-        (void* lhs, void* rhs, u64_t llen, u64_t rlen) {
-            if (llen != rlen) return false_t;
-            return strncmp                  (
-                lhs           ,
-                rhs           ,
-                min(llen, rlen)
-            ) == 0;
+ord_t
+    mem_ord
+        (u8_t* src, u8_t* ops, u64_t len) {
+            if (!src) return ord_err;
+            if (!ops) return ord_err;
+            if (!len) return ord_err;
+            int res = strncmp       (
+                src,
+                ops,
+                len
+            );
+
+            if (res < 0) return ord_lt;
+            if (res > 0) return ord_gt;
+            return ord_eq;
 }
 
-bool_t
-    mem_gt
-        (void* lhs, void* rhs, u64_t llen, u64_t rlen) {
-            if (llen != rlen) return false_t;
-            return strncmp                  (
-                lhs           ,
-                rhs           ,
-                min(llen, rlen)
-            ) > 0;
-}
-
-bool_t
-    mem_lt
-        (void* lhs, void* rhs, u64_t llen, u64_t rlen) {
-            if (llen != rlen) return false_t;
-            return strncmp                  (
-                lhs           ,
-                rhs           ,
-                min(llen, rlen)
-            ) < 0;
-}
-
+bool_t mem_eq(u8_t* src, u8_t* ops, u64_t len) { return mem_ord(src, ops, len) == ord_eq; }
+bool_t mem_gt(u8_t* src, u8_t* ops, u64_t len) { return mem_ord(src, ops, len) == ord_gt; }
+bool_t mem_lt(u8_t* src, u8_t* ops, u64_t len) { return mem_ord(src, ops, len) == ord_lt; }
