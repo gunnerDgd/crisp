@@ -10,6 +10,7 @@
 #include "core/box.h"
 
 #include "core/macro.h"
+#include "core/print.h"
 
 #include "core/cpu.h"
 #include "core/task.h"

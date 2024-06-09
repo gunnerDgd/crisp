@@ -4,6 +4,7 @@
 #include "core/atom.h"
 #include "core/bit.h"
 #include "core/endian.h"
+#include "core/print.h"
 
 #include "core/box.h"
 #include "core/mem.h"
