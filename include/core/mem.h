@@ -28,6 +28,7 @@ void*  mem_acq  (mem*, void*, u64_t);
 void   mem_rel  (mem*, void*, u64_t);
 
 void   mem_set (void*, u8_t , u64_t)       ;
+ord_t  mem_ord (void*, void*, u64_t)       ;
 void   mem_copy(void*, void*, u64_t)       ;
 void   mem_move(void*, void*, u64_t)       ;
 u64_t  mem_find(void*, void*, u64_t, u64_t);

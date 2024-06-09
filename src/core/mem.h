@@ -35,13 +35,15 @@ void   mem_del  (mem*)                ;
 void*  mem_acq  (mem*, void*, u64_t);
 void   mem_rel  (mem*, void*, u64_t);
 
-void   mem_set  (void*, u8_t , u64_t)       ;
-void   mem_copy (void*, void*, u64_t)       ;
-void   mem_move (void*, void*, u64_t)       ;
-u64_t  mem_find (void*, void*, u64_t, u64_t);
-bool_t mem_eq   (void*, void*, u64_t, u64_t);
-bool_t mem_gt   (void*, void*, u64_t, u64_t);
-bool_t mem_lt   (void*, void*, u64_t, u64_t);
+void   mem_set  (u8_t*, u8_t , u64_t)       ;
+void   mem_copy (u8_t*, u8_t*, u64_t)       ;
+void   mem_move (u8_t*, u8_t*, u64_t)       ;
+u64_t  mem_find (u8_t*, u8_t*, u64_t, u64_t);
+
+ord_t  mem_ord  (u8_t*, u8_t*, u64_t);
+bool_t mem_eq   (u8_t*, u8_t*, u64_t);
+bool_t mem_gt   (u8_t*, u8_t*, u64_t);
+bool_t mem_lt   (u8_t*, u8_t*, u64_t);
 
 #define KB *(1ull << 10ull)
 #define MB *(1ull << 20ull)
