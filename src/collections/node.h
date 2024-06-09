@@ -19,9 +19,9 @@ node*  node_next (node*, node*)         ;
 node*  node_prev (node*, node*)         ;
 
 #ifndef __cplusplus
-#define next(par)               node_next (par, 0)
+#define next(par)               node_next (par, null_t)
 #define next_as(par, par_next)  node_next (par, par_next)
-#define prev(par)               node_prev (par, 0)
+#define prev(par)               node_prev (par, null_t)
 #define prev_as(par, par_prev)  node_prev (par, par_prev)
 #define value(par)              node_value(par)
 #define value_as(par, par_type) ((par_type)node_value(par))
