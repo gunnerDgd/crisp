@@ -161,78 +161,86 @@ u64_t
 
 bool_t
     str_eq
-        (str* par, str* par_cmp)                                {
-            if (trait_of(par_cmp) != str_t)       return false_t;
-            if (trait_of(par)     != str_t)       return false_t;
-            if (str_len(par) != str_len(par_cmp)) return false_t;
-            return mem_eq                                       (
-                str_ptr(par)    ,
-                str_ptr(par_cmp),
-                str_len(par)    ,
-                str_len(par_cmp)
+        (str* self, str* cmp)                          {
+            if (trait_of(self) != str_t) return false_t;
+            if (trait_of(cmp)  != str_t) return false_t;
+            return str_eq_cstr                         (
+                self        ,
+                str_ptr(cmp),
+                str_len(cmp)
             );
 }
 
 bool_t
     str_gt
-        (str* par, str* par_cmp)                          {
-            if (trait_of(par_cmp) != str_t) return false_t;
-            if (trait_of(par)     != str_t) return false_t;
-            return mem_gt                                 (
-                str_ptr(par)    ,
-                str_ptr(par_cmp),
-                str_len(par)    ,
-                str_len(par_cmp)
+        (str* self, str* ord)                          {
+            if (trait_of(self) != str_t) return false_t;
+            if (trait_of(ord)  != str_t) return false_t;
+            return str_gt_cstr                         (
+                self        ,
+                str_ptr(ord),
+                str_len(ord)
             );
 }
 
 bool_t
     str_lt
-        (str* par, str* par_cmp)                          {
-            if (trait_of(par_cmp) != str_t) return false_t;
-            if (trait_of(par)     != str_t) return false_t;
-            return mem_lt                                 (
-                str_ptr(par)    ,
-                str_ptr(par_cmp),
-                str_len(par)    ,
-                str_len(par_cmp)
+        (str* self, str* ord)                          {
+            if (trait_of(self) != str_t) return false_t;
+            if (trait_of(ord)  != str_t) return false_t;
+            return str_lt_cstr                         (
+                self        ,
+                str_ptr(ord),
+                str_len(ord)
             );
 }
 
 bool_t
     str_eq_cstr
-        (str* par, const char* par_cmp, u64_t par_len) {
-            if (trait_of(par) != str_t) return false_t;
-            return mem_eq                             (
-                str_ptr(par),
-                par_cmp     ,
-                str_len(par),
-                par_len
+        (str* self, const char* cmp, u64_t len)        {
+            if (trait_of(self) != str_t) return false_t;
+            if (!cmp)                    return false_t;
+            if (!len)                    return false_t;
+            len = min (str_len(self), len);
+
+            if (str_len(self) != len) return false_t;
+            return mem_eq                           (
+                str_ptr(self),
+                cmp          ,
+                len
             );
 }
 
 bool_t
     str_gt_cstr
-        (str* par, const char* par_cmp, u64_t par_len) {
-            if (trait_of(par) != str_t) return false_t;
-            return mem_gt                             (
-                str_ptr(par),
-                par_cmp     ,
-                str_len(par),
-                par_len
-            );
+        (str* self, const char* ord, u64_t len)        {
+            if (trait_of(self) != str_t) return false_t;
+            if (!ord)                    return false_t;
+            if (!len)                    return false_t;
+            len = min (len, str_len(self));
+
+            ord_t res = mem_ord (str_ptr(self), ord, len);
+            if (res == ord_gt) return  true_t;
+            if (res != ord_eq) return false_t;
+
+            if (str_len(self) > len) return true_t;
+            return false_t;
 }
 
 bool_t
     str_lt_cstr
-        (str* par, const char* par_cmp, u64_t par_len) {
-            if (trait_of(par) != str_t) return false_t;
-            return mem_lt                             (
-                str_ptr(par),
-                par_cmp     ,
-                str_len(par),
-                par_len
-            );
+        (str* self, const char* ord, u64_t len)        {
+            if (trait_of(self) != str_t) return false_t;
+            if (!ord)                    return false_t;
+            if (!len)                    return false_t;
+            len = min (len, str_len(self));
+
+            ord_t res = mem_ord (str_ptr(self), ord, len);
+            if (res == ord_lt) return  true_t;
+            if (res != ord_eq) return false_t;
+
+            if (str_len(self) < len) return true_t;
+            return false_t;
 }
 
 bool_t
