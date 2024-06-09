@@ -1,51 +1,65 @@
-#include <map.h>
-#include <stdlib.h>
+#include <core.h>
+#include <collections.h>
 
-void* cstd_mem_new(mem* par, u64_t par_size) { return malloc(par_size); }
-void  cstd_mem_del(mem* par, void* par_del)  { free(par_del); }
+use()
 
-mem cstd_mem		     = {
-	.on_new = &cstd_mem_new,
-	.on_del = &cstd_mem_del
-};
+typedef struct foo {
+    obj head;
+    int num;
+}   foo;
 
-typedef struct test {
-	obj   head ;
-	u64_t value;
-}	test;
+bool_t foo_new	(foo* self, u32_t count, va_list arg) { println("Object Created")         ; self->num = va_arg(arg, u64_t); return true_t; }
+bool_t foo_clone(foo* self, foo* clone)               { println("Object Created As Clone"); return true_t; }
+bool_t foo_ref  (foo* self)                           { println("Object Referenced")      ; return true_t; }
+void   foo_del  (foo* self)                           { println("Object Destroyed")       ; }
 
-bool_t test_new	 (test* par_obj, u32_t par_count, va_list par) { par_obj->value = va_arg(par, u64_t); return true_t; }
-bool_t test_clone(test* par    , test* par_clone)			   { par->value     = par_clone->value  ; return true_t; }
-bool_t test_ref  (test* par)								   { return true_t; }
-void   test_del  (test* par)								   { }
-
-ord_t test_ord(test* par, test* par_cmp)		   {
-	if (par->value == par_cmp->value) return ord_eq;
-	if (par->value <  par_cmp->value) return ord_lt;
-	if (par->value >  par_cmp->value) return ord_gt;
+ord_t
+    foo_ord_arg
+        (foo* self, u64_t ops)                 {
+	        if (self->num == ops) return ord_eq;
+	        if (self->num <  ops) return ord_lt;
+	        if (self->num >  ops) return ord_gt;
+	        return ord_err;
 }
 
-ops_cmp cmp_ops  = { .ord = test_ord };
-obj_ops test_ops = { .cmp = &cmp_ops };
+ord_t
+    foo_ord
+        (foo* self, foo* ops)		                {
+	        if (self->num == ops->num) return ord_eq;
+	        if (self->num <  ops->num) return ord_lt;
+	        if (self->num >  ops->num) return ord_gt;
+	        return ord_err;
+}
 
-obj_trait test_t		  = {
-	.on_new	  = &test_new   ,
-	.on_clone = &test_clone ,
-	.on_ref   = &test_ref   ,
-	.on_del	  = &test_del   ,
-	.size	  = sizeof(test),
-	.ops      = &test_ops
+ops_cmp foo_cmp = make_ops_cmp(foo_ord, foo_ord_arg);
+obj_ops foo_ops = {
+    .cmp = &foo_cmp
 };
 
-int main()			  {
-	set_mem(&cstd_mem);
+obj_trait foo_trait = make_trait (
+    foo_new    ,
+    foo_clone  ,
+    foo_ref    ,
+    foo_del    ,
+	sizeof(foo),
+	&foo_ops
+);
 
-	map* map   = make (map_t)   from (0)   ;
-	obj* push1 = make (&test_t) from (1, 0); node* elem1 = map_push(map, push1);
-	obj* push2 = make (&test_t) from (1, 1); node* elem2 = map_push(map, push2);
-	obj* key1  = make (&test_t) from (1, 0);
-	obj* key2  = make (&test_t) from (1, 2);
+obj_trait* foo_t = &foo_trait;
 
-	obj* key_val1 = value(map_find(map, key1));
-	obj* key_val2 = value(map_find(map, key2));
+int run()			                  {
+	map* fma  = make (map) from (0)   ;
+	obj* foo1 = make (foo) from (1, 0);
+	obj* foo2 = make (foo) from (1, 1);
+
+    node* fno1 = map_move(fma, foo1);
+    node* fno2 = map_move(fma, foo2);
+
+	foo* val1 = value(map_find(fma, (any_t) 0));
+	foo* val2 = value(map_find(fma, (any_t) 1));
+
+	println ("VAL1 : %d", (trait_of(val1) == foo_t) ? val1->num : -1);
+	println ("VAL2 : %d", (trait_of(val2) == foo_t) ? val2->num : -1);
+
+	del (fma);
 }

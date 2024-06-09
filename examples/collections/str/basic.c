@@ -1,18 +1,17 @@
 #include <core.h>
 #include <collections.h>
 
-#include <stdio.h>
+use ()
 
-int run ()                          {
-    str* str_1 = make (str) from (0);
-    str_push_back_cstr(str_1, "Hello", 5); printf("%s\n", str_ptr(str_1));
-    str_push_back_cstr(str_1, "World", 5); printf("%s\n", str_ptr(str_1));
-    str_push_cstr     (str_1, " ", 1 , 5); printf("%s\n", str_ptr(str_1));
-    str_pop_back      (str_1, 6)         ; printf("%s\n", str_ptr(str_1));
+int run ()                        {
+    str* foo = make (str) from (0);
+    str_push_back_cstr(foo, "Hello", 5); println("PUSH : %s", str_ptr(foo));
+    str_push_back_cstr(foo, "World", 5); println("PUSH : %s", str_ptr(foo));
+    str_push_cstr     (foo, " ", 1 , 5); println("PUSH : %s", str_ptr(foo));
+    str_pop_back      (foo, 6)         ; println("POP : %s", str_ptr(foo));
 
-    printf ("Compare : %s\n",
-        (str_eq_cstr(str_1, "Hello", 5))
-            ? "True"
-            : "False"
-    );
+    bool_t res = str_eq_cstr (foo, "Hello", 5);
+    if (!res) println ("NOT EQUAL");
+    else      println ("EQUAL");
+    return 0;
 }

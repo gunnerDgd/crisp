@@ -1,10 +1,10 @@
 #include <thread.h>
 #include <core.h>
 
-#include <stdio.h>
+use (dep (thread))
 
-void test_1 ()              {
-    printf("Hello Thread\n");
+void test_1 ()             {
+    println("Hello Thread");
 }
 
 int run ()                                          {

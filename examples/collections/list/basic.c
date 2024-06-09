@@ -1,49 +1,36 @@
-#include <list.h>
-#include <obj.h>
-#include <mem.h>
+#include <core.h>
+#include <collections.h>
 
-#include <stdio.h>
-#include <stdlib.h>
+use()
 
+typedef struct foo {
+    obj head;
+    int num;
+}   foo;
 
-void* cstd_mem_new(mem* par, u64_t par_size) { return malloc(par_size); }
-void  cstd_mem_del(mem* par, void* par_del)  { free(par_del); }
+bool_t foo_new	(foo* self, u32_t count, va_list arg) { println("Object Created")         ; self->num = va_arg(arg, u64_t); return true_t; }
+bool_t foo_clone(foo* self, foo* clone)               { println("Object Created As Clone"); return true_t; }
+bool_t foo_ref  (foo* self)                           { println("Object Referenced")      ; return true_t; }
+void   foo_del  (foo* self)                           { println("Object Destroyed")       ; }
 
-mem cstd_mem		     = {
-	.on_new = &cstd_mem_new,
-	.on_del = &cstd_mem_del
-};
+obj_trait foo_trait = make_trait (
+    foo_new    ,
+    foo_clone  ,
+    foo_ref    ,
+    foo_del    ,
+	sizeof(foo),
+	null_t
+);
 
-typedef struct test {
-	obj   head ;
-	u64_t value;
-}	test;
+obj_trait* foo_t = &foo_trait;
 
-bool_t test_new	 (test* par_obj, u32_t par_count, va_list par) { printf("Object Created\n")		    ; par_obj->value = va_arg(par, u64_t); return true_t; }
-bool_t test_clone(test* par    , test* par_clone)			   { printf("Object Created As Clone\n"); return true_t; }
-bool_t test_ref  (test* par)								   { printf("Object Referenced\n")	    ; return true_t; }
-void   test_del  (test* par)								   { printf("Object Destroyed\n")	    ; }
+int run()                          {
+	list* fli = make(list) from (0);
 
-obj_trait test_t		 = {
-	.on_new	  = &test_new  ,
-	.on_clone = &test_clone,
-	.on_ref   = &test_ref  ,
-	.on_del	  = &test_del  ,
-	.size	  = sizeof(test)
-};
-
-int main()			  {
-	set_mem(&cstd_mem);
-
-	list* list = make(list_t) from (0);
-
-	for(u64_t i = 0 ; i < 3 ; ++i)
-		list_push_front(list, make(&test_t) from(1, i));
-
-	list_for(list, node)							{
-		printf("%d\n", value_as(node, test*)->value);
-		del   (value(node));
+	for(u64_t i = 0 ; i < 3 ; ++i) list_move_front(fli, make(foo) from(1, i));
+	list_for(fli, pos)                         {
+		println("%d", value_as(pos, foo*)->num);
 	}
 
-	del(list);
+	del(fli);
 }

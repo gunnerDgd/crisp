@@ -1,5 +1,4 @@
 #include <core.h>
-#include <stdio.h>
 
 struct test {
     u64_t a;
@@ -11,9 +10,14 @@ use()
 
 int run()                               {
     struct test* test = new(struct test);
-    test->a = 1; printf("test::a : %d\n", test->a);
-    test->b = 2; printf("test::b : %d\n", test->b);
-    test->c = 3; printf("test::c : %d\n", test->c);
+    if (!test)                            {
+        println("Memory Not Available !!");
+        return 0;
+    }
+
+    test->a = 1; println("test::a : %d", test->a);
+    test->b = 2; println("test::b : %d", test->b);
+    test->c = 3; println("test::c : %d", test->c);
 
     drop(test);
 }
