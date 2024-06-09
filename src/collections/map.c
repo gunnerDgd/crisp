@@ -37,18 +37,17 @@ void
 
 node*
     map_push
-        (map* par, obj* par_push)                    {
-            if (trait_of(par) != map_t) return null_t;
-            list_for (&par->map, push)                            {
-                if (!push)                           continue     ;
-                if (op_eq((obj*) push, value(push))) return null_t;
-                if (op_gt((obj*) push, value(push)))              {
-                    node *cur = make (node) from (1, par_push);
-                    if (trait_of(cur) != node_t) return null_t;
-                    return next_as(cur, push);
-                }
+        (map* self, obj* push)                        {
+            if (trait_of(self) != map_t) return null_t;
+            list_for (&self->map, pos)                    {
+                if (op_eq(push, value(pos))) return null_t;
+                if (op_gt(push, value(pos))) continue;
+                node *cur = make (node) from (1, push);
+
+                if (trait_of(cur) != node_t) return null_t;
+                return next_as(cur, pos);
             }
-            return list_push_back(&par->map, par_push);
+            return list_push_back(&self->map, push);
 }
 
 node*
@@ -64,22 +63,24 @@ node*
 
 void      
     map_pop
-        (map* par, any_t par_key)                                                  {
-            if (trait_of(par) != map_t)  return; node *pop = map_find(par, par_key);
+        (map* self, any_t key)                 {
+            if (trait_of(self) != map_t) return;
+
+            node *pop = map_find(self, key);
             if (trait_of(pop) != node_t) return;
             del(pop);
 }
 
 node*
     map_find
-        (map* par, any_t par_key)                    {
-            if (trait_of(par) != map_t) return null_t;
-            list_for (&par->map, find)                       {
-                if (op_ne_arg(value(find), par_key)) continue;
-                return find;
+        (map* self, any_t key)                        {
+            if (trait_of(self) != map_t) return null_t;
+            list_for (&self->map, pos)                  {
+                if (op_ne_arg(value(pos), key)) continue;
+                return pos;
             }
 
-            return map_end(par);
+            return map_end(self);
 }
 
 bool_t    
