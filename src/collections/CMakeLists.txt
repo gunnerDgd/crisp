@@ -30,3 +30,5 @@ inc                                (
     ../../include/collections/seq.h
     ../../include/collections.h
 )
+
+target_link_libraries(crisp-collections PRIVATE crisp-core)

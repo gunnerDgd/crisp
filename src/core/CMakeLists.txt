@@ -10,6 +10,7 @@ endif()
 lib (crisp-core
     type.h
     macro.h
+    print.h
     cpu.h
     bit.h
 
@@ -83,6 +84,7 @@ inc                  (crisp-core-include STATIC
     ../../include/core/bit.h
     ../../include/core/cpu.h
     ../../include/core/endian.h
+    ../../include/core/print.h
     ../../include/core/mem.h
     ../../include/core/obj.h
     ../../include/core/fut.h
