@@ -31,18 +31,10 @@ if    (PRESET_SUB_BARE)
 
         target_include_directories(crisp-sub PRIVATE ../src)
         target_link_libraries     (crisp-sub PRIVATE crisp-core)
-    endif()
-
-    if   (PRESET_WIN32)
-        lib                  (
-            crisp-sub
-            bare/win32/print.c
-            bare/win32/main.c
-            bare/main.c
-            bare/mem.c
-        )
-
+    else ()
+        lib (crisp-sub bare/main.c bare/mem.c)
         target_include_directories(crisp-sub PRIVATE ../src)
+        target_link_libraries     (crisp-sub PRIVATE crisp-core)
     endif()
 elseif(DEFINED PRESET_SUB_LIBC)
     lib            (
