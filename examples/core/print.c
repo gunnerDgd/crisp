@@ -2,6 +2,7 @@
 
 use()
 
-int run()           {
-    println("Hello");
+int run()         {
+    print("Hello");
+    return 1;
 }
