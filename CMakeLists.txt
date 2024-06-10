@@ -1,38 +1,4 @@
 project(crisp)
-
-set (CRISP_ROOT    ${CMAKE_CURRENT_SOURCE_DIR})
-set (CRISP_INCLUDE ${CMAKE_CURRENT_SOURCE_DIR}/include)
-set (CRISP_EXAMPLE ${CMAKE_CURRENT_SOURCE_DIR}/example)
-set (CRISP_SRC     ${CMAKE_CURRENT_SOURCE_DIR}/src)
-
-include (${CMAKE_CURRENT_SOURCE_DIR}/cmake/preset.cmake)
-include (${CMAKE_CURRENT_SOURCE_DIR}/cmake/lib.cmake)
-include (${CMAKE_CURRENT_SOURCE_DIR}/cmake/app.cmake)
-include (${CMAKE_CURRENT_SOURCE_DIR}/cmake/inc.cmake)
-include (${CMAKE_CURRENT_SOURCE_DIR}/cmake/asm.cmake)
-
-if   (NOT DEFINED PRESET_ARCH)
-    add_arch()
-endif()
-
-if   (NOT DEFINED PRESET_COMPILER)
-    add_compiler()
-endif()
-
-if   (NOT DEFINED PRESET_OS)
-    add_os()
-endif()
-
-if   (NOT DEFINED PRESET_SUB)
-    if    (PRESET_LINUX)
-        sub_libc()
-    elseif(PRESET_WIN32)
-        sub_libc()
-    else  ()
-        sub_bare()
-    endif ()
-endif()
-
 if   (PRESET_BUILD_EXAMPLES)
     if (PRESET_SUB_LIBC)
         use_collections()

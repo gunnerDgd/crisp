@@ -1,5 +1,0 @@
-include(${CMAKE_CURRENT_LIST_DIR}/preset/arch.cmake)
-include(${CMAKE_CURRENT_LIST_DIR}/preset/feature.cmake)
-include(${CMAKE_CURRENT_LIST_DIR}/preset/os.cmake)
-include(${CMAKE_CURRENT_LIST_DIR}/preset/compiler.cmake)
-include(${CMAKE_CURRENT_LIST_DIR}/preset/sub.cmake)
