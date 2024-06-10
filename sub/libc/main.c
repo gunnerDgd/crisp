@@ -1,4 +1,4 @@
-#include "../../core.h"
+#include "../../src/core.h"
 
 extern mem_ops libc_mem_do;
 extern mem     libc_mem;

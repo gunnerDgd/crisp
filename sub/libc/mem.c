@@ -1,4 +1,4 @@
-#include "../../core.h"
+#include "../../src/core.h"
 
 #include <stdlib.h>
 #include <string.h>

@@ -1,4 +1,4 @@
-#include "../../core.h"
+#include "../../src/core.h"
 #include <stdio.h>
 
 void println_va(const char* str, va_list arg) { vprintf(str, arg); printf("\n"); }
