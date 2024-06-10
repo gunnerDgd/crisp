@@ -25,7 +25,7 @@ endif()
 
 if   (NOT DEFINED PRESET_SUB)
     if    (PRESET_LINUX)
-        sub_bare()
+        sub_libc()
     elseif(PRESET_WIN32)
         sub_libc()
     else  ()
