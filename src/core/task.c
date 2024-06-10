@@ -36,7 +36,7 @@ void*
     task_do_ret
         (task* par)                                   {
             if (trait_of(par) != task_t) return null_t;
-            return par->ret;
+            return par->res;
 }
 
 fut_ops task_fut_ops = make_fut_ops (
