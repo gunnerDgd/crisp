@@ -6,7 +6,7 @@
 #include <linux/fcntl.h>
 
 #include "abi/call.h"
-#include "abi/aux.h"
+#include "abi/def.h"
 #include "abi/arg.h"
 #include "abi/int.h"
 

@@ -5,7 +5,7 @@ if    (PRESET_SUB_BARE)
             bare/linux/abi/call.h
             bare/linux/abi/int.h
             bare/linux/abi/arg.h
-            bare/linux/abi/aux.h
+            bare/linux/abi/def.h
             bare/linux/abi.h
 
             bare/linux/fs/perm.h
