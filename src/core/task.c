@@ -63,7 +63,7 @@ bool_t
             if (!func) return false_t;
             u8_t *spa = self->spa;
             u64_t len = 1 MB;
-            len -= 24;
+            len -= 40;
 
             if (!make_at(&self->cpu, cpu) from (0)) return false_t;
             cpu_entry(&self->cpu, task_do_run);
