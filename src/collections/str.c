@@ -1,313 +1,253 @@
 #include "str.h"
 
-obj_trait str_trait = make_trait (
-    str_new    ,
-    str_clone  ,
-    null_t     ,
-    str_del    ,
-    sizeof(str),
-    null_t
+static str*
+    do_add
+        (str* self, str* arg)                         {
+            if (trait_of(self) != str_t) return null_t;
+            if (trait_of(arg)  != str_t) return null_t;
+            str* ret = make (str) from (0);
+
+            if (trait_of(ret) != str_t) return null_t;
+            seq_push_back(&ret->str, &self->str, str_len(self));
+            seq_push_back(&ret->str, &arg ->str, str_len(arg)) ;
+            return ret;
+}
+
+static str*
+    do_add_eq
+        (str* self, str* arg)                         {
+            if (trait_of(self) != str_t) return null_t;
+            if (trait_of(arg)  != str_t) return null_t;
+
+            seq_push_back(&self->str, &arg->str, str_len(arg));
+            return self;
+}
+
+static str*
+    do_mul
+        (str* self, u64_t num)                        {
+            if (trait_of(self) != str_t) return null_t;
+            if (!num)                    return null_t;
+            str* ret = make (str) from (0);
+
+            if (trait_of(ret) != str_t) return null_t;
+            while (num --) seq_push_back(&ret->str, &self->str, str_len(self));
+            return ret;
+}
+
+static arith
+    do_arith = make_arith (
+        do_add   ,
+        null_t   ,
+        do_mul   ,
+        null_t   ,
+        null_t   ,
+        do_add_eq,
+        null_t   ,
+        null_t   ,
+        null_t   ,
+        null_t
 );
 
-obj_trait *str_t = &str_trait;
+static ord_t
+    do_ord
+        (str* self, str* arg)                          {
+            if (trait_of(self) != str_t) return ord_err;
+            if (trait_of(arg)  != str_t) return ord_err;
+            u64_t len;
 
-bool_t
-    str_new
-        (str* par_str, u32_t par_count, va_list par)                      {
-            mem *mem = null_t; if (par_count > 0) mem = va_arg(par, void*);
+            len = min (str_len(self), str_len(arg));
+            return mem_ord    (
+                str_ptr(self),
+                str_ptr(arg) ,
+                len
+            );
+}
+
+static ord_t
+    do_ord_arg
+        (str* self, const char* arg)                   {
+            if (trait_of(self) != str_t) return ord_err;
+            if (!arg)                    return ord_err;
+            u64_t len = str_len(self);
+            u8_t* pos = str_ptr(self);
+
+            for (u64_t i = 0 ; i < len ; ++i)     {
+                if (pos[i] > arg[i]) return ord_gt;
+                if (pos[i] < arg[i]) return ord_lt;
+                if (arg[i] == '\0')  return ord_gt;
+            }
+
+            if (arg[len] != '\0') return ord_lt;
+            return ord_eq;
+}
+
+static cmp
+    do_cmp = make_cmp (
+        do_ord_arg,
+        do_ord
+);
+
+static obj_ops
+    do_ops =              {
+        .arith = &do_arith,
+        .cmp   = &do_cmp
+};
+
+static bool_t
+    do_new
+        (str* self, u32_t count, va_list arg)                         {
+            mem *mem = null_t; if (count > 0) mem = va_arg(arg, void*);
             if (trait_of(mem) != mem_t) mem = get_mem();
             if (trait_of(mem) != mem_t) return false_t;
 
-            if (!make_at(&par_str->str, seq) from (2, 16, mem)) return false_t;
+            if (!make_at(&self->str, seq) from (2, 16, mem)) return false_t;
             return true_t;
 }
 
-bool_t str_clone(str* par, str* par_clone) { return clone_at(&par->str, &par_clone->str); }
-void   str_del  (str* par)		           { del(&par->str); }
+static bool_t
+    do_clone
+        (str* self, str* clone)                     {
+            return clone_at(&self->str, &clone->str);
+}
+
+static void
+    do_del
+        (str* self)        {
+            del(&self->str);
+}
+
+static obj_trait
+    do_obj = make_trait (
+        do_new     ,
+        do_clone   ,
+        null_t     ,
+        do_del     ,
+        sizeof(str),
+        &do_ops
+);
+
+obj_trait *str_t = &do_obj;
 
 void
-    str_push_back
-        (str* par, str* par_push)                  {
-            if (trait_of(par_push) != str_t) return;
-            if (trait_of(par_push) != str_t) return;
-            u64_t len = seq_len(&par_push->str);
-            void *src = seq_ptr(&par_push->str);
-            seq  *dst = &par->str;
-
-            seq_push_back(dst, src, len);
+    str_push
+        (str* self, const char* push, u64_t len, u64_t off) {
+            if (trait_of(self) != str_t) return;
+            seq_push         (
+                &self->str,
+                push      ,
+                len       ,
+                off
+            );
 }
 
 void
     str_push_front
-        (str* par, str* par_push)                  {
-            if (trait_of(par_push) != str_t) return;
-            if (trait_of(par_push) != str_t) return;
-            u64_t len = seq_len(&par_push->str);
-            void *src = seq_ptr(&par_push->str);
-            seq  *dst = &par->str;
-
-            seq_push_front(dst, src, len);
-}
-
-void
-    str_push
-        (str* par, str* par_push, u64_t par_off)   {
-            if (trait_of(par_push) != str_t) return;
-            if (trait_of(par_push) != str_t) return;
-            u64_t len = seq_len(&par_push->str);
-            void *src = seq_ptr(&par_push->str);
-            seq  *dst = &par->str;
-
-            seq_push(dst, src, len, par_off);
-}
-
-void
-    str_push_front_cstr
-        (str* par, const char* par_push, u64_t par_len) {
-            if (trait_of(par) != str_t) return;
-            seq_push_front                    (
-                &par->str,
-                par_push ,
-                par_len
+        (str* self, const char* push, u64_t len) {
+            if (trait_of(self) != str_t) return;
+            seq_push_front   (
+                &self->str,
+                push      ,
+                len
             );
 }
 
 void
-    str_push_back_cstr
-        (str* par, const char* par_push, u64_t par_len) {
-            if (trait_of(par) != str_t) return;
-            seq_push_back                     (
-                &par->str,
-                par_push ,
-                par_len
-            );
-}
-
-void
-    str_push_cstr
-        (str* par, const char* par_push, u64_t par_len, u64_t par_off) {
-            if (trait_of(par) != str_t) return;
-            seq_push                          (
-                &par->str,
-                par_push ,
-                par_len  ,
-                par_off
+    str_push_back
+        (str* self, const char* push, u64_t len) {
+            if (trait_of(self) != str_t) return;
+            seq_push_back (
+                &self->str,
+                push      ,
+                len
             );
 }
 
 void
     str_pop_front
-        (str* par, u64_t par_len)             {
-            if (trait_of(par) != str_t) return;
-            seq_pop_front(&par->str, par_len);
+        (str* self, u64_t len)                 {
+            if (trait_of(self) != str_t) return;
+            seq_pop_front(&self->str, len);
 }
 
 void
     str_pop_back
-        (str* par, u64_t par_len)             {
-            if (trait_of(par) != str_t) return;
-            seq_pop_back(&par->str, par_len);
+        (str* self, u64_t len)                 {
+            if (trait_of(self) != str_t) return;
+            seq_pop_back(&self->str, len);
 }
 
 void
     str_pop
-        (str* par, u64_t par_len, u64_t par_off) {
-            if (trait_of(par) != str_t) return;
-            seq_pop                           (
-                &par->str,
-                par_len,
-                par_off
+        (str* self, u64_t len, u64_t off)      {
+            if (trait_of(self) != str_t) return;
+            seq_pop          (
+                &self->str,
+                len       ,
+                off
             );
 }
 
 void
     str_prep_front
-        (str* par, u64_t par_len)             {
-            if (trait_of(par) != str_t) return;
-            seq_prep_front(&par->str, par_len);
+        (str* self, u64_t len)                 {
+            if (trait_of(self) != str_t) return;
+            seq_prep_front(&self->str, len);
 }
 
 void
     str_prep_back
-        (str* par, u64_t par_len)             {
-            if (trait_of(par) != str_t) return;
-            seq_prep_back (&par->str, par_len);
+        (str* self, u64_t len)                 {
+            if (trait_of(self) != str_t) return;
+            seq_prep_back (&self->str, len);
 }
 
 u64_t
     str_find
-        (str* par, u64_t par_off, str* par_find)      {
-            if (trait_of(par_find) != str_t) return -1;
-            if (trait_of(par)      != str_t) return -1;
-            return mem_find                           (
-                str_ptr(par) + par_off,
-                str_ptr(par_find)     ,
-                str_len(par)          ,
-                str_len(par_find)
-            );
-}
-
-u64_t
-    str_find_cstr
-        (str* par, u64_t par_off, const char* par_find, u64_t par_len) {
-            if (trait_of(par_find) != str_t) return -1;
-            return mem_find                           (
-                str_ptr(par) + par_off,
-                par_find              ,
-                str_len(par)          ,
-                par_len
-            );
-}
-
-bool_t
-    str_eq
-        (str* self, str* cmp)                          {
-            if (trait_of(self) != str_t) return false_t;
-            if (trait_of(cmp)  != str_t) return false_t;
-            return str_eq_cstr                         (
-                self        ,
-                str_ptr(cmp),
-                str_len(cmp)
-            );
-}
-
-bool_t
-    str_gt
-        (str* self, str* ord)                          {
-            if (trait_of(self) != str_t) return false_t;
-            if (trait_of(ord)  != str_t) return false_t;
-            return str_gt_cstr                         (
-                self        ,
-                str_ptr(ord),
-                str_len(ord)
-            );
-}
-
-bool_t
-    str_lt
-        (str* self, str* ord)                          {
-            if (trait_of(self) != str_t) return false_t;
-            if (trait_of(ord)  != str_t) return false_t;
-            return str_lt_cstr                         (
-                self        ,
-                str_ptr(ord),
-                str_len(ord)
-            );
-}
-
-bool_t
-    str_eq_cstr
-        (str* self, const char* cmp, u64_t len)        {
-            if (trait_of(self) != str_t) return false_t;
-            if (!cmp)                    return false_t;
-            if (!len)                    return false_t;
-            len = min (str_len(self), len);
-
-            if (str_len(self) != len) return false_t;
-            return mem_eq                           (
-                str_ptr(self),
-                cmp          ,
+        (str* self, u64_t off, const char* find, u64_t len) {
+            if (trait_of(self) != str_t) return -1;
+            if (!find)                   return -1;
+            return mem_find                       (
+                str_ptr(self) + off,
+                find               ,
+                str_len(self)      ,
                 len
             );
 }
 
 bool_t
-    str_gt_cstr
-        (str* self, const char* ord, u64_t len)        {
-            if (trait_of(self) != str_t) return false_t;
-            if (!ord)                    return false_t;
-            if (!len)                    return false_t;
-            len = min (len, str_len(self));
-
-            ord_t res = mem_ord (str_ptr(self), ord, len);
-            if (res == ord_gt) return  true_t;
-            if (res != ord_eq) return false_t;
-
-            if (str_len(self) > len) return true_t;
-            return false_t;
-}
-
-bool_t
-    str_lt_cstr
-        (str* self, const char* ord, u64_t len)        {
-            if (trait_of(self) != str_t) return false_t;
-            if (!ord)                    return false_t;
-            if (!len)                    return false_t;
-            len = min (len, str_len(self));
-
-            ord_t res = mem_ord (str_ptr(self), ord, len);
-            if (res == ord_lt) return  true_t;
-            if (res != ord_eq) return false_t;
-
-            if (str_len(self) < len) return true_t;
-            return false_t;
-}
-
-bool_t
     str_begin
-        (str* par, str* par_cmp)                          {
-            if (trait_of(par_cmp) != str_t) return false_t;
-            if (trait_of(par)     != str_t) return false_t;
-            u64_t  ret = str_find(par, 0, par_cmp);
+        (str* self, const char* cmp, u64_t len)        {
+            if (trait_of(self) != str_t) return false_t;
+            if (!cmp)                    return false_t;
+            if (!len)                    return false_t;
+            u64_t ret = str_find (
+                self,
+                0   ,
+                cmp ,
+                len
+            );
+
             return ret == 0;
 }
 
 bool_t
     str_end
-        (str* par, str* par_cmp)                          {
-            if (trait_of(par_cmp) != str_t) return false_t;
-            if (trait_of(par)     != str_t) return false_t;
-            u64_t  off = str_len (par) - str_len(par_cmp);
-            u64_t  ret = str_find(par, off, par_cmp);
-            return ret == off;
-}
-
-bool_t
-    str_begin_cstr
-        (str* par, const char* par_cmp, u64_t par_len) {
-            if (trait_of(par) != str_t) return false_t;
-            u64_t ret = str_find_cstr                 (
-                par    ,
-                0      ,
-                par_cmp,
-                par_len
-            );
-
-            return ret == 0;
-}
-
-bool_t
-    str_end_cstr
-        (str* par, const char* par_cmp, u64_t par_len) {
-            if (trait_of(par) != str_t) return false_t;
-            u64_t  off = str_len (par) - par_len;
-            u64_t  ret = str_find_cstr          (
-                par    ,
-                off    ,
-                par_cmp,
-                par_len
+        (str* self, const char* cmp, u64_t len)        {
+            if (trait_of(self) != str_t) return false_t;
+            if (!cmp)                    return false_t;
+            if (!len)                    return false_t;
+            u64_t  off = str_len (self) - len;
+            u64_t  ret = str_find            (
+                self,
+                off ,
+                cmp ,
+                len
             );
 
             return ret == off;
 }
 
-bool_t
-    str_empty
-        (str* par)                                   {
-            if (trait_of(par) != str_t) return true_t;
-            return seq_empty(&par->str);
-}
-
-u64_t
-    str_len
-        (str* par)                              {
-            if (trait_of(par) != str_t) return 0;
-            return seq_len(&par->str);
-}
-
-const char*
-    str_ptr
-        (str* par)                                   {
-            if (trait_of(par) != str_t) return null_t;
-            return seq_ptr(&par->str);
-}
+bool_t      str_empty(str* self) { if (trait_of(self) != str_t) return true_t; return seq_empty(&self->str); }
+u64_t       str_len  (str* self) { if (trait_of(self) != str_t) return 0;      return seq_len  (&self->str); }
+const char* str_ptr  (str* self) { if (trait_of(self) != str_t) return null_t; return seq_ptr  (&self->str); }
