@@ -1,5 +1,5 @@
-#ifndef __ARCH_X86_64_CPU_H__
-#define __ARCH_X86_64_CPU_H__
+#ifndef CORE_ARCH_X86_CPU_H
+#define CORE_ARCH_X86_CPU_H
 
 #ifdef PRESET_ARCH_X86_64
 #include "../../obj.h"

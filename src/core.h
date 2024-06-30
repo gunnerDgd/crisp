@@ -1,5 +1,5 @@
-#ifndef __CORE_H__
-#define __CORE_H__
+#ifndef CORE_H
+#define CORE_H
 
 #include "core/atom.h"
 #include "core/bit.h"
@@ -28,9 +28,5 @@ struct            core  {
 };
 
 extern struct core core;
-bool_t core_new  (struct core*, u32_t, va_list);
-bool_t core_clone(struct core*, struct core*)  ;
-bool_t core_ref  (struct core*)                ;
-void   core_del  (struct core*)                ;
 
 #endif

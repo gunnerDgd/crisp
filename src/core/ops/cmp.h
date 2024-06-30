@@ -1,5 +1,5 @@
-#ifndef __OPS_CMP_H__
-#define __OPS_CMP_H__
+#ifndef CORE_OPS_CMP_H
+#define CORE_OPS_CMP_H
 
 #include "../type.h"
 
@@ -12,35 +12,31 @@ typedef enum ord_t {
     ord_gt  =  2
 }   ord_t;
 
-typedef struct ops_cmp                        {
+typedef struct cmp                            {
     ord_t (*ord)    (struct obj*, struct obj*);
     ord_t (*ord_arg)(struct obj*, any_t)      ;
-}   ops_cmp;
+}   cmp;
 
-#define make_ops_cmp(ord, ord_arg) {                            \
-    .ord_arg = ((ord_t)(*)(struct obj*, struct obj*))(ord_arg), \
-    .ord     = ((ord_t)(*)(struct obj*, any_t))      (ord)      \
-}
+#define make_cmp(do_ord_arg, do_ord)                           {\
+    .ord_arg = (ord_t(*)(struct obj*, any_t))      (do_ord_arg),\
+    .ord     = (ord_t(*)(struct obj*, struct obj*))(do_ord)    ,\
+}                                                               \
 
-ord_t  op_ord      (struct obj*, struct obj*);
-ord_t  op_org_arg  (struct obj*, any_t)      ;
+ord_t  ord    (struct obj*, struct obj*);
+ord_t  ord_arg(struct obj*, any_t)      ;
 
-bool_t op_gt       (struct obj*, struct obj*);
-bool_t op_gt_arg   (struct obj*, any_t)      ;
+bool_t gt_eq(struct obj*, struct obj*);
+bool_t lt_eq(struct obj*, struct obj*);
+bool_t gt   (struct obj*, struct obj*);
+bool_t lt   (struct obj*, struct obj*);
+bool_t eq   (struct obj*, struct obj*);
+bool_t ne   (struct obj*, struct obj*);
 
-bool_t op_gt_eq    (struct obj*, struct obj*);
-bool_t op_gt_eq_arg(struct obj*, any_t)      ;
-
-bool_t op_lt       (struct obj*, struct obj*);
-bool_t op_lt_arg   (struct obj*, any_t)      ;
-
-bool_t op_lt_eq    (struct obj*, struct obj*);
-bool_t op_lt_eq_arg(struct obj*, any_t)      ;
-
-bool_t op_eq       (struct obj*, struct obj*);
-bool_t op_eq_arg   (struct obj*, any_t)      ;
-
-bool_t op_ne       (struct obj*, struct obj*);
-bool_t op_ne_arg   (struct obj*, any_t)      ;
+bool_t lt_eq_arg(struct obj*, any_t);
+bool_t gt_eq_arg(struct obj*, any_t);
+bool_t gt_arg   (struct obj*, any_t);
+bool_t lt_arg   (struct obj*, any_t);
+bool_t eq_arg   (struct obj*, any_t);
+bool_t ne_arg   (struct obj*, any_t);
 
 #endif

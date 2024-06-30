@@ -1,5 +1,5 @@
-#ifndef __CORE_MOD_H__
-#define __CORE_MOD_H__
+#ifndef CORE_MOD_H
+#define CORE_MOD_H
 
 #include "type.h"
 

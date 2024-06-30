@@ -1,8 +1,6 @@
-#ifndef __TYPE_H__
-#define __TYPE_H__
+#ifndef CORE_TYPE_H
+#define CORE_TYPE_H
 
-#ifdef PRESET_LINUX_MODULE
-#else
 #include <stdarg.h>
 #include <stdint.h>
 #include <stddef.h>
@@ -45,6 +43,4 @@ typedef u32_t reg_t;
 
 #if PRESET_ARCH_BIT == 16
 typedef u16_t reg_t;
-#endif
-
 #endif

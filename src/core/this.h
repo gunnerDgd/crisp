@@ -1,5 +1,5 @@
-#ifndef __THIS_H__
-#define __THIS_H__
+#ifndef CORE_THIS_H
+#define CORE_THIS_H
 
 #include "obj.h"
 #include "mod.h"
@@ -27,10 +27,5 @@ extern __declspec(thread) struct this this;
 #else
 extern struct this this;
 #endif
-
-bool_t this_new  (struct this*, u32_t, va_list);
-bool_t this_clone(struct this*, struct this*)  ;
-bool_t this_ref  (struct this*)                ;
-void   this_del  (struct this*)                ;
 
 #endif

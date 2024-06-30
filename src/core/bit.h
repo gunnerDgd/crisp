@@ -1,5 +1,5 @@
-#ifndef __BIT_H__
-#define __BIT_H__
+#ifndef CORE_BIT_H
+#define CORE_BIT_H
 
 #include "type.h"
 

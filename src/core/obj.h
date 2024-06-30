@@ -1,5 +1,5 @@
-#ifndef __OBJ_H__
-#define __OBJ_H__
+#ifndef CORE_OBJ_H
+#define CORE_OBJ_H
 
 #include "type.h"
 #include "ops.h"
@@ -39,26 +39,26 @@ obj_trait* obj_get_trait(obj*);
 u64_t      obj_use_count(obj*);
 
 #ifndef __cplusplus
-#define make(par_type)           (par_type*)obj_new      (null_t       , ((obj_trait*)(par_type##_t)),
-#define vmake(par_type)          (par_type*)obj_new_va   (null_t       , ((obj_trait*)(par_type##_t)),
-#define make_at(par, par_type)              obj_new_at   (((obj*)(par)), ((obj_trait*)(par_type##_t)),
-#define vmake_at(par, par_type)             obj_new_at_va(((obj*)(par)), ((obj_trait*)(par_type##_t)),
+#define make(type)           (type*)obj_new      (null_t       , ((obj_trait*)(type##_t)),
+#define vmake(type)          (type*)obj_new_va   (null_t       , ((obj_trait*)(type##_t)),
+#define make_at(self, type)              obj_new_at   (((obj*)(self)), ((obj_trait*)(type##_t)),
+#define vmake_at(self, type)             obj_new_at_va(((obj*)(self)), ((obj_trait*)(type##_t)),
 #define from(...)                __VA_ARGS__)
 
-#define clone(par)               obj_clone    (((obj*)par))
-#define clone_at(par, par_clone) obj_clone_at (((obj*)par), ((obj*)par_clone))
-#define ref(par)                 obj_ref      (((obj*)par))
-#define del(par)                 obj_del      (((obj*)par))
-#define use_count(par)           obj_use_count(((obj*)par))
-#define trait_of(par)            obj_get_trait(((obj*)par))
+#define clone(self)           obj_clone    (((obj*)self))
+#define clone_at(self, clone) obj_clone_at (((obj*)self), ((obj*)clone))
+#define ref(self)             obj_ref      (((obj*)self))
+#define del(self)             obj_del      (((obj*)self))
+#define use_count(self)       obj_use_count(((obj*)self))
+#define trait_of(self)        obj_get_trait(((obj*)self))
 
-#define make_trait(par_new, par_clone, par_ref, par_del, par_size, par_ops) {\
-    .on_new   = ((bool_t (*)(obj*, u32_t, va_list))(par_new))  ,             \
-    .on_clone = ((bool_t (*)(obj*, obj*))          (par_clone)),             \
-    .on_ref   = ((bool_t (*)(obj*))(par_ref))                  ,             \
-    .on_del   = ((void   (*)(obj*))(par_del))                  ,             \
-    .size     = ((u64_t)(par_size))                            ,             \
-    .ops      = ((obj_ops*)(par_ops))                          ,             \
+#define make_trait(do_new, do_clone, do_ref, do_del, do_size, do_ops) {\
+    .on_new   = ((bool_t (*)(obj*, u32_t, va_list))(do_new))  ,        \
+    .on_clone = ((bool_t (*)(obj*, obj*))          (do_clone)),        \
+    .on_ref   = ((bool_t (*)(obj*))(do_ref))                  ,        \
+    .on_del   = ((void   (*)(obj*))(do_del))                  ,        \
+    .size     = ((u64_t)(do_size))                            ,        \
+    .ops      = ((obj_ops*)(do_ops))                          ,        \
 }
 
 #endif

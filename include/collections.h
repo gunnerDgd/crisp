@@ -3,7 +3,7 @@
 
 #include "collections/list.h"
 #include "collections/map.h"
-#include "collections/node.h"
+#include "collections/pos.h"
 #include "collections/bma.h"
 #include "collections/str.h"
 

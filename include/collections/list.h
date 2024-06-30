@@ -1,30 +1,26 @@
-#ifndef __COLLECTIONS_LIST_H__
-#define __COLLECTIONS_LIST_H__
+#ifndef COLLECTIONS_LIST_H
+#define COLLECTIONS_LIST_H
 
-#include "node.h"
+#include "pos.h"
 
 extern obj_trait  *list_t   ;
 typedef struct     list     { u8_t handle[256]; } list;
 
-node*  list_push_back (list*, obj*);
-node*  list_push_front(list*, obj*);
+pos*   list_move_front(list* self, any_t* move);
+pos*   list_move_back (list* self, any_t* move);
 
-node*  list_move_front(list*, obj*);
-node*  list_move_back (list*, obj*);
+pos*   list_push_front(list* self, any_t move);
+pos*   list_push_back (list* self, any_t move);
 
-obj*   list_pop_front (list*)      ;
-obj*   list_pop_back  (list*)	   ;
+any_t  list_pop_front (list* self);
+any_t  list_pop_back  (list* self);
 
-bool_t list_empty     (list*)      ;
-node*  list_begin     (list*)      ;
-node*  list_end       (list*)      ;
+bool_t list_empty     (list* self);
+pos*   list_begin     (list* self);
+pos*   list_end       (list* self);
 
-#define list_for(par, par_it)                                        \
-    node* par_it = list_begin(par), *par_it##_end = list_end(par);   \
-    for( ; par_it && (par_it != par_it##_end) ; par_it = next(par_it))
-
-#define list_while(par, par_it)                                   \
-    node* par_it = list_begin(par), *par_it##_end = list_end(par);\
-    while(par_it && (par_it != par_it##_end))
+#define list_for(name, cur)                                         \
+    pos* (cur) = list_begin((name));                                \
+    for( ; (cur) && (cur) != list_end((name)) ; (cur) = next((cur)))\
 
 #endif

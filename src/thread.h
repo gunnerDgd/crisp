@@ -1,5 +1,5 @@
-#ifndef __THREAD_H__
-#define __THREAD_H__
+#ifndef THREAD_H
+#define THREAD_H
 
 #include "thread/mtx.h"
 #include "thread/thd.h"
@@ -16,11 +16,6 @@ struct            thread  {
 #elif  PRESET_COMPILER_GCC
 #define thd_local __thread
 #endif
-
-bool_t thread_new  (struct thread*, u32_t, va_list);
-bool_t thread_clone(struct thread*, struct thread*);
-bool_t thread_ref  (struct thread*);
-void   thread_del  (struct thread*);
 
 #ifdef PRESET_COMPILER_GCC
 extern __thread           struct thread thread;

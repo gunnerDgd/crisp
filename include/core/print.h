@@ -1,5 +1,5 @@
-#ifndef __PRINT_H__
-#define __PRINT_H__
+#ifndef CORE_PRINT_H
+#define CORE_PRINT_H
 
 #include "type.h"
 

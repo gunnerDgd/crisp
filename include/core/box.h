@@ -1,5 +1,5 @@
-#ifndef __BOX_H__
-#define __BOX_H__
+#ifndef CORE_BOX_H
+#define CORE_BOX_H
 
 #include "obj.h"
 #include "mem.h"

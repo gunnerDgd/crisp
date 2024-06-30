@@ -1,8 +1,6 @@
-#ifndef __TYPE_H__
-#define __TYPE_H__
+#ifndef CORE_TYPE_H
+#define CORE_TYPE_H
 
-#ifdef PRESET_LINUX_MODULE
-#else
 #include <stdarg.h>
 #include <stdint.h>
 #include <stddef.h>
@@ -23,7 +21,6 @@ typedef double   f64_t;
 
 typedef bool     bool_t;
 typedef void*    any_t ;
-#endif
 
 #define false_t  0
 #define true_t   1

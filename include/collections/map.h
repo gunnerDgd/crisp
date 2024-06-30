@@ -1,7 +1,7 @@
 #ifndef __COLLECTIONS_MAP_H__
 #define __COLLECTIONS_MAP_H__
 
-#include "node.h"
+#include "pos.h"
 
 extern obj_trait* map_t;
 typedef struct    map  { u8_t map[256]; } map;

@@ -1,5 +1,5 @@
-#ifndef __BMA_H__
-#define __BMA_H__
+#ifndef COLLECTIONS_BMA_H
+#define COLLECTIONS_BMA_H
 
 #include "../core.h"
 
@@ -11,13 +11,9 @@ typedef struct    bma  {
     reg_t in ;
 }   bma;
 
-bool_t bma_new  (bma*, u32_t, va_list);
-bool_t bma_clone(bma*, bma*)          ;
-void   bma_del  (bma*)                ;
-
-bool_t bma_out_lock(bma*, any_t*);
-bool_t bma_out     (bma*, any_t*);
-bool_t bma_in_lock (bma*, any_t);
-bool_t bma_in      (bma*, any_t);
+bool_t bma_out_lock(bma* self, any_t* out);
+bool_t bma_out     (bma* self, any_t* out);
+bool_t bma_in_lock (bma* self, any_t  out);
+bool_t bma_in      (bma* self, any_t  out);
 
 #endif

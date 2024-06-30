@@ -1,5 +1,5 @@
-#ifndef __CORE_H__
-#define __CORE_H__
+#ifndef CORE_H
+#define CORE_H
 
 #include "core/atom.h"
 #include "core/bit.h"
@@ -9,7 +9,6 @@
 #include "core/box.h"
 #include "core/mem.h"
 
-#include "core/cpu.h"
 #include "core/task.h"
 #include "core/fut.h"
 

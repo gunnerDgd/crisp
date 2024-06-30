@@ -1,5 +1,5 @@
-#ifndef __CPU_H__
-#define __CPU_H__
+#ifndef CORE_CPU_H
+#define CORE_CPU_H
 
 #ifdef PRESET_ARCH_X86_64
 #include "arch/x86_64/cpu.h"

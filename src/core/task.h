@@ -1,5 +1,5 @@
-#ifndef __TASK_TASK_H__
-#define __TASK_TASK_H__
+#ifndef CORE_TASK_H
+#define CORE_TASK_H
 
 #include "obj.h"
 
@@ -21,11 +21,7 @@ typedef struct    task  {
             cpu;
 }   task;
 
-bool_t task_new   (task*, u32_t, va_list);
-bool_t task_clone (task*, task*)         ;
-void   task_del   (task*)                ;
-fut*   task_fut   (task*)                ;
-
-fut*   async      (void*(*)(void*), void*);
+fut* async   (any_t(*)(any_t), any_t);
+fut* task_fut(task*);
 
 #endif

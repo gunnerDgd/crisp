@@ -1,5 +1,5 @@
-#ifndef __FUT_H__
-#define __FUT_H__
+#ifndef CORE_FUT_H
+#define CORE_FUT_H
 
 #include "obj.h"
 
@@ -12,9 +12,9 @@ typedef struct fut_ops {
 }   fut_ops;
 
 #ifndef __cplusplus
-#define make_fut_ops(par_poll, par_ret) {\
-    .poll = ((u64_t(*)(obj*))(par_poll)),\
-    .ret  = ((void*(*)(obj*))(par_ret)) ,\
+#define make_fut_ops(do_poll, do_ret)  {\
+    .poll = ((u64_t(*)(obj*))(do_poll)),\
+    .ret  = ((void*(*)(obj*))(do_ret)) ,\
 }
 #endif
 
@@ -27,13 +27,8 @@ typedef struct    fut  {
     void    *ret ;
 }   fut;
 
-bool_t fut_new  (fut*, u32_t, va_list);
-bool_t fut_clone(fut*, fut*)          ;
-void   fut_del  (fut*)                ;
-
-u64_t  fut_poll (fut*);
-void*  fut_ret  (fut*);
-
-void*  await    (fut*);
+u64_t  fut_poll(fut*);
+void*  fut_ret (fut*);
+void*  await   (fut*);
 
 #endif
