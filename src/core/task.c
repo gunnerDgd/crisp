@@ -1,62 +1,52 @@
 #include "task.h"
 #include "this.h"
 
-void
-    task_do_run
-        (task* par)                                  {
-            if (trait_of(par)       != task_t) return;
-            if (trait_of(&par->cpu) != cpu_t)  return;
+static void
+    do_run
+        (task* self)                            {
+            if (trait_of(self) != task_t) return;
             task* task = this.task;
-            this.task  = par       ;
+            this.task  = self;
 
-            par->res  = par->func(par->arg);
-            par->stat = fut_ready          ;
-            cpu_switch(&par->cpu, par->ret);
+            self->res  = self->func(self->arg);
+            self->stat = fut_ready;
+
+            cpu_switch(&self->cpu, self->ret);
             this.task = task;
 }
 
-u64_t  
-    task_do_poll
-        (task* par)                                                    {
-            if (trait_of(par) != task_t)      return fut_err  ; cpu ret;
+static u64_t
+    do_poll
+        (task* self)                                                   {
+            if (trait_of(self) != task_t)     return fut_err  ; cpu ret;
             if (!make_at(&ret, cpu) from (0)) return fut_err  ;
-            if (par->stat != fut_pend)        return par->stat;
+            if (self->stat != fut_pend)       return self->stat;
             task* task = this.task;
-            this.task  = par      ;
+            this.task  = self;
 
-            par->ret = &ret  ; cpu_switch(&ret, &par->cpu);
-            par->ret = null_t;
+            self->ret = &ret  ; cpu_switch(&ret, &self->cpu);
+            self->ret = null_t;
             del (&ret);
 
-            this.task = task;
-            return par->stat ;
+            this.task  = task;
+            return self->stat;
 }
 
-void* 
-    task_do_ret
+static any_t
+    do_ret
         (task* par)                                   {
             if (trait_of(par) != task_t) return null_t;
             return par->res;
 }
 
-fut_ops task_fut_ops = make_fut_ops (
-    task_do_poll,
-    task_do_ret
+static fut_ops
+    do_fut = make_fut_ops (
+        do_poll,
+        do_ret
 );
 
-obj_trait task_trait = make_trait (
-        task_new    ,
-        task_clone  ,
-        null_t      ,
-        task_del    ,
-        sizeof(task),
-        null_t
-);
-
-obj_trait *task_t = &task_trait;
-
-bool_t
-    task_new
+static bool_t
+    do_new
         (task* self, u32_t count, va_list par)                           {
             void *func = null_t; if (count > 0) func = va_arg(par, void*);
             void *arg  = null_t; if (count > 1) arg  = va_arg(par, void*);
@@ -66,8 +56,8 @@ bool_t
             len -= 40;
 
             if (!make_at(&self->cpu, cpu) from (0)) return false_t;
-            cpu_entry(&self->cpu, task_do_run);
             cpu_stack(&self->cpu, spa, len);
+            cpu_entry(&self->cpu, do_run);
             cpu_arg  (&self->cpu, self);
 
             self->stat = fut_pend;
@@ -78,16 +68,16 @@ bool_t
             return true_t;
 }
 
-bool_t
-    task_clone
+static bool_t
+    do_clone
         (task* self, task* clone)                                 {
             if (!make_at(&self->cpu, cpu) from (0)) return false_t;
             u8_t *spa = self->spa;
             u64_t len = 1 MB;
-            len -= 24;
+            len -= 40;
 
-            cpu_entry(&self->cpu, task_do_run);
             cpu_stack(&self->cpu, spa, len);
+            cpu_entry(&self->cpu, do_run);
             cpu_arg  (&self->cpu, self);
             self->func = clone->func;
             self->arg  = clone->arg ;
@@ -98,20 +88,32 @@ bool_t
             return true_t;
 }
 
-void   
-    task_del
-        (task* par)        {
-            del (&par->cpu);
+static void
+    do_del
+        (task* self)        {
+            del (&self->cpu);
 }
+
+static obj_trait
+    do_obj = make_trait (
+        do_new      ,
+        do_clone    ,
+        null_t      ,
+        do_del      ,
+        sizeof(task),
+        null_t
+);
+
+obj_trait *task_t = &do_obj;
 
 fut*
     task_fut
-        (task* par)                                   {
-            if (trait_of(par) != task_t) return null_t;
-            return make (fut) from                    (
-                2            ,
-                &task_fut_ops,
-                par
+        (task* self)                                   {
+            if (trait_of(self) != task_t) return null_t;
+            return make (fut) from      (
+                2      ,
+                &do_fut,
+                self
             );
 }
 

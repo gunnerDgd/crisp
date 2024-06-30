@@ -10,19 +10,8 @@
 
 thd_local struct thread thread;
 
-obj_trait thread_trait = make_trait (
-    thread_new           ,
-    thread_clone         ,
-    thread_ref           ,
-    thread_del           ,
-    sizeof(struct thread),
-    null_t
-);
-
-obj_trait *thread_t = &thread_trait;
-
-bool_t
-    thread_new
+static bool_t
+    do_new
         (struct thread* self, u32_t count, va_list arg) {
 #ifdef PRESET_LINUX
 #ifdef SYS_gettid
@@ -38,9 +27,21 @@ bool_t
             return false_t;
 }
 
-bool_t thread_clone(struct thread* self, struct thread* clone) { return false_t; }
-bool_t thread_ref  (struct thread* self)                       { return false_t; }
-void   thread_del  (struct thread* self)                       {  }
+static bool_t do_clone(struct thread* self, struct thread* clone) { return false_t; }
+static bool_t do_ref  (struct thread* self)                       { return false_t; }
+static void   do_del  (struct thread* self)                       {  }
+
+static obj_trait
+    do_obj = make_trait      (
+        do_new               ,
+        do_clone             ,
+        do_ref               ,
+        do_del               ,
+        sizeof(struct thread),
+        null_t
+);
+
+obj_trait *thread_t = &do_obj;
 
 u64_t  this_thd_id() { return thread.uid ; }
 thd*   this_thd   () { return thread.this; }

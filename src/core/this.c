@@ -13,19 +13,8 @@ __declspec(thread) struct this this;
 struct this this;
 #endif
 
-obj_trait this_trait = make_trait (
-    this_new           ,
-    this_clone         ,
-    this_ref           ,
-    this_del           ,
-    sizeof(struct this),
-    null_t
-);
-
-obj_trait *this_t = &this_trait;
-
-bool_t
-    this_new
+static bool_t
+    do_new
         (struct this* self, u32_t count, va_list par)                  {
             any_t run = null_t; if (count > 0) run = va_arg(par, any_t);
             any_t arg = null_t; if (count > 1) arg = va_arg(par, any_t);
@@ -39,6 +28,18 @@ bool_t
             return true_t;
 }
 
-bool_t this_clone(struct this* self, struct this* clone) { return false_t; }
-bool_t this_ref  (struct this* self)                     { return false_t; }
-void   this_del  (struct this* self)                     {}
+static bool_t do_clone(struct this* self, struct this* clone) { return false_t; }
+static bool_t do_ref  (struct this* self)                     { return false_t; }
+static void   do_del  (struct this* self)                     {}
+
+static obj_trait
+    do_obj = make_trait    (
+        do_new             ,
+        do_clone           ,
+        do_ref             ,
+        do_del             ,
+        sizeof(struct this),
+        null_t
+);
+
+obj_trait *this_t = &do_obj;
