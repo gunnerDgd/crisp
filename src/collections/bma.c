@@ -1,15 +1,35 @@
 #include "bma.h"
 
-bool_t
-    bma_new
+static bool_t
+    do_new
         (bma* self, u32_t count, va_list arg) {
             self->in  = (reg_t) -1;
             self->out = 0;
             return true_t;
 }
 
-bool_t bma_clone(bma* self, bma* clone) { return false_t; }
-void   bma_del  (bma* self)             {                 }
+static bool_t
+    do_clone
+        (bma* self, bma* clone) {
+            return false_t;
+}
+
+static void
+    do_del
+        (bma* self) {
+}
+
+static obj_trait
+    do_obj = make_trait (
+        do_new     ,
+        do_clone   ,
+        null_t     ,
+        do_del     ,
+        sizeof(bma),
+        null_t
+);
+
+obj_trait *bma_t = &do_obj;
 
 bool_t
     bma_in_lock

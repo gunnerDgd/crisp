@@ -1,136 +1,129 @@
 #include "list.h"
 
-obj_trait list_trait = make_trait (
-    list_new    ,
-    list_clone  ,
-    null_t      ,
-    list_del    ,
-    sizeof(list),
-    null_t
-);
-
-obj_trait* list_t = &list_trait;
-
-bool_t
-    list_new
-        (list* self, u32_t count, va_list arg)               {
-            mem* mem = null_t; if (count > 0) mem = get_mem();
+static bool_t
+    do_new
+        (list* self, u32_t count, va_list arg)                        {
+            mem* mem = null_t; if (count > 0) mem = va_arg(arg, any_t);
             if (trait_of(mem) != mem_t) mem = get_mem();
             if (trait_of(mem) != mem_t) return false_t;
 
-            if (!make_at(&self->begin, node) from(0)) return false_t;
-            if (!make_at(&self->end  , node) from(0)) return false_t;
-            if (!next_as(&self->begin, &self->end))   return false_t;
+            if (!make_at(&self->begin, pos) from(0)) return false_t;
+            if (!make_at(&self->end  , pos) from(0)) return false_t;
+            if (!next_as(&self->begin, &self->end))  return false_t;
             return true_t;
 }
 
-bool_t
-    list_clone
-        (list* self, list* clone)                                   {
-            if (trait_of(clone->mem) != mem_t)        return false_t;
-            if (!make_at(&self->begin, node) from(0)) return false_t;
-            if (!make_at(&self->end  , node) from(0)) return false_t;
+static bool_t
+    do_clone
+        (list* self, list* clone)                                  {
+            if (trait_of(clone->mem) != mem_t)       return false_t;
+            if (!make_at(&self->begin, pos) from(0)) return false_t;
+            if (!make_at(&self->end  , pos) from(0)) return false_t;
 
             if (!next_as(&self->begin, &clone->end))   return false_t;
             if (!prev_as(&self->end  , &clone->begin)) return false_t;
             self->mem = clone->mem;
 
-            list_for(clone, push) list_push_back(self, value(push));
+            list_for(clone, push) list_push_back(self, as_any(push));
             return true_t;
 }
 
-void
-    list_del
+static void
+    do_del
         (list* self)                                        {
             for ( ; !list_empty(self) ; list_pop_back(self));
 }
 
-node*
+static obj_trait
+    do_obj = make_trait (
+        do_new      ,
+        do_clone    ,
+        null_t      ,
+        do_del      ,
+        sizeof(list),
+        null_t
+);
+
+obj_trait* list_t = &do_obj;
+
+pos*
     list_push_back
-        (list* par, obj* par_push)                    {
+        (list* par, any_t push)                       {
             if (trait_of(par) != list_t) return null_t;
-            node *ret = (node*) obj_new               (
+            pos *ret = (pos*) obj_new  (
                 par->mem,
-                node_t  ,
+                pos_t   ,
                 1       ,
-                par_push
+                push
             );
 
-            if (trait_of(ret) != node_t) return null_t;
+            if (trait_of(ret) != pos_t) return null_t;
             prev_as(ret, prev(&par->end));
             prev_as(&par->end, ret)      ;
             return  ret;
 }
 
-node*
+pos*
     list_push_front
-        (list* par, obj* par_push)                    {
-            if (trait_of(par) != list_t) return null_t;
-            node *ret = (node*) obj_new               (
-                par->mem,
-                node_t  ,
-                1       ,
-                par_push
+        (list* self, any_t push)                       {
+            if (trait_of(self) != list_t) return null_t;
+            pos *ret = (pos*) obj_new   (
+                self->mem,
+                pos_t    ,
+                1        ,
+                push
             );
 
-            if (trait_of(ret) != node_t) return null_t;
-            next_as(ret, next(&par->begin));
-            next_as(&par->begin, ret)      ;
+            if (trait_of(ret) != pos_t) return null_t;
+            next_as(ret, next(&self->begin));
+            next_as(&self->begin, ret)      ;
             return  ret;
 }
 
-node*
+pos*
     list_move_back
-        (list* par, obj* par_push)                   {
-            node* ret = list_push_back(par, par_push);
+        (list* self, any_t* push)                 {
+            pos* ret = list_push_back(self, *push);
 
-            if (trait_of(ret) != node_t) return null_t;
-            del(par_push);
+            if (trait_of(ret) != pos_t) return null_t;
+            *push = null_t;
             return ret;
 }
 
-node*
+pos*
     list_move_front
-        (list* par, obj* par_push)                    {
-            node* ret = list_push_front(par, par_push);
+        (list* self, any_t* push)                 {
+            pos* ret = list_push_front(self, push);
 
-            if (trait_of(ret) != node_t) return null_t;
-            del(par_push);
+            if (trait_of(ret) != pos_t) return null_t;
+            *push = null_t;
             return ret;
 }
 
-obj*
+any_t
     list_pop_front
         (list* par)                                   {
             if (trait_of(par) != list_t) return null_t;
             if (list_empty(par))         return null_t;
+            any_t ret;
+            pos  *pos;
 
-            node *ret_cur = next (&par->begin);
-            obj  *ret     = value(ret_cur)    ;
-            if (use_count(ret) == 1) {
-                del(ret_cur);
-                return 0;
-            }
-
-            del   (ret_cur);
-            return ret     ;
+            pos = next  (&par->begin);
+            ret = as_any(pos);
+            return ret;
 }
 
-obj*
+any_t
     list_pop_back
         (list* par)                                   {
             if (trait_of(par) != list_t) return null_t;
             if (list_empty(par))         return null_t;
+            any_t ret;
+            pos  *pos;
 
-            node *ret_cur = prev (&par->end);
-            obj  *ret     = value(ret_cur)  ;
-            if (use_count(ret) == 1) {
-                del (ret_cur);
-                return null_t;
-            }
-
-            del   (ret_cur);
-            return ret     ;
+            pos = prev  (&par->end);
+            ret = as_any(pos);
+            return ret;
 }
 
 bool_t
@@ -140,16 +133,16 @@ bool_t
             return next(&par->begin) == &par->end;
 }
 
-node*
+pos*
     list_begin
-        (list* par)                                   {
-            if (trait_of(par) != list_t) return null_t;
-            return par->begin.next;
+        (list* self)                                   {
+            if (trait_of(self) != list_t) return null_t;
+            return next(&self->begin);
 }
 
-node*
+pos*
     list_end
-        (list* par)                                   {
-            if (trait_of(par) != list_t) return null_t;
-            return &par->end;
+        (list* self)                                   {
+            if (trait_of(self) != list_t) return null_t;
+            return &self->end;
 }

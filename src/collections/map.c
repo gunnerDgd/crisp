@@ -1,63 +1,66 @@
 #include "map.h"
 
-obj_trait map_trait = make_trait (
-    map_new    ,
-    map_clone  ,
-    null_t     ,
-    map_del    ,
-    sizeof(map),
-    null_t
-);
-
-obj_trait* map_t = &map_trait;
-
-bool_t    
-    map_new
-        (map* par_map, u32_t par_count, va_list par)                      {
-            mem *mem = null_t; if (par_count > 1) mem = va_arg(par, void*);
+static bool_t
+    do_new
+        (map* self, u32_t count, va_list arg)                         {
+            mem *mem = null_t; if (count > 1) mem = va_arg(arg, any_t);
             if (trait_of(mem) != mem_t) mem = get_mem();
             if (trait_of(mem) != mem_t) return false_t ;
 
-            if (!make_at(&par_map->map, list) from(1, mem)) return false_t;
+            if (!make_at(&self->map, list) from(1, mem)) return false_t;
             return true_t;
 }
 
-bool_t    
-    map_clone
-        (map* par, map* par_clone)                                   {
-            if (!clone_at(&par->map, &par_clone->map)) return false_t;
+static bool_t
+    do_clone
+        (map* self, map* clone)                                   {
+            if (!clone_at(&self->map, &clone->map)) return false_t;
             return true_t;
 }
 
-void
-    map_del
-        (map* par)         {
-            del (&par->map);
+static void
+    do_del
+        (map* self)         {
+            del (&self->map);
 }
 
-node*
+static obj_trait
+    do_obj = make_trait (
+        do_new     ,
+        do_clone   ,
+        null_t     ,
+        do_del     ,
+        sizeof(map),
+        null_t
+);
+
+obj_trait* map_t = &do_obj;
+
+
+
+pos*
     map_push
-        (map* self, obj* push)                        {
+        (map* self, any_t push)                       {
             if (trait_of(self) != map_t) return null_t;
-            list_for (&self->map, pos)                    {
-                if (op_eq(push, value(pos))) return null_t;
-                if (op_gt(push, value(pos))) continue;
-                node *cur = make (node) from (1, push);
+            list_for (&self->map, cur)                  {
+                if (eq(push, as_any(cur))) return null_t;
+                if (gt(push, as_any(cur))) continue;
+                pos *new = make (pos) from (1, push);
 
-                if (trait_of(cur) != node_t) return null_t;
-                return next_as(cur, pos);
+                if (trait_of(new) != pos_t) return null_t;
+                return next_as(new, cur);
             }
             return list_push_back(&self->map, push);
 }
 
-node*
+pos*
     map_move
-        (map* self, obj* move)                          {
+        (map* self, any_t* move)                        {
             if (trait_of (self) != map_t)  return null_t;
-            node *ret = map_push (self, move);
+            pos *ret = map_push (self, move);
 
-            if (trait_of(ret) != node_t) return null_t;
-            del (move);
+            if (trait_of(ret) != pos_t) return null_t;
+            *move = null_t;
             return ret;
 }
 
@@ -66,40 +69,23 @@ void
         (map* self, any_t key)                 {
             if (trait_of(self) != map_t) return;
 
-            node *pop = map_find(self, key);
-            if (trait_of(pop) != node_t) return;
+            pos *pop = map_find(self, key);
+            if (trait_of(pop) != pos_t) return;
             del(pop);
 }
 
-node*
+pos*
     map_find
         (map* self, any_t key)                        {
             if (trait_of(self) != map_t) return null_t;
-            list_for (&self->map, pos)                  {
-                if (op_ne_arg(value(pos), key)) continue;
+            list_for (&self->map, pos)                {
+                if (ne_arg(as_any(pos), key)) continue;
                 return pos;
             }
 
             return map_end(self);
 }
 
-bool_t    
-    map_empty
-        (map* par)                                    {
-            if (trait_of(par) != map_t) return false_t;
-            return list_empty(&par->map);
-}
-
-node*
-    map_begin
-        (map* par)                                   {
-            if (trait_of(par) != map_t) return null_t;
-            return list_begin(&par->map);
-}
-
-node*
-    map_end
-        (map* par)                                   {
-            if (trait_of(par) != map_t) return null_t;
-            return list_end(&par->map);
-}
+bool_t map_empty(map* self) { if (trait_of(self) != map_t) return false_t; return list_empty(&self->map); }
+pos*   map_begin(map* self) { if (trait_of(self) != map_t) return null_t;  return list_begin(&self->map); }
+pos*   map_end  (map* self) { if (trait_of(self) != map_t) return null_t;  return list_end  (&self->map); }

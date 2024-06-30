@@ -78,8 +78,8 @@ i64_t
         obj_trait *trait = as->trait ; if (!trait) return 0;
         obj_ops   *ops   = trait->ops; if (!ops)   return 0;
         if (!ops->cast)         return 0;
-        if (!ops->cast->as_i16) return 0;
-        return ops->cast->as_i16(as);
+        if (!ops->cast->as_i64) return 0;
+        return ops->cast->as_i64(as);
 }
 
 u64_t 
@@ -93,12 +93,12 @@ u64_t
 }
 
 f32_t
-    as_f32(struct obj* par)                                  {
-        obj       *as    = par       ; if (!as)    return 0.0;
-        obj_trait *trait = as->trait ; if (!trait) return 0.0;
-        obj_ops   *ops   = trait->ops; if (!ops)   return 0.0;
-        if (!ops->cast)         return 0.0;
-        if (!ops->cast->as_f32) return 0.0;
+    as_f32(struct obj* par)                                   {
+        obj       *as    = par       ; if (!as)    return 0.0f;
+        obj_trait *trait = as->trait ; if (!trait) return 0.0f;
+        obj_ops   *ops   = trait->ops; if (!ops)   return 0.0f;
+        if (!ops->cast)         return 0.0f;
+        if (!ops->cast->as_f32) return 0.0f;
         return ops->cast->as_f32(as);
 }
 

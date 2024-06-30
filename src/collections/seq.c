@@ -1,241 +1,213 @@
 #include "seq.h"
 
-obj_trait seq_trait = make_trait (
-    seq_new    ,
-    seq_clone  ,
-    null_t     ,
-    seq_del    ,
-    sizeof(seq),
-    null_t
-);
-
-obj_trait *seq_t = &seq_trait;
-
-bool_t
-    seq_new
-        (seq* par_seq, u32_t par_count, va_list par)                       {
-            u64_t len = 16    ; if (par_count > 0) len = va_arg(par, u64_t);
-            mem*  mem = null_t; if (par_count > 1) mem = va_arg(par, void*);
+static bool_t
+    do_new
+        (seq* self, u32_t count, va_list arg)                          {
+            u64_t len = 16    ; if (count > 0) len = va_arg(arg, u64_t);
+            mem*  mem = null_t; if (count > 1) mem = va_arg(arg, any_t);
             if (trait_of(mem) != mem_t) mem = get_mem();
             if (trait_of(mem) != mem_t) return false_t ;
 
-            par_seq->ptr   = mem_acq (mem, null_t, len);
-            par_seq->begin = 0  ;
-            par_seq->end   = 0  ;
-            par_seq->mem   = mem;
-            par_seq->len   = len;
+            self->ptr   = mem_use (mem, null_t, len);
+            self->begin = 0  ;
+            self->end   = 0  ;
+            self->mem   = mem;
+            self->len   = len;
             return true_t;
 }
 
-bool_t
-    seq_clone
-        (seq* par, seq* par_clone)       {
-            par->begin = par_clone->begin;
-            par->end   = par_clone->end  ;
-            par->len   = par_clone->len  ;
-            par->mem   = par_clone->mem  ;
+static bool_t
+    do_clone
+        (seq* self, seq* clone)       {
+            self->begin = clone->begin;
+            self->end   = clone->end;
+            self->len   = clone->len;
+            self->mem   = clone->mem;
 
-            par->ptr = mem_acq(par->mem, null_t, par->len); if (!par->ptr) return false_t;
-            mem_copy(par->ptr, par_clone->ptr, par->len);
+            self->ptr = mem_use(self->mem, null_t, self->len);
+            if (!self->ptr) return false_t;
+            mem_copy      (
+                self ->ptr,
+                clone->ptr,
+                self ->len
+            );
+
             return true_t;
 }
 
-void
-    seq_del
-        (seq* par)                               {
-            mem_rel(par->mem, par->ptr, par->len);
+static void
+    do_del
+        (seq* self)                                   {
+            mem_free (self->mem, self->ptr, self->len);
 }
+
+static obj_trait
+    do_obj = make_trait (
+        do_new     ,
+        do_clone   ,
+        null_t     ,
+        do_del     ,
+        sizeof(seq),
+        null_t
+);
+
+obj_trait *seq_t = &do_obj;
+
+
 
 void
     seq_prep_front
-        (seq* par, u64_t par_len)             {
-            if (trait_of(par) != seq_t) return;
-            if (!par_len)               return;
+        (seq* self, u64_t prep)                {
+            if (trait_of(self) != seq_t) return;
+            if (!prep)                   return;
 
-            u8_t *ptr = mem_acq(par->mem, null_t, par->len + par_len);
-            u8_t *dst = ptr      + par->begin + par_len;
-            u8_t *src = par->ptr + par->begin;
-            u64_t len = seq_len(par);
+            u8_t *ptr = mem_use(self->mem, null_t, self->len + prep);
+            u8_t *dst = ptr       + self->begin + prep;
+            u8_t *src = self->ptr + self->begin;
+            u64_t len = seq_len(self);
+            mem_copy (dst, src, len);
 
-            mem_copy(dst, src, len)               ;
-            mem_rel (par->mem, par->ptr, par->len);
-            par->begin += par_len;
-            par->end   += par_len;
-            par->len   += len;
-            par->ptr    = ptr;
+            mem_free(self->mem, self->ptr, self->len);
+            self->begin += prep;
+            self->end   += prep;
+            self->len   += len;
+            self->ptr    = ptr;
 }
 
 void
     seq_prep_back
-        (seq* par, u64_t par_len)             {
-            if (trait_of(par) != seq_t) return;
-            if (!par_len)               return;
+        (seq* self, u64_t prep)                {
+            if (trait_of(self) != seq_t) return;
+            if (!prep)                   return;
 
-            u8_t *ptr = mem_acq(par->mem, null_t, par->len + par_len);
-            u8_t *dst = ptr      + par->begin;
-            u8_t *src = par->ptr + par->begin;
-            u64_t len = seq_len(par);
-
+            u8_t *ptr = mem_use(self->mem, null_t, self->len + prep);
+            u8_t *dst = ptr       + self->begin;
+            u8_t *src = self->ptr + self->begin;
+            u64_t len = seq_len(self);
             mem_copy(dst, src, len);
-            mem_rel (par->mem, par->ptr, par->len);
-            par->len += par_len;
-            par->ptr  = ptr    ;
+
+            mem_free(self->mem, self->ptr, self->len);
+            self->len += prep;
+            self->ptr  = ptr;
 }
 
 void
     seq_prep
-        (seq* par, u64_t par_off, u64_t par_len) {
-            if (trait_of(par) != seq_t) return;
-            if (!par_len)               return;
+        (seq* self, u64_t off, u64_t prep)     {
+            if (trait_of(self) != seq_t) return;
+            if (!prep)                   return;
 
-            if (par_off >= seq_len(par)) { seq_prep_back (par, par_len); return; }
-            if (par_off == 0)            { seq_prep_front(par, par_len); return; }
-            u8_t *ptr = mem_acq(par->mem, null_t, par_len + par->len);
-            u8_t *dst = ptr      + par->begin;
-            u8_t *src = par->ptr + par->begin;
-            u64_t len = par_off;
+            if (off >= seq_len(self)) { seq_prep_back (self, prep); return; }
+            if (off == 0)             { seq_prep_front(self, prep); return; }
+            u8_t *ptr = mem_use(self->mem, null_t, prep + self->len);
+            u8_t *dst = ptr       + self->begin;
+            u8_t *src = self->ptr + self->begin;
+            u64_t len = off;
 
             mem_copy(dst, src, len);
-            len  = seq_len(par) - par_off;
-            dst += (par_off + par_len);
-            src += (par_off);
+            len  = seq_len(self) - off;
+            dst += (off + prep);
+            src += (off);
 
-            mem_copy(dst, src, len)               ;
-            mem_rel (par->mem, par->ptr, par->len);
-            par->end += par_len;
-            par->ptr  = ptr    ;
-            par->len += par_len;
+            mem_copy(dst, src, len)                  ;
+            mem_free(self->mem, self->ptr, self->len);
+            self->end += prep;
+            self->ptr  = ptr ;
+            self->len += prep;
 }
 
-u64_t
-    seq_free_front
-        (seq* par)                              {
-            if (trait_of(par) != seq_t) return 0;
-            return par->begin;
-}
+u64_t  seq_free_front(seq* par) { if (trait_of(par) != seq_t) return 0; return par->begin; }
+u64_t  seq_free_back (seq* par) { if (trait_of(par) != seq_t) return 0; return par->len - par->end; }
 
-u64_t
-    seq_free_back
-        (seq* par)                              {
-            if (trait_of(par) != seq_t) return 0;
-            return par->len - par->end;
-}
-
-bool_t
-    seq_empty
-        (seq* par)                                   {
-            if (trait_of(par) != seq_t) return true_t;
-            return par->begin == par->end;
-}
-
-u64_t
-    seq_len
-        (seq* par)                              {
-            if (trait_of(par) != seq_t) return 0;
-            return par->end - par->begin;
-}
-
-void*
-    seq_ptr
-        (seq* par)                                   {
-            if (trait_of(par) != seq_t) return null_t;
-            return par->ptr + par->begin;
-}
+bool_t seq_empty(seq* par) { if (trait_of(par) != seq_t) return true_t; return par->begin == par->end; }
+u64_t  seq_len  (seq* par) { if (trait_of(par) != seq_t) return 0;      return par->end    - par->begin; }
+void*  seq_ptr  (seq* par) { if (trait_of(par) != seq_t) return null_t; return par->ptr + par->begin; }
 
 void
     seq_push_front
-        (seq* par, void* par_src, u64_t par_len) {
-            if (trait_of(par) != seq_t) return;
-            if (!par_src)               return;
-            if (!par_len)               return;
+        (seq* self, void* src, u64_t len)      {
+            if (trait_of(self) != seq_t) return;
+            if (!src)                    return;
+            if (!len)                    return;
 
-            if (seq_free_front(par) < par_len) seq_prep_front(par, par_len);
-            par->begin -= par_len;
+            if (seq_free_front(self) < len) seq_prep_front(self, len);
+            self->begin -= len;
 
-            u8_t *dst = par->ptr + par->begin;
-            u8_t *src = par_src;
-            u64_t len = par_len;
-
+            u8_t *dst = self->ptr + self->begin;
             mem_copy(dst, src, len);
 }
 
 void
     seq_push_back
-        (seq* par, void* par_src, u64_t par_len) {
-            if (trait_of(par) != seq_t) return;
-            if (!par_src)               return;
-            if (!par_len)               return;
+        (seq* self, void* src, u64_t len)      {
+            if (trait_of(self) != seq_t) return;
+            if (!src)                    return;
+            if (!len)                    return;
 
-            if (seq_free_back(par) < par_len) seq_prep_back(par, par_len);
-            u8_t *dst = par->ptr + par->end;
-            u8_t *src = par_src;
-            u64_t len = par_len;
+            if (seq_free_back(self) < len) seq_prep_back(self, len);
+            u8_t *dst = self->ptr + self->end;
 
             mem_copy(dst, src, len);
-            par->end += par_len;
+            self->end += len;
 }
 
 void
     seq_push
-        (seq* par, void* par_src, u64_t par_len, u64_t par_off) {
-            if (trait_of(par) != seq_t) return;
-            if (!par_src)               return;
-            if (!par_len)               return;
+        (seq* self, void* src, u64_t len, u64_t off) {
+            if (trait_of(self) != seq_t) return;
+            if (!src)                    return;
+            if (!len)                    return;
 
-            if (par_off > seq_len(par)) { seq_push_back (par, par_src, par_len); return; }
-            if (par_off == 0)           { seq_push_front(par, par_src, par_len); return; }
-            seq_prep(par, par_off, par_len);
+            if (off > seq_len(self)) { seq_push_back (self, src, len); return; }
+            if (off == 0)            { seq_push_front(self, src, len); return; }
+            seq_prep(self, off, len);
 
-            u8_t *dst = par->ptr + par->begin + par_off;
-            u8_t *src = par_src;
-            u64_t len = par_len;
-
+            u8_t *dst = self->ptr + self->begin + off;
             mem_copy(dst, src, len);
 }
 
 void
     seq_pop_front
-        (seq* par, u64_t par_len)             {
-            if (trait_of(par) != seq_t) return;
-            if (!par_len)               return;
-            if (par->begin < par_len)         {
-                par->begin = 0;
+        (seq* self, u64_t len)                 {
+            if (trait_of(self) != seq_t) return;
+            if (!len)                    return;
+            if (self->begin < len)             {
+                self->begin = 0;
                 return;
             }
 
-            par->begin -= par_len;
-            mem_set(par->ptr + par->begin, 0x00, par_len);
+            self->begin -= len;
+            mem_set(self->ptr + self->begin, 0x00, len);
 }
 
 void
     seq_pop_back
-        (seq* par, u64_t par_len)             {
-            if (trait_of(par) != seq_t) return;
-            if (!par_len)               return;
-            if (par_len >= seq_len(par))                          {
-                mem_set(par->ptr + par->begin, 0x00, seq_len(par));
-                par->end = par->begin;
+        (seq* self, u64_t len)                 {
+            if (trait_of(self) != seq_t) return;
+            if (!len)                    return;
+            if (len >= seq_len(self))                                {
+                mem_set(self->ptr + self->begin, 0x00, seq_len(self));
+                self->end = self->begin;
             }
 
-            par->end -= par_len;
-            mem_set(par->ptr + par->end, 0x00, par_len);
+            self->end -= len;
+            mem_set(self->ptr + self->end, 0x00, len);
 }
 
 void
     seq_pop
-        (seq* par, u64_t par_off, u64_t par_len) {
-            if (trait_of(par) != seq_t) return;
-            if (!par_len)               return;
+        (seq* self, u64_t off, u64_t len)      {
+            if (trait_of(self) != seq_t) return;
+            if (!len)                    return;
 
-            if (par_off > par->end) { seq_pop_back (par, par_len); return; }
-            if (par_off == 0)       { seq_pop_front(par, par_len); return; }
-            u8_t *dst = par->ptr + par_off;
-            u8_t *src = dst      + par_len;
-            u64_t len = par_len;
+            if (off > self->end) { seq_pop_back (self, len); return; }
+            if (off == 0)        { seq_pop_front(self, len); return; }
+            u8_t *dst = self->ptr + off;
+            u8_t *src = dst       + len;
 
-            if (len > (par->end - par_off)) len = (par->end - par_off);
+            if (len > (self->end - off)) len = (self->end - off);
             mem_copy(dst, src, len);
 
-            par->end -= par_len;
-            mem_set(par->ptr + par->end, 0x00, par_len);
+            self->end -= len;
+            mem_set(self->ptr + self->end, 0x00, len);
 }

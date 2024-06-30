@@ -3,44 +3,45 @@
 #include "this.h"
 #include "task.h"
 
-obj_trait fut_trait = make_trait (
-    fut_new    ,
-    fut_clone  ,
-    null_t     ,
-    fut_del    ,
-    sizeof(fut),
-    null_t
-);
-
-obj_trait* fut_t = &fut_trait;
-
-bool_t
-    fut_new
-        (fut* par_fut, u32_t par_count, va_list par)                             {
-            fut_ops *ops = null_t; if (par_count > 0) ops = va_arg(par, fut_ops*);
-            obj     *fut = null_t; if (par_count > 1) fut = va_arg(par, obj    *);
+static bool_t
+    do_new
+        (fut* self, u32_t count, va_list arg)                             {
+            fut_ops *ops = null_t; if (count > 0) ops = va_arg(arg, any_t);
+            obj     *fut = null_t; if (count > 1) fut = va_arg(arg, any_t);
             if (!ops)       return false_t;
             if (!ops->poll) return false_t;
             if (!ops->ret)  return false_t;
             if (!fut)       return false_t;
 
-            par_fut->stat = fut_pend;
-            par_fut->fut  = ref(fut);
-            par_fut->ops  = ops     ;
+            self->stat = fut_pend;
+            self->fut  = ref(fut);
+            self->ops  = ops     ;
             return true_t;
 }
 
-bool_t
-    fut_clone
+static bool_t
+    do_clone
         (fut* self, fut* clone) {
             return false_t;
 }
 
-void   
-    fut_del
+static void
+    do_del
         (fut* self)        {
             del (self->fut);
 }
+
+static obj_trait
+    do_obj = make_trait (
+        do_new     ,
+        do_clone   ,
+        null_t     ,
+        do_del     ,
+        sizeof(fut),
+        null_t
+);
+
+obj_trait* fut_t = &do_obj;
 
 u64_t  
     fut_poll

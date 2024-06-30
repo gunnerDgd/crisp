@@ -1,90 +1,76 @@
 #include "bit.h"
+
 #include "../obj.h"
 
-struct obj* 
-    op_and(struct obj* par, any_t par_arg)                      {
-        obj*       and   = par       ; if (!and)   return null_t;
-        any_t      arg   = par_arg   ; if (!arg)   return null_t;
-        obj_trait *trait = and->trait; if (!trait) return null_t;
-        obj_ops   *ops   = trait->ops; if (!ops)   return null_t;
+struct obj*
+    bit_and
+        (struct obj* self, any_t arg)                                   {
+            obj_trait *trait = trait_of(self); if (!trait) return null_t;
+            obj_ops   *ops   = trait->ops;     if (!ops)   return null_t;
 
-        if (!ops->bit)      return null_t;
-        if (!ops->bit->and) return null_t;
-        return ops->bit->and(and, arg);
+            if (!ops->bit->and) return null_t;
+            return ops->bit->and(self, arg);
 }
 
-struct obj* 
-    op_and_eq(struct obj* par, any_t par_arg)                   {
-        obj*       and   = par       ; if (!and)   return null_t;
-        any_t      arg   = par_arg   ; if (!arg)   return null_t;
-        obj_trait *trait = and->trait; if (!trait) return null_t;
-        obj_ops   *ops   = trait->ops; if (!ops)   return null_t;
+struct obj*
+    bit_and_eq
+        (struct obj* self, any_t arg)                                   {
+            obj_trait *trait = trait_of(self); if (!trait) return null_t;
+            obj_ops   *ops   = trait->ops;     if (!ops)   return null_t;
 
-        if (!ops->bit)         return null_t;
-        if (!ops->bit->and_eq) return null_t;
-        ops->bit->and(and, arg);
-        return and;
+            if (!ops->bit->and_eq) return null_t;
+            ops->bit->and_eq(self, arg);
+            return self;
 }
 
+struct obj*
+    bit_or
+        (struct obj* self, any_t arg)                                   {
+            obj_trait *trait = trait_of(self); if (!trait) return null_t;
+            obj_ops   *ops   = trait->ops;     if (!ops)   return null_t;
 
-struct obj* 
-    op_or(struct obj* par, any_t par_arg)                       {
-        obj*       or    = par       ; if (!or)    return null_t;
-        any_t      arg   = par_arg   ; if (!arg)   return null_t;
-        obj_trait *trait = or->trait ; if (!trait) return null_t;
-        obj_ops   *ops   = trait->ops; if (!ops)   return null_t;
-
-        if (!ops->bit)     return null_t;
-        if (!ops->bit->or) return null_t;
-        return ops->bit->or(or, arg);
+            if (!ops->bit->or) return null_t;
+            return ops->bit->or(self, arg);
 }
 
-struct obj* 
-    op_or_eq(struct obj* par, any_t par_arg)                    {
-        obj*       or    = par       ; if (!or)    return null_t;
-        any_t      arg   = par_arg   ; if (!arg)   return null_t;
-        obj_trait *trait = or->trait ; if (!trait) return null_t;
-        obj_ops   *ops   = trait->ops; if (!ops)   return null_t;
-        
-        if (!ops->bit)        return null_t;
-        if (!ops->bit->or_eq) return null_t;
-        ops->bit->or(or, arg);
-        return or;
+struct obj*
+    bit_or_eq
+        (struct obj* self, any_t arg)                                   {
+            obj_trait *trait = trait_of(self); if (!trait) return null_t;
+            obj_ops   *ops   = trait->ops;     if (!ops)   return null_t;
+
+            if (!ops->bit->and_eq) return null_t;
+            ops->bit->and_eq(self, arg);
+            return self;
 }
 
+struct obj*
+    bit_xor
+        (struct obj* self, any_t arg)                                   {
+            obj_trait *trait = trait_of(self); if (!trait) return null_t;
+            obj_ops   *ops   = trait->ops;     if (!ops)   return null_t;
 
-struct obj* 
-    op_xor(struct obj* par, any_t par_arg)                      {
-        obj*       xor   = par       ; if (!xor)   return null_t;
-        any_t      arg   = par_arg   ; if (!arg)   return null_t;
-        obj_trait *trait = xor->trait; if (!trait) return null_t;
-        obj_ops   *ops   = trait->ops; if (!ops)   return null_t;
-        
-        if (!ops->bit)      return null_t;
-        if (!ops->bit->xor) return null_t;
-        return ops->bit->xor(xor, arg);
+            if (!ops->bit->and) return null_t;
+            return ops->bit->and(self, arg);
 }
 
-struct obj* 
-    op_xor_eq(struct obj* par, any_t par_arg)                   {
-        obj*       xor   = par       ; if (!xor)   return null_t;
-        any_t      arg   = par_arg   ; if (!arg)   return null_t;
-        obj_trait *trait = xor->trait; if (!trait) return null_t;
-        obj_ops   *ops   = trait->ops; if (!ops)   return null_t;
-        
-        if (!ops->bit)         return null_t;
-        if (!ops->bit->xor_eq) return null_t;
-        ops->bit->xor_eq(xor, arg);
-        return xor;
+struct obj*
+    bit_xor_eq
+        (struct obj* self, any_t arg)                                   {
+            obj_trait *trait = trait_of(self); if (!trait) return null_t;
+            obj_ops   *ops   = trait->ops;     if (!ops)   return null_t;
+
+            if (!ops->bit->xor_eq) return null_t;
+            ops->bit->xor_eq(self, arg);
+            return self;
 }
 
+struct obj*
+    bit_not
+        (struct obj* self)                                              {
+            obj_trait *trait = trait_of(self); if (!trait) return null_t;
+            obj_ops   *ops   = trait->ops;     if (!ops)   return null_t;
 
-struct obj* 
-    op_not(struct obj* par)                                     {
-        obj*       not   = par       ; if (!not)   return null_t;
-        obj_trait *trait = not->trait; if (!trait) return null_t;
-        obj_ops   *ops   = trait->ops; if (!ops)   return null_t;
-        if (!ops->bit)      return null_t;
-        if (!ops->bit->not) return null_t;
-        return ops->bit->not(not);
+            if (!ops->bit->not) return null_t;
+            return ops->bit->not(self);
 }
