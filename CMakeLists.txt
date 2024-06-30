@@ -1,13 +1,6 @@
 project(crisp)
-if   (PRESET_BUILD_EXAMPLES)
-    if (PRESET_SUB_LIBC)
-        use_collections()
-        use_thread     ()
-    endif()
-endif()
 
 add_subdirectory(src)
-add_subdirectory(sub)
 if (PRESET_BUILD_EXAMPLES)
     add_subdirectory(examples)
 endif()

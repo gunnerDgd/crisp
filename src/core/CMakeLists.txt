@@ -56,6 +56,7 @@ lib (crisp-core
 
     ../core.h
     ../core.c
+    ../main.c
 )
 
 target_link_libraries(crisp-core PRIVATE crisp-core-arch crisp-sub)

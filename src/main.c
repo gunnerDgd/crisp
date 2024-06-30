@@ -1,4 +1,4 @@
-#include <core.h>
+#include "core.h"
 
 int run   ();
 int do_run()                                     {
