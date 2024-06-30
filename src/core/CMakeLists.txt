@@ -48,27 +48,11 @@ lib (crisp-core
     ops/cast.h
     ops/cast.c
 
-    ops/bit.h
-    ops/bit.c
-
     ops/cmp.h
     ops/cmp.c
 
-    ops/logical.h
-    ops/logical.c
-
-    sync/spsc.h
-    sync/spsc.c
-
-    sync/spmc.h
-    sync/spmc.c
-
-    sync/mpsc.h
-    sync/mpsc.c
-
-    sync/mpmc.h
-    sync/mpmc.c
-    sync.h
+    ops/bit.h
+    ops/bit.c
 
     ../core.h
     ../core.c
@@ -82,7 +66,6 @@ inc                  (crisp-core-include STATIC
     ../../include/core/box.h
     ../../include/core/mod.h
     ../../include/core/bit.h
-    ../../include/core/cpu.h
     ../../include/core/endian.h
     ../../include/core/print.h
     ../../include/core/mem.h
@@ -97,11 +80,4 @@ inc                  (crisp-core-include STATIC
     ../../include/core/ops/cast.h
     ../../include/core/ops/bit.h
     ../../include/core/ops/cmp.h
-    ../../include/core/ops/logical.h
-
-    ../../include/core/sync/spsc.h
-    ../../include/core/sync/spmc.h
-    ../../include/core/sync/mpsc.h
-    ../../include/core/sync/mpmc.h
-    ../../include/core/sync.h
 )

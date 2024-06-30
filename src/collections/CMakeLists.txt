@@ -8,8 +8,8 @@ lib(crisp-collections
     map.h
     map.c
 
-    node.h
-    node.c
+    pos.h
+    pos.c
 
     seq.h
     seq.c
@@ -24,7 +24,7 @@ inc                                (
     crisp-collections-include
     ../../include/collections/list.h
     ../../include/collections/map.h
-    ../../include/collections/node.h
+    ../../include/collections/pos.h
     ../../include/collections/bma.h
     ../../include/collections/str.h
     ../../include/collections/seq.h
