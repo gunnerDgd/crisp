@@ -111,3 +111,13 @@ f64_t
         if (!ops->cast->as_f64) return  0.0;
         return ops->cast->as_f64(as);
 }
+
+any_t
+    as_any(struct obj* par)                                     {
+        obj       *as    = par       ; if (!as)    return null_t;
+        obj_trait *trait = as->trait ; if (!trait) return null_t;
+        obj_ops   *ops   = trait->ops; if (!ops)   return null_t;
+        if (!ops->cast)         return null_t;
+        if (!ops->cast->as_f64) return null_t;
+        return ops->cast->as_any(as);
+}
