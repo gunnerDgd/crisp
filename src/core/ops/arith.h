@@ -37,16 +37,16 @@ typedef struct arith                         {
 
 #endif
 
-struct obj* add   (struct obj*, any_t);
-struct obj* sub   (struct obj*, any_t);
-struct obj* mul   (struct obj*, any_t);
-struct obj* div   (struct obj*, any_t);
-struct obj* mod   (struct obj*, any_t);
+struct obj* op_add   (struct obj*, any_t);
+struct obj* op_sub   (struct obj*, any_t);
+struct obj* op_mul   (struct obj*, any_t);
+struct obj* op_div   (struct obj*, any_t);
+struct obj* op_mod   (struct obj*, any_t);
 
-struct obj* add_eq(struct obj*, any_t);
-struct obj* sub_eq(struct obj*, any_t);
-struct obj* mul_eq(struct obj*, any_t);
-struct obj* div_eq(struct obj*, any_t);
-struct obj* mod_eq(struct obj*, any_t);
+struct obj* op_add_eq(struct obj*, any_t);
+struct obj* op_sub_eq(struct obj*, any_t);
+struct obj* op_mul_eq(struct obj*, any_t);
+struct obj* op_div_eq(struct obj*, any_t);
+struct obj* op_mod_eq(struct obj*, any_t);
 
 #endif

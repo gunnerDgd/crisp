@@ -2,7 +2,7 @@
 #include "../obj.h"
 
 struct obj* 
-    add
+    op_add
         (struct obj* self, any_t arg)                                   {
             obj_trait *trait = trait_of(self); if (!trait) return null_t;
             obj_ops   *ops   = trait->ops;     if (!ops)   return null_t;
@@ -12,7 +12,7 @@ struct obj*
 }
 
 struct obj*
-    add_eq
+    op_add_eq
         (struct obj* self, any_t arg)                                   {
             obj_trait *trait = trait_of(self); if (!trait) return null_t;
             obj_ops   *ops   = trait->ops;     if (!ops)   return null_t;
@@ -23,7 +23,7 @@ struct obj*
 }
 
 struct obj*
-    sub
+    op_sub
         (struct obj* self, any_t arg)                                   {
             obj_trait *trait = trait_of(self); if (!trait) return null_t;
             obj_ops   *ops   = trait->ops;     if (!ops)   return null_t;
@@ -33,7 +33,7 @@ struct obj*
 }
 
 struct obj*
-    sub_eq
+    op_sub_eq
         (struct obj* self, any_t arg)                                   {
             obj_trait *trait = trait_of(self); if (!trait) return null_t;
             obj_ops   *ops   = trait->ops;     if (!ops)   return null_t;
@@ -44,7 +44,7 @@ struct obj*
 }
 
 struct obj*
-    mul
+    op_mul
         (struct obj* self, any_t arg)                                   {
             obj_trait *trait = trait_of(self); if (!trait) return null_t;
             obj_ops   *ops   = trait->ops;     if (!ops)   return null_t;
@@ -54,7 +54,7 @@ struct obj*
 }
 
 struct obj*
-    mul_eq
+    op_mul_eq
         (struct obj* self, any_t arg)                                   {
             obj_trait *trait = trait_of(self); if (!trait) return null_t;
             obj_ops   *ops   = trait->ops;     if (!ops)   return null_t;
@@ -65,7 +65,7 @@ struct obj*
 }
 
 struct obj*
-    div
+    op_div
         (struct obj* self, any_t arg)                                   {
             obj_trait *trait = trait_of(self); if (!trait) return null_t;
             obj_ops   *ops   = trait->ops;     if (!ops)   return null_t;
@@ -75,7 +75,7 @@ struct obj*
 }
 
 struct obj*
-    div_eq
+    op_div_eq
         (struct obj* self, any_t arg)                                   {
             obj_trait *trait = trait_of(self); if (!trait) return null_t;
             obj_ops   *ops   = trait->ops;     if (!ops)   return null_t;
@@ -86,7 +86,7 @@ struct obj*
 }
 
 struct obj*
-    mod
+    op_mod
         (struct obj* self, any_t arg)                                   {
             obj_trait *trait = trait_of(self); if (!trait) return null_t;
             obj_ops   *ops   = trait->ops;     if (!ops)   return null_t;
@@ -96,7 +96,7 @@ struct obj*
 }
 
 struct obj*
-    mod_eq
+    op_mod_eq
         (struct obj* self, any_t arg)                                   {
             obj_trait *trait = trait_of(self); if (!trait) return null_t;
             obj_ops   *ops   = trait->ops;     if (!ops)   return null_t;
