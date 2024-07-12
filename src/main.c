@@ -1,15 +1,18 @@
 #include "core.h"
 
 int run   ();
-int do_run()                                     {
-    if (!make_at(&core, core) from (0)) return -1;
-    if (!mod_new())                     return -2;
-    bool_t res = obj_new_at                      (
+
+int do_run(mem* mem, int(*func)(any_t), any_t arg)    {
+    if (!make_at(&core, core) from (1, mem)) return -1;
+    if (!mod_new())                          return -2;
+
+    if (!func) func = run;
+    bool_t res = obj_new_at (
         &this ,
         this_t,
         2     ,
-        run   ,
-        null_t
+        func  ,
+        arg
     );
 
     if (!res) return -3;
