@@ -27,9 +27,11 @@ obj_trait* foo_t = &foo_trait;
 int run()                          {
 	list* fli = make(list) from (0);
 
-	for(u64_t i = 0 ; i < 3 ; ++i) list_move_front(fli, make(foo) from(1, i));
-	list_for(fli, pos)                         {
-		println("%d", value_as(pos, foo*)->num);
+	for(u64_t i = 0 ; i < 3 ; ++i) list_push_front(fli, make(foo) from(1, i));
+	list_for(fli, pos)                  {
+	    foo* ret = (foo*) as(pos, foo_t);
+		println("%d", ret->num);
+		del    (ret);
 	}
 
 	del(fli);

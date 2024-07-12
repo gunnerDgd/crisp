@@ -31,7 +31,7 @@ ord_t
 	        return ord_err;
 }
 
-ops_cmp foo_cmp = make_ops_cmp(foo_ord, foo_ord_arg);
+cmp     foo_cmp = make_cmp(foo_ord_arg, foo_ord);
 obj_ops foo_ops = {
     .cmp = &foo_cmp
 };
@@ -52,11 +52,11 @@ int run()			                  {
 	obj* foo1 = make (foo) from (1, 0);
 	obj* foo2 = make (foo) from (1, 1);
 
-    node* fno1 = map_move(fma, foo1);
-    node* fno2 = map_move(fma, foo2);
+    pos* fpo1 = map_push(fma, foo1);
+    pos* fpo2 = map_push(fma, foo2);
 
-	foo* val1 = value(map_find(fma, (any_t) 0));
-	foo* val2 = value(map_find(fma, (any_t) 1));
+	foo* val1 = (foo*) as_any(map_find(fma, (any_t) 0));
+	foo* val2 = (foo*) as_any(map_find(fma, (any_t) 1));
 
 	println ("VAL1 : %d", (trait_of(val1) == foo_t) ? val1->num : -1);
 	println ("VAL2 : %d", (trait_of(val2) == foo_t) ? val2->num : -1);
