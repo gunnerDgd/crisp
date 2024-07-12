@@ -15,17 +15,12 @@ struct            this  {
     any_t        ret;
 };
 
-#ifdef PRESET_FEATURE_THREAD
 #ifdef PRESET_COMPILER_GCC
 extern __thread struct this this;
 #endif
 
 #ifdef PRESET_COMPILER_MSVC
 extern __declspec(thread) struct this this;
-#endif
-
-#else
-extern struct this this;
 #endif
 
 #endif

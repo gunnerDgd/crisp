@@ -1,16 +1,11 @@
 #include "this.h"
 
-#ifdef PRESET_FEATURE_THREAD
 #ifdef PRESET_COMPILER_GCC
 __thread struct this this;
 #endif
 
 #ifdef PRESET_COMPILER_MSVC
 __declspec(thread) struct this this;
-#endif
-
-#else
-struct this this;
 #endif
 
 static bool_t
