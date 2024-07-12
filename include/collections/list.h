@@ -20,7 +20,7 @@ pos*   list_begin     (list* self);
 pos*   list_end       (list* self);
 
 #define list_for(name, cur)                                         \
-    pos* (cur) = list_begin((name));                                \
+    pos* cur = list_begin((name));                                  \
     for( ; (cur) && (cur) != list_end((name)) ; (cur) = next((cur)))\
 
 #endif
