@@ -1,4 +1,6 @@
-lib(crisp-collections
+lib                       (
+    NAME crisp-collections
+    SRC
     list.h
     list.c
 
@@ -31,4 +33,4 @@ inc                                (
     ../../include/collections.h
 )
 
-target_link_libraries(crisp-collections PRIVATE crisp-core)
+link_libraries(crisp-collections)

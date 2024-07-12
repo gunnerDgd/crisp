@@ -14,9 +14,14 @@ elseif(PRESET_FFI_SYSV)
     )
 endif ()
 
-lib (crisp-core-arch
+lib                     (
+    NAME crisp-core-arch
+    SRC
     cpu.h
     cpu.c
 )
 
 target_link_libraries(crisp-core-arch PRIVATE crisp-core-arch-asm)
+
+link_libraries(crisp-core-arch-asm)
+link_libraries(crisp-core-arch)

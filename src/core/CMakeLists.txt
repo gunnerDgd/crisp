@@ -7,7 +7,10 @@ elseif(PRESET_ARCH_X86)
     add_subdirectory(arch/x86)
 endif()
 
-lib (crisp-core
+lib                (
+    NAME crisp-core
+    OPT  nolibc
+    SRC
     type.h
     macro.h
     print.h
@@ -59,8 +62,8 @@ lib (crisp-core
     ../main.c
 )
 
-target_link_libraries(crisp-core PRIVATE crisp-core-arch crisp-sub)
-inc                  (crisp-core-include STATIC
+inc                         (
+    crisp-core-include
     ../../include/core.h
 
     ../../include/core/atom.h
@@ -82,3 +85,6 @@ inc                  (crisp-core-include STATIC
     ../../include/core/ops/bit.h
     ../../include/core/ops/cmp.h
 )
+
+target_link_libraries(crisp-core PUBLIC crisp-core-arch crisp-core-arch-asm)
+link_libraries       (crisp-core)
