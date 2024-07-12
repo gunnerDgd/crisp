@@ -110,6 +110,8 @@ any_t
 
             pos = next  (&par->begin);
             ret = as_any(pos);
+            del(pos);
+
             return ret;
 }
 
@@ -123,6 +125,8 @@ any_t
 
             pos = prev  (&par->end);
             ret = as_any(pos);
+            del(pos);
+
             return ret;
 }
 
